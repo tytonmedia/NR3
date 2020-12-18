@@ -249,7 +249,7 @@
                                 }
                             }
                             catch(err) {
-                                $("#css_minified").append("CSS is minified.");
+                                $("#css_minified").append("This page has minified CSS.");
                                 var get_passed = document.getElementById("passed_progress").style.width;
                                 var add_vale = parseFloat(get_passed) + 3.7;
                                 $("#passed_progress").css("width", add_vale + "%");
@@ -269,7 +269,7 @@
                                 }
                             }
                             catch(err) {
-                                $("#js_minified").append("JS is minified");
+                                $("#js_minified").append("The pages JS (javascript) is minified.");
                                 var get_passed = document.getElementById("passed_progress").style.width;
                                 var add_vale = parseFloat(get_passed) + 3.7;
                                 $("#passed_progress").css("width", add_vale + "%");
@@ -287,7 +287,7 @@
                                 }
                             }
                             catch(err) {
-                                $("#gzip_compression").append("GZIP is enabled.");
+                                $("#gzip_compression").append("GZIP is enabled on your page.");
                                 var get_passed = document.getElementById("passed_progress").style.width;
                                 var add_vale = parseFloat(get_passed) + 3.7;
                                 $("#passed_progress").css("width", add_vale + "%");

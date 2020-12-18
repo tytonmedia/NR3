@@ -425,9 +425,9 @@
             <div class="row">
                 <div class="col-md-3">
                 @if($page_text_ratio > 10)
-                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Text-HTML ratio</h6>
+                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Text-to-HTML ratio</h6>
                 @else
-                    <h6><span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>Text-HTML ratio</h6>
+                    <h6><span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>Text-to-HTML ratio</h6>
                 @endif
                 </div>
                 <div class="col-md-9">
@@ -436,7 +436,8 @@
                             <tr>
                             <th>Page Size</th>
                             <th>Text Size</th>
-                            <th>Text-HTML Ratio(%)</th>
+                            <th>Text-to-HTML Ratio(%)</th>
+                            <th>recommended Ratio</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -444,9 +445,11 @@
                                 <td>{{number_format($page_size,'1')}} Kb</td>
                                 <td>{{number_format($page_words_size,'1')}} kb</td>
                                 <td>{{number_format($page_text_ratio,'1')}} %</td>
+                                <td>10%</td>
                             </tr>
                         </tbody>
                     </table>
+                   
                 </div>
             </div>
         </div>

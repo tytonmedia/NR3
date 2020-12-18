@@ -9,7 +9,7 @@ use App\Analysis;
 use App\User;
 use App\Payment;
 use App\Audit;
-ini_set('max_execution_time', '200'); //200 seconds = 3.5 minutes
+
 class analysisController extends Controller
 {
 
@@ -691,41 +691,37 @@ class analysisController extends Controller
         
          //backlink count
         try{
-            $semrush = "https://api.semrush.com/analytics/v1/?key=247c8d4143eff74adb96fb2f0b3f3d8a";
 
-            $curl = curl_init($semrush);
-            curl_setopt($curl, CURLOPT_URL, $semrush);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+         //    $semrush = "https://api.semrush.com/analytics/v1/?key=247c8d4143eff74adb96fb2f0b3f3d8a";
+
+         //    $curl = curl_init($semrush);
+         //    curl_setopt($curl, CURLOPT_URL, $semrush);
+         //    curl_setopt($curl, CURLOPT_POST, true);
+         //    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
           
-            $getdomain = parse_url($url, PHP_URL_HOST);
-          //    dd($getdomain);
-            $data = '{type: "backlinks_overview", target_type: "root_domain",export_columns: "domains_num,urls_num", target: "'.$getdomain.'"}';
-            $headers = array();
-            $headers = [
-                'Accept:application/json',
-                'Content-Type:application/json',
-                'Content-Length: ' . strlen($data)
-            ];
-            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+         //  //    dd($getdomain);
+         //    $data = '{type: "backlinks_overview", target_type: "url",export_columns: "domains_num,urls_num", target: "'.$url.'"}';
+          
+         //    //for debug only!
+         // //   curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+         //  //  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             
-            //for debug only!
-         //   curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-          //  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            
-            $resp = curl_exec($curl);
-            curl_close($curl);
+         //    $resp = curl_exec($curl);
+         //    curl_close($curl);
 
-            // split names & values
-            list($names,$values) = preg_split("/[\s,][\d]/",$resp);// <= set here your regex according your response 
-            $names = str_replace(' ','_',trim($names)); 
-            $names = explode(';',$names);
-            $values = explode(';',$values);
-            $SEMrush_data = array_combine($names,$values);   
-            $domains_num =  $SEMrush_data['domains_num'];
-            $urls_num = $SEMrush_data['urls_num'];
+         //    // split names & values
+         //    list($names,$values) = preg_split("/[\s,][\d]/",$resp);// <= set here your regex according your response 
+         //    $names = str_replace(' ','_',trim($names)); 
+         //    $names = explode(';',$names);
+         //    $values = explode(';',$values);
+         //    $SEMrush_data = array_combine($names,$values);   
+         //    $domains_num =  $SEMrush_data['domains_num'];
+         //    $urls_num = $SEMrush_data['urls_num'];
 
-        }catch(Exception $e){}
+        }catch(Exception $e){
+           // print_r($e);
+        }
 
 
         //Image Size
