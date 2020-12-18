@@ -144,13 +144,13 @@
 	<div style="border-top:1px solid #ddd;padding:5px;background:#eee">
 		<label style="font-size:18px;margin:0">Today's Charge</label>:
 			@if($id == '1')
-					<strong style="font-size:18px;color:green">$29/month</strong>
+					<strong style="font-size:18px;color:green">$29</strong>
 				@endif
 				@if($id == '2')
-					<strong style="font-size:18px;color:green">$49/month</strong>
+					<strong style="font-size:18px;color:green">$49</strong>
 				@endif
 				@if($id == '3')
-					<strong style="font-size:18px;color:green">$99/month</strong>
+					<strong style="font-size:18px;color:green">$99</strong>
 				@endif
 	</div>
 
