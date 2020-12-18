@@ -510,7 +510,7 @@
                                 </tbody>
                                 </table>
                         @else
-                            <p>Error Fetching Images</p>
+                            <p>Error Fetching Images.</p>
                         @endif
                     @endif    
                 </div>

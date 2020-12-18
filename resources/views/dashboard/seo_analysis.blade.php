@@ -219,15 +219,8 @@
                 }
 
                 function setUpQuery() {
-                    const api = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed';
-                    const url =  $("#analyze").val();
-                    const parameters = {
-                        url: encodeURIComponent(url)
-                    };
-                    let query = `${api}?`;
-                    for (key in parameters) {
-                        query += `${key}=${parameters[key]}`;
-                    }
+                    const query = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url='+ encodeURIComponent($("#analyze").val()) +'&key=AIzaSyAHRm6Jkj3mkwZkpvUK1H4haBgGT7_mj8k';
+
                     return query;
                 }
 
@@ -247,7 +240,7 @@
                             try {
                                 var wastBytes_css = lighthouse.audits['unminified-css']['details']['items'][1]['wastedBytes'];
                                 if(wastBytes_css){
-                                    $("#css_minified").append("Your CSS is not minified. Minifying your CSS can help speed up your website which will improve SEO and user experience");
+                                    $("#css_minified").append("Your CSS is not minified. Minifying your CSS can help speed up your website which will improve SEO and user experience.");
                                     var get_passed = document.getElementById("warning").style.width;
                                     var add_vale = parseFloat(get_passed) + 3.7;
                                     $("#warning").css("width", add_vale + "%");
@@ -256,7 +249,7 @@
                                 }
                             }
                             catch(err) {
-                                $("#css_minified").append("CSS is minified");
+                                $("#css_minified").append("CSS is minified.");
                                 var get_passed = document.getElementById("passed_progress").style.width;
                                 var add_vale = parseFloat(get_passed) + 3.7;
                                 $("#passed_progress").css("width", add_vale + "%");
@@ -266,7 +259,7 @@
                             try {
                                 var wastBytes_js = lighthouse.audits['unminified-javascript']['details']['items'][1]['wastedBytes'];
                                 if(wastBytes_js){
-                                    $("#js_minified").append("Your JS is not minified. Minifying your files and code can help speed up your website which will improve SEO and user experience");
+                                    $("#js_minified").append("Your JS is not minified. Minifying your files and code can help speed up your website which will improve SEO and user experience.");
                                     var get_passed = document.getElementById("warning").style.width;
                                     var add_vale = parseFloat(get_passed) + 3.7;
                                     $("#warning").css("width", add_vale + "%");
@@ -285,7 +278,7 @@
                             try {
                                 var wastBytes_js = lighthouse.audits['uses-text-compression']['details']['items'][1]['wastedBytes'];
                                 if(wastBytes_js){
-                                    $("#gzip_compression").append("Your page is not being GZIP compressed. This can impact how quickly your page takes to load");
+                                    $("#gzip_compression").append("Your page is not being GZIP compressed. This can impact how quickly your page takes to load.");
                                     var get_passed = document.getElementById("warning").style.width;
                                     var add_vale = parseFloat(get_passed) + 3.7;
                                     $("#warning").css("width", add_vale + "%");
@@ -294,7 +287,7 @@
                                 }
                             }
                             catch(err) {
-                                $("#gzip_compression").append("GZIP is enabled");
+                                $("#gzip_compression").append("GZIP is enabled.");
                                 var get_passed = document.getElementById("passed_progress").style.width;
                                 var add_vale = parseFloat(get_passed) + 3.7;
                                 $("#passed_progress").css("width", add_vale + "%");

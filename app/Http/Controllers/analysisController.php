@@ -9,7 +9,7 @@ use App\Analysis;
 use App\User;
 use App\Payment;
 use App\Audit;
-
+ini_set('max_execution_time', '200'); //200 seconds = 3.5 minutes
 class analysisController extends Controller
 {
 
@@ -653,36 +653,10 @@ class analysisController extends Controller
         $create_analysis->site_url = $url;
         $create_analysis->payment_id = $Payment->id ?? Null;
         $create_analysis->save();
-               //backlink count
-        try{
-            $semrush = "https://api.semrush.com/analytics/v1/?key=c1e034dec2d230da542fae097853854a&type=backlinks_overview&target=".$url."&target_type=root_domain&export_columns=domains_num,urls_num";
-
-            $curl = curl_init($semrush);
-            curl_setopt($curl, CURLOPT_URL, $semrush);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-            //for debug only!
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            
-            $resp = curl_exec($curl);
-            curl_close($curl);
-
-            // split names & values
-            list($names,$values) = preg_split("/[\s,][\d]/",$resp);// <= set here your regex according your response 
-            $names = str_replace(' ','_',trim($names)); 
-            $names = explode(';',$names);
-            $values = explode(';',$values);
-            $SEMrush_data = array_combine($names,$values);   
-            $domains_num =  $SEMrush_data['domains_num'];
-            $urls_num = $SEMrush_data['urls_num'];
-
-        }catch(Exception $e){}
-
+              
         //Mobile Friendly test
         try{
-            $urls = "https://searchconsole.googleapis.com/v1/urlTestingTools/mobileFriendlyTest:run?key=AIzaSyBoWi8UVeIzrhXxxDhPm4G9OQT3lJuy1fc";
+            $urls = "https://searchconsole.googleapis.com/v1/urlTestingTools/mobileFriendlyTest:run?key=AIzaSyAHRm6Jkj3mkwZkpvUK1H4haBgGT7_mj8k";
 
             $curl = curl_init($urls);
             curl_setopt($curl, CURLOPT_URL, $urls);
@@ -710,9 +684,50 @@ class analysisController extends Controller
             curl_close($curl);
             $mobile = json_decode($resp, true);
             $mobile_friendly = $mobile['mobileFriendliness'];
-        
+            if(empty($mobile_friendly))   {
+                $mobile_friendly = 'Error';
+            }     
         }catch(Exception $e){}
         
+         //backlink count
+        try{
+            $semrush = "https://api.semrush.com/analytics/v1/?key=247c8d4143eff74adb96fb2f0b3f3d8a";
+
+            $curl = curl_init($semrush);
+            curl_setopt($curl, CURLOPT_URL, $semrush);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+          
+            $getdomain = parse_url($url, PHP_URL_HOST);
+          //    dd($getdomain);
+            $data = '{type: "backlinks_overview", target_type: "root_domain",export_columns: "domains_num,urls_num", target: "'.$getdomain.'"}';
+            $headers = array();
+            $headers = [
+                'Accept:application/json',
+                'Content-Type:application/json',
+                'Content-Length: ' . strlen($data)
+            ];
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+            
+            //for debug only!
+         //   curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+          //  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            
+            $resp = curl_exec($curl);
+            curl_close($curl);
+
+            // split names & values
+            list($names,$values) = preg_split("/[\s,][\d]/",$resp);// <= set here your regex according your response 
+            $names = str_replace(' ','_',trim($names)); 
+            $names = explode(';',$names);
+            $values = explode(';',$values);
+            $SEMrush_data = array_combine($names,$values);   
+            $domains_num =  $SEMrush_data['domains_num'];
+            $urls_num = $SEMrush_data['urls_num'];
+
+        }catch(Exception $e){}
+
+
         //Image Size
         try {
             foreach ($crawler->filter('img') as $img) {
@@ -793,7 +808,7 @@ class analysisController extends Controller
                 foreach ($social_link as $social) {
                     if (strpos($ext, $social)) {
                         $link_to_social[] = $ext;
-                        $social_media_link = 'Links to social media profiles found';
+                        $social_media_link = 'Links to social media profiles found.';
                     }
                 }
             }
