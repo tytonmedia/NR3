@@ -28,10 +28,10 @@ class DashboardController extends Controller
             $productname = 'Free';
             $created = 'N/A';
         }
-    } else{
-        $productname = 'Guest';
+} else {
+     $productname = 'Guest';
          $created = 'N/A';
-    }
+}
          return view('dashboard/home',compact('productname','created'));
     }
 
