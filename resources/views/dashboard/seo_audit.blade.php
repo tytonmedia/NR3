@@ -38,6 +38,7 @@
             <p>Please wait while we crawl your pages. This process can take a few minutes.</p>
         </div>
     </div>
+     <div id="error-box" style="display:none"><h4>Whoops!</h4><p>There was an error trying to run your website audit. Please check your URL and try again!</p></div>
     <div id="text-container" class="audit-container"></div>
      <!------------------------------------------Animation Script ProgressBarStart----------------------------------------------------->
 
@@ -145,6 +146,7 @@
                                             if (e.lengthComputable) {
                                                 var percent = Math.round((e.loaded / e.total) * 100)-60;
                                                 //console.log(percent);
+                                                $('#error-box').hide();
                                                 $('#waiting').show();
                                                 $('#tool-desc').slideUp();
                                                 $('#analyse').attr('disabled','disabled');
@@ -171,6 +173,12 @@
                                             animateElements();
                                         }
                                     }
+                                    ,
+                                error: function (request, status, error) {
+                                $('#waiting').hide();
+                                $('#analyse').removeAttr('disabled');
+                                $('#error-box').show();
+                                }
                                 });
                         }else{
                             alert("The link doesn't have http:// or https://");
