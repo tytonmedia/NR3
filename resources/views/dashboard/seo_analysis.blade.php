@@ -43,6 +43,7 @@
             <p>Please wait while we crawl your page. This process can take a few minutes.</p>
         </div>
     </div>
+    <div id="error-box" style="display:none"><h4>Whoops!</h4><p>There was an error trying to run your analysis. Please check your URL and try again!</p></div>
     <div id="text-container"></div>
 
 
@@ -180,7 +181,7 @@
                                       'event_label': 'click',
                                       'value': url
                                     });
-                         
+
                             $(".progress-bar1").css("animation-play-state", "running");
                             $.ajax({
                                 xhr : function() {
@@ -190,6 +191,7 @@
                                         if (e.lengthComputable) {
                                             var percent = Math.round((e.loaded / e.total) * 100)-60;
                                             //console.log(percent);
+                                            $('#error-box').hide();
                                             $('#waiting').show();
                                             $('#tool-desc').slideUp();
                                              $('#analyse').attr('disabled','disabled');
@@ -218,6 +220,11 @@
                                         
                                     }
                                     
+                                },
+                                error: function (request, status, error) {
+                                $('#waiting').hide();
+                                $('#analyse').removeAttr('disabled');
+                                $('#error-box').show();
                                 }
                             });
                         }else{

@@ -13,6 +13,12 @@ h1, h2, h3, h4, h5 ,h6, .nav a {font-family:Roboto;}
 .audit-container .circle div {top:74px;}
 .warning-box {background:#f9ede4;}
 .error-box {background:#f9e8e8;}
+#error-box {background: #f9e8e8;
+    border: 1px solid #f00;
+    margin-top: 3%;
+    padding: 15px;}
+    #error-box h4 {color:#f00;}
+    #error-box p {margin:0;}
 .notice-box {background:#DCE8F7;}
 body .btn-warning {background:#f60;color:#fff;border-color:#f60;}
 body .btn-warning:hover {background:#d45602;color:#fff;}
