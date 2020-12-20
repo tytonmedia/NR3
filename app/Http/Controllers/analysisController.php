@@ -9,6 +9,9 @@ use App\Analysis;
 use App\User;
 use App\Payment;
 use App\Audit;
+use GuzzleHttp\Client as guzzler;
+
+ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 
 class analysisController extends Controller
 {
@@ -693,34 +696,48 @@ class analysisController extends Controller
         try{
 
 
-         //    $semrush = "https://api.semrush.com/analytics/v1/?key=247c8d4143eff74adb96fb2f0b3f3d8a";
 
-         //    $curl = curl_init($semrush);
-         //    curl_setopt($curl, CURLOPT_URL, $semrush);
-         //    curl_setopt($curl, CURLOPT_POST, true);
-         //    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-          
-         //  //    dd($getdomain);
-         //    $data = '{type: "backlinks_overview", target_type: "url",export_columns: "domains_num,urls_num", target: "'.$url.'"}';
-          
-         //    //for debug only!
-         // //   curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-         //  //  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+            // $client = new \GuzzleHttp\Client();
+
+            // $client->request('GET', 'https://api.semrush.com/analytics/v1/', [
+            //         'query' => [ 'key' => '247c8d4143eff74adb96fb2f0b3f3d8a',
+            //     'type' => 'backlinks_overview',
+            //     'target_type' => 'url',
+            //     'target' => $url,
+            //     'export_columns' => 'domains_num,urls_num']]);
+
+
+            //         $response = $request->getBody();
+
+            //         var_dump($response);
+
+
+
+            $semrush = "https://api.semrush.com/analytics/v1/?key=247c8d4143eff74adb96fb2f0b3f3d8a&type=backlinks_overview&target=".$url."&target_type=url&export_columns=domains_num,urls_num";
+
+            $curl = curl_init($semrush);
+            curl_setopt($curl, CURLOPT_URL, $semrush);
+            curl_setopt($curl, CURLOPT_POST, FALSE);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             
-         //    $resp = curl_exec($curl);
-         //    curl_close($curl);
+            //for debug only!
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            
+            $resp = curl_exec($curl);
+            curl_close($curl);
 
-         //    // split names & values
-         //    list($names,$values) = preg_split("/[\s,][\d]/",$resp);// <= set here your regex according your response 
-         //    $names = str_replace(' ','_',trim($names)); 
-         //    $names = explode(';',$names);
-         //    $values = explode(';',$values);
-         //    $SEMrush_data = array_combine($names,$values);   
-         //    $domains_num =  $SEMrush_data['domains_num'];
-         //    $urls_num = $SEMrush_data['urls_num'];
+            // split names & values
+            list($names,$values) = preg_split("/[\s,][\d]/",$resp);// <= set here your regex according your response 
+            $names = str_replace(' ','_',trim($names)); 
+            $names = explode(';',$names);
+            $values = explode(';',$values);
+            $SEMrush_data = array_combine($names,$values);   
+            $domains_num =  $SEMrush_data['domains_num'];
+            $urls_num = $SEMrush_data['urls_num'];
 
         }catch(Exception $e){
-           // print_r($e);
         }
 
 
@@ -738,7 +755,7 @@ class analysisController extends Controller
                     $pat_error[] = $img->getAttribute('src');
                 }
             }
-            $img_data = arsort(array_combine($location, $image_size));
+            $img_data = array_combine($location, $image_size);
         } catch (Exception $e) {}
        
         //Schema

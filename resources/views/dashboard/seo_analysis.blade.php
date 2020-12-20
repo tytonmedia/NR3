@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'SEO Analysis')
+@section('title', 'SEO Analysis Tool - Ninja Reports')
 @section('content')
 <div class="col-md-10  overview">
         <div id="tool-desc" class="row">
@@ -145,9 +145,10 @@
 
                 $(".btn").click(function(e){
                     e . preventDefault();
-                    
+                    var url =  $("#analyze").val();
+                     if(isUrl(url)) {
                     if(loggedIn){
-                        var url =  $("#analyze").val();
+                        
                         !!url && insertParam('url', url);
                             //analyzeURL();
                     }else{
@@ -162,15 +163,24 @@
                             }
                         });
                     }
-                    //send analytics event
-                      ga('send', 'event', 'analyze', 'click', url);
+                } else {
+                alert('The URL you entered is not valid. Be sure to add https:// or http://');
+                }
+
                 });
 
                 function analyzeURL(){
                     var url =  $("#analyze").val();
                     if(url.length != 0){
                     if(isUrl(url) != false){
-                        
+                         //send analytics event
+                             
+                         gtag('event', 'click', {
+                                      'event_category': 'audit',
+                                      'event_label': 'click',
+                                      'value': url
+                                    });
+                         
                             $(".progress-bar1").css("animation-play-state", "running");
                             $.ajax({
                                 xhr : function() {
@@ -211,10 +221,10 @@
                                 }
                             });
                         }else{
-                            alert("The link doesn't have http:// or https://");
+                            alert("The URL doesn't have http:// or https://");
                         }
                     }else{
-                        alert('add url');
+                        alert('add a url');
                     }
                 }
 
@@ -278,7 +288,7 @@
                             try {
                                 var wastBytes_js = lighthouse.audits['uses-text-compression']['details']['items'][1]['wastedBytes'];
                                 if(wastBytes_js){
-                                    $("#gzip_compression").append("Your page is not being GZIP compressed. This can impact how quickly your page takes to load.");
+                                    $("#gzip_compression").append("Your page is not being GZIP compressed.");
                                     var get_passed = document.getElementById("warning").style.width;
                                     var add_vale = parseFloat(get_passed) + 3.7;
                                     $("#warning").css("width", add_vale + "%");
@@ -303,9 +313,14 @@
                 }
 
                 function isUrl(s) {
-                    var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
-                            return regexp.test(s);
-                    }
+                    var pattern = new RegExp('^https?:\\/\\/'+ // protocol
+                                            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+                                            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                                            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                                            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                                            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+                                          return !!pattern.test(s);
+                                      }
 
                 });
 

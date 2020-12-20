@@ -417,7 +417,7 @@
                     @endif
                 </div>
                 <div class="col-md-9">
-                        Page contains {{$page_words}} words.
+                        Page contains {{ number_format($page_words,0) }} words.
                     </p>
                 </div>
             </div>
@@ -437,7 +437,7 @@
                             <th>Page Size</th>
                             <th>Text Size</th>
                             <th>Text-to-HTML Ratio(%)</th>
-                            <th>recommended Ratio</th>
+                            <th>Recommended Ratio</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -574,7 +574,7 @@
                 </div>
                 <div class="col-md-9">
                     @if(!empty($domains_num))
-                        <p>{{$domains_num}} Referring domains.</p>
+                        <p>{{ $domains_num }} Referring domains.</p>
                     @else
                         <p>N/A</p>
                     @endif
@@ -583,11 +583,11 @@
             <hr>
             <div class="row">
                 <div class="col-md-3">
-                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Referring URLs </h6>
+                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Referring URLs</h6>
                 </div>
                 <div class="col-md-9">
                          @if(!empty($urls_num))
-                        <p>{{$urls_num}} Referring URLs.</p>
+                        <p>{{ $urls_num }} Referring URLs.</p>
                     @else
                         <p>N/A</p>
                     @endif

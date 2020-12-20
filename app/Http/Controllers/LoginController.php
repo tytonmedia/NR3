@@ -59,7 +59,7 @@ class LoginController extends Controller
                     elseif ($redirect != null && $url == null) {
                         return redirect($redirect);
                     }else{
-                        return redirect('/home');
+                        return redirect()->intended('/home');
                     }
                 }
             } else {
@@ -79,7 +79,7 @@ class LoginController extends Controller
                     } elseif ($redirect != null && $url == null) {
                         return redirect($redirect);
                     } else {
-                        return redirect('/home');
+                        return redirect()->intended('/home');
 
                     }
 

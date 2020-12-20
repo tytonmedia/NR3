@@ -8,7 +8,8 @@ use Stripe;
 use App\User;
 use App\Payment;  
 use Auth;
-use DB; 
+use DB;
+
 class DashboardController extends Controller
 {
     public function home(){
@@ -58,7 +59,8 @@ class DashboardController extends Controller
             $product = 'N/A';
             $status = 'N/A';
         }
-;        return view('dashboard/account',compact('product','status','audit_count'));
+
+        return view('dashboard/account',compact('product','status'));
     }
     public function subscription(){
         if(!empty(auth()->user()->id)) {

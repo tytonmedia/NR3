@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'SEO Audit')
+@section('title', 'SEO Audit Tool - Ninja Reports')
 @section('content')
 <div class="col-md-10 overview">
        <div id="tool-desc" class="row">
@@ -103,6 +103,7 @@
             $(".btn").click(function(e){
                     e.preventDefault();
                     var url =  $("#seo_audit").val();
+                    if(isUrl(url)) {
                     if(loggedIn){
                         !!url && insertParam('url', url);
                         //get_audit();
@@ -118,14 +119,24 @@
                             }
                         });
                     }
-                    //send analytics event
-                      ga('send', 'event', 'audit', 'click', url);
+
+                } else {
+                    alert('The URL you entered is not valid. Be sure to add https:// or http://');
+                }
                 });
                 function get_audit(){
                     var url =  $("#seo_audit").val();
                     
                         if(url.length != 0){
                             if(isUrl(url) !== false){
+
+                                        gtag('event', 'click', {
+                                      'event_category': 'audit',
+                                      'event_label': 'click',
+                                      'value': url
+                                    });
+
+
                                 $(".progress-bar1").css("animation-play-state", "running");
                                 $.ajax({
                                     xhr : function() {
@@ -215,9 +226,14 @@
             
            // $(window).scroll(animateElements);
            function isUrl(s) {
-                    var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
-                            return regexp.test(s);
-                    }
+                    var pattern = new RegExp('^https?:\\/\\/'+ // protocol
+                                            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+                                            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                                            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                                            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                                            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+                                          return !!pattern.test(s);
+                                      }
         });
 
 

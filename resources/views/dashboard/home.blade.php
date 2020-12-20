@@ -25,7 +25,7 @@
             <h6><span>Plan: </span><span>{{ $productname ?? '' }}</span></h6>
             <h6><span>Created: </span><span>{{ $created ?? '' }}</span></h6>
             <a href="{{route('subscription')}}" class="btn btn-warning btn-sm">Upgrade</a>
-            <a href="mailto:support@ninjareports.com" class="btn btn-secondary btn-sm">Support</a>
+            <a href="https://ninjareports.zendesk.com/hc/en-us/requests/new" class="btn btn-secondary btn-sm">Support</a>
         </div>
     </div>
 
