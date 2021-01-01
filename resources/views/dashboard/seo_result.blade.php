@@ -243,8 +243,8 @@
                     @else
                     <span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
                     @endif
-                    Alt Tags <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Alt tags tell search engines what your images are about since they can only read text."><i class="fa fa-info-circle" ></i></a></h6>
                 @endif
+                Alt Tags <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Alt tags tell search engines what your images are about since they can only read text."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     @if(empty($all_img_src))
@@ -412,7 +412,7 @@
                         @if($domains_num != 'empty')
                         <p>{{ $domains_num }} domains are pointing to your page.</p>
                          @else
-                        <p>No Backlinks Found</p>
+                        <p>You don't have any backlinks.</p>
                         @endif
                     @endif
 
@@ -427,10 +427,10 @@
                      @if($urls_num == 'payme')
                         <p>Upgrade to view backlink data. <a class="btn btn-sm btn-warning" href="/subscription">FREE TRIAL</a></p>
                     @else
-                        @if(!empty($urls_num))
+                        @if($urls_num != 'empty')
                         <p>{{ $urls_num }} backlinks are pointing to your page.</p>
                          @else
-                        <p>N/A</p>
+                        <p>ou don't have any backlinks.</p>
                         @endif
                     @endif
                 </div>
