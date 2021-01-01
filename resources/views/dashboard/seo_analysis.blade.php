@@ -39,7 +39,7 @@
       <div id="waiting" style="display:none;">
         <div class="loading-box">
             <img src="{{asset('images/806.gif')}}" alt="loading"/>
-            <h4>Crawling...</h4>
+            <h4 id="loading-text">Crawling...</h4>
             <p>Please wait while we crawl your page. This process can take a few minutes.</p>
         </div>
     </div>
@@ -88,7 +88,7 @@
             }
 
             $(document).ready(function($) {
-                $(".progress-bar1").css("animation-play-state", "paused");
+               // $(".progress-bar1").css("animation-play-state", "paused");
                
                 function animateElements() {
                     $('.Progress').each(function() {
@@ -136,7 +136,7 @@
                 
                     if(analyze_url && loggedIn){
                         if(isUrl(analyze_url) != false){
-                            $(".progress-bar1").css("animation-play-state", "running");
+                         //   $(".progress-bar1").css("animation-play-state", "running");
                             analyzeURL();
                         }else{
                             //alert("The link doesn't have http or https");
@@ -182,7 +182,7 @@
                                       'value': url
                                     });
 
-                            $(".progress-bar1").css("animation-play-state", "running");
+                           // $(".progress-bar1").css("animation-play-state", "running");
                             $.ajax({
                                 xhr : function() {
                                     var xhr = new window.XMLHttpRequest();
@@ -195,7 +195,14 @@
                                             $('#waiting').show();
                                             $('#tool-desc').slideUp();
                                              $('#analyse').attr('disabled','disabled');
-                                            $('#progressBar').attr('aria-valuenow', percent).css('width', percent + '%').text(percent + '%');
+                                              count = 0;
+                                              wordsArray = ["Fetching Google Mobile Test...", "Finding Backlinks...", "Analyzing UI...", "Scanning Content...", "Calculating Score..."];
+                                             setInterval(function () {
+                                              count++;
+                                                $("#loading-text").fadeOut(600, function () {
+                                                  $(this).text(wordsArray[count % wordsArray.length]).fadeIn(600);
+                                                     });
+                                             }, 10000);
                                         }
                                     });
                                     return xhr;
@@ -313,8 +320,8 @@
                             //$('.circle').attr('data-percent', score);
                             // animateElements();
                             //$(window).scroll(animateElements);
-                            $('#progressBar').css('width', 100 + '%').text(100 + '%');
-                            $(".progress-bar1").css("animation-play-state", "paused");
+                          //  $('#progressBar').css('width', 100 + '%').text(100 + '%');
+                          //  $(".progress-bar1").css("animation-play-state", "paused");
                             
                         });
                 }

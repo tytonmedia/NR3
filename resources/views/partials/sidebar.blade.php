@@ -24,14 +24,13 @@
 						<div class="">
 							<a class="dropdown-item" href="#header"><i class="fa fa-code" aria-hidden="true"></i> HEADER</a>
 							<a class="dropdown-item" href="#technical"><i class="fa fa-cog" aria-hidden="true"></i> TECHNICAL</a>
+							<a class="dropdown-item" href="#Keywords"><i class="fa fa-bullseye" aria-hidden="true"></i> RANKINGS</a>
+							<a class="dropdown-item" href="#links"><i class="fa fa-link" aria-hidden="true"></i> LINKS</a>
 							<a class="dropdown-item" href="#Content"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> CONTENT</a>
 							<a class="dropdown-item" href="#performance"><i class="fa fa-bar-chart" aria-hidden="true"></i> PERFORMANCE</a>
-							<a class="dropdown-item" href="#links"><i class="fa fa-link" aria-hidden="true"></i> LINKS</a>
 							<a class="dropdown-item" href="#security"><i class="fa fa-shield" aria-hidden="true"></i> SECURITY</a>
-							<a class="dropdown-item" href="#social"><i class="fa fa-facebook-official" aria-hidden="true"></i>
- SOCIAL</a>
-							<a class="dropdown-item" href="#other"><i class="fa fa-asterisk" aria-hidden="true"></i>
- OTHER</a>
+							<a class="dropdown-item" href="#social"><i class="fa fa-facebook-official" aria-hidden="true"></i> SOCIAL</a>
+							<a class="dropdown-item" href="#other"><i class="fa fa-asterisk" aria-hidden="true"></i> OTHER</a>
 						</div>
 					</div>
 				</li>
@@ -102,13 +101,14 @@
 			</div>
 		</div>
 		<!-- Access Model -->
-		<div class="modal" id="upgradeModel">
+
+		<div class="modal" id="upgradeModel" tabindex="-1" role="dialog" aria-labelledby="upgradeModel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 
 					<!-- Modal Header -->
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<button type="button" class="close" data-dismiss="modal" id="close">&times;</button>
 					</div>
 
 					<!-- Modal body -->

@@ -692,27 +692,10 @@ class analysisController extends Controller
             }     
         }catch(Exception $e){}
         
-         //backlink count
+       //backlink count
+        if($Payment->id != NULL) {
+            // if is a paid user, show the backlink counts
         try{
-
-
-
-
-            // $client = new \GuzzleHttp\Client();
-
-            // $client->request('GET', 'https://api.semrush.com/analytics/v1/', [
-            //         'query' => [ 'key' => '247c8d4143eff74adb96fb2f0b3f3d8a',
-            //     'type' => 'backlinks_overview',
-            //     'target_type' => 'url',
-            //     'target' => $url,
-            //     'export_columns' => 'domains_num,urls_num']]);
-
-
-            //         $response = $request->getBody();
-
-            //         var_dump($response);
-
-
 
             $semrush = "https://api.semrush.com/analytics/v1/?key=247c8d4143eff74adb96fb2f0b3f3d8a&type=backlinks_overview&target=".$url."&target_type=url&export_columns=domains_num,urls_num";
 
@@ -728,18 +711,109 @@ class analysisController extends Controller
             $resp = curl_exec($curl);
             curl_close($curl);
 
-            // split names & values
-            list($names,$values) = preg_split("/[\s,][\d]/",$resp);// <= set here your regex according your response 
-            $names = str_replace(' ','_',trim($names)); 
-            $names = explode(';',$names);
-            $values = explode(';',$values);
-            $SEMrush_data = array_combine($names,$values);   
-            $domains_num =  $SEMrush_data['domains_num'];
-            $urls_num = $SEMrush_data['urls_num'];
+            if (strpos($resp,'ERROR ')===0) {
+                //error
+                 $domains_num = 'empty';
+                 $urls_num = 'empty';
+                } else {
+                // no error
+                // split names & values
+                $backlink_counts = preg_split('/\r*\n+|\r+/', $resp);
+                array_pop($backlink_counts);
+                
+                    foreach ($backlink_counts as $key => $value) {
+                        $backlink_counts[$key] = explode(';', $value);
+                    }
+                $domains_num = $backlink_counts[1][0];
+                $urls_num = $backlink_counts[1][1];
 
-        }catch(Exception $e){
-        }
+            }
+           
 
+        } catch(Exception $e){}
+        //if not paid user, show upgrade teasers
+    } else {
+            $domains_num =  'payme';
+            $urls_num = 'payme';
+
+        } // end if
+
+     //backlink data
+        if($Payment->id != NULL) {
+            // if is a paid user, show the backlink data
+        try{
+            $semrush_backlinks = "https://api.semrush.com/analytics/v1/?key=247c8d4143eff74adb96fb2f0b3f3d8a&type=backlinks&target=".$url."&target_type=url&export_columns=source_url,anchor,external_num,internal_num&display_limit=5";
+
+            $curl = curl_init($semrush_backlinks);
+            curl_setopt($curl, CURLOPT_URL, $semrush_backlinks);
+            curl_setopt($curl, CURLOPT_POST, FALSE);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            
+            //for debug only!
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            
+            $resp = curl_exec($curl);
+            curl_close($curl);
+             if (strpos($resp,'ERROR ')===0) {
+                //error
+                $semrush_links = 'empty';
+                } else {
+                // no error
+                $semrush_links = preg_split('/\r*\n+|\r+/', $resp);
+                array_pop($semrush_links);
+                foreach ($semrush_links as $key => $value) {
+
+                    $semrush_links[$key] = explode(';', $value);
+            
+                }
+            } 
+        }catch(Exception $e){}
+
+         } else {
+                $semrush_links = 'payme';
+
+        } // end if
+
+         //top keywords
+        if($Payment->id != NULL) {
+            // if is a paid user, show the organic keywords
+        try{
+            $semrush_keywords = "https://api.semrush.com/?key=247c8d4143eff74adb96fb2f0b3f3d8a&type=url_organic&database=us&url=".$url."&display_limit=10&export_columns=Ph,Po,Nq,Co,Kd,Tg";
+
+            $curl = curl_init($semrush_keywords);
+            curl_setopt($curl, CURLOPT_URL, $semrush_keywords);
+            curl_setopt($curl, CURLOPT_POST, FALSE);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            
+            //for debug only!
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            
+            $resp = curl_exec($curl);
+            curl_close($curl);
+
+             if (strpos($resp,'ERROR ')===0) {
+                //error
+                $keyword_list = 'empty';
+                }
+                 else {
+                // no error
+                $keyword_list = preg_split('/\r*\n+|\r+/', $resp);
+                array_pop($keyword_list);
+                foreach ($keyword_list as $key => $value) {
+
+                    $keyword_list[$key] = explode(';', $value);
+            
+                }
+            } 
+
+        }catch(Exception $e){}
+
+         } else {
+                $keyword_list = 'payme';
+
+        } // end if
 
         //Image Size
         try {
@@ -762,6 +836,10 @@ class analysisController extends Controller
         try {
             $schema = $crawler->filterXpath('//script[@type="application/ld+json"]')->text();
             $schema_org = json_decode($schema, true);
+            $schema_types = array();
+            foreach ($schema_org['@graph'] as $key => $value) {
+                $schema_types[$key] = $value['@type'];
+            } 
 
             if (empty($schema_org['@graph'][0]['@type'])) {
                 $org_schema = $schema_org['@type'];
@@ -1079,152 +1157,153 @@ class analysisController extends Controller
         //Page Score Passed
         try {
             if ($title_length > 50 && $title_length <= 60) {
-                $val1_pass = 3.7;
+                $val1_pass = 1;
             } else {
                 $val1_pass = 0;
             }
             if ($meta_length >= 120 && $meta_length <= 160) {
-                $val2_pass = 3.7;
+                $val2_pass = 1;
             } else {
                 $val2_pass = 0;
             }
             if (!empty($canonical)) {
-                $val3_pass = 3.7;
+                $val3_pass = 1;
             } else {
                 $val3_pass = 0;
             }
             if (!empty($schema_tags)) {
-                $val4_pass = 3.7;
+                $val4_pass = 1;
             } else {
                 $val4_pass = 0;
             }
             if (empty($img_miss_alt)) {
-                $val5_pass = 3.7;
+                $val5_pass = 1;
             } else {
                 $val5_pass = 0;
             }
             if ($url_seo_friendly == "Seo Friendly") {
-                $val6_pass = 3.7;
+                $val6_pass = 1;
             } else {
                 $val6_pass = 0;
             }
             if (!empty($iframe)) {
                 $val7_pass = 0;
             } else {
-                $val7_pass = 3.7;
+                $val7_pass = 1;
             }
             if ($h1_tags > 0) {
-                $val8_pass = 3.7;
+                $val8_pass = 1;
             } else {
                 $val8_pass = 0;
             }
             if ($h2_tags > 0) {
-                $val9_pass = 3.7;
+                $val9_pass = 1;
             } else {
                 $val9_pass = 0;
             }
             if ($h3_tags > 0) {
-                $val10_pass = 3.7;
+                $val10_pass = 1;
             } else {
                 $val10_pass = 0;
             }
             if (!empty($word_count)) {
-                $val11_pass = 3.7;
+                $val11_pass = 1;
             } else {
                 $val11_pass = 0;
             }
             if ($page_words > 300) {
-                $val12_pass = 3.7;
+                $val12_pass = 1;
             } else {
                 $val12_pass = 0;
             }
             if (!empty($cache)) {
-                $val13_pass = 3.7;
+                $val13_pass = 1;
             } else {
                 $val13_pass = 0;
             }
             if (!empty($status404)) {
                 $val14_pass = 0;
             } else {
-                $val14_pass = 3.7;
+                $val14_pass = 1;
             }
             if ($page_https == "Page using HTTPS") {
-                $val15_pass = 3.7;
+                $val15_pass = 1;
             } else {
                 $val15_pass = 0;
             }
             if (!empty($a_https) && !empty($link_https) && !empty($script_https)) {
                 $val16_pass = 0;
             } else {
-                $val16_pass = 3.7;
+                $val16_pass = 1;
             }
             if (!empty($social_media_link)) {
-                $val17_pass = 3.7;
+                $val17_pass = 1;
             } else {
                 $val17_pass = 0;
             }
             if (!empty($social_schema)) {
-                $val18_pass = 3.7;
+                $val18_pass = 1;
             } else {
                 $val18_pass = 0;
             }
             if (!empty($sitemap)) {
-                $val20_pass = 3.7;
+                $val20_pass = 1;
             } else {
                 $val20_pass = 0;
             }
             if ($h1_tags > 0) {
-                $val21_pass = 3.7;
+                $val21_pass = 1;
             } else {
                 $val21_pass = 0;
             }
             if ($h2_tags > 0) {
-                $val22_pass = 3.7;
+                $val22_pass = 1;
             } else {
                 $val22_pass = 0;
             }
             if ($h3_tags > 0) {
-                $val23_pass = 3.7;
+                $val23_pass = 1;
             } else {
                 $val23_pass = 0;
             }
             if (!empty($img_data)) {
-                $val24_pass = 3.7;
+                $val24_pass = 1;
             } else {
                 $val24_pass = 0;
             }
             if (!empty($favicon)) {
-                $val25_pass = 3;
+                $val25_pass = 1;
             } else {
                 $val25_pass = 0;
             }
             if($mobile_friendly === 'MOBILE_FRIENDLY'){
-                $val26_pass = 3;
+                $val26_pass = 1;
             }elseif($mobile_friendly === 'NOT_MOBILE_FRIENDLY'){
                 $val26_pass = 0;
             }else{
                 $val26_pass = 0;
             }
             if(!empty($internal_link)){ 
-                $val27_pass = 3;
+                $val27_pass = 1;
             }else{ 
                 $val27_pass = 0;
             }
             if($page_text_ratio > 10){
-                $val28_pass = 3;
+                $val28_pass = 1;
             }else{
                 $val28_pass = 0;
             }   
-            $text_html_ration = 3.7;
-            $http_rquest = 3.7;
+            $text_html_ration = 1;
+            $http_rquest = 1;
 
-            $passed_score = $val1_pass + $val2_pass + $val3_pass + $val4_pass + $val5_pass + $val6_pass + $val7_pass + $val8_pass + $val9_pass
+            $total_passed_score = $val1_pass + $val2_pass + $val3_pass + $val4_pass + $val5_pass + $val6_pass + $val7_pass + $val8_pass + $val9_pass
                 + $val10_pass + $val11_pass + $val12_pass + $val13_pass + $val14_pass + $val15_pass + $val16_pass + $val17_pass
                 + $val18_pass + $val20_pass + $val21_pass + $val22_pass + $val23_pass + $val24_pass +
                 $text_html_ration + $http_rquest + $val25_pass + $val26_pass + $val27_pass + $val28_pass;
-             $passed_score = round($passed_score);
-            
-            if($passed_score > 80){
+             $passed_score = round(((float)$total_passed_score/27)*100, 0);
+            if($passed_score > 85 ){
+            $score_description = "Your page SEO is great!";
+            } elseif ($passed_score > 70) {
             $score_description = "Your page SEO is good!";
             } elseif ($passed_score > 60) {
             $score_description = "Your page SEO needs work!";
@@ -1235,74 +1314,76 @@ class analysisController extends Controller
     
         //Page Score Warning
         try {
-            if (empty($canonical)) {$val3_warning = 3.7;} else {$val3_warning = 0;}
-            if (!empty($img_miss_alt)) {$val5_warning = 3.7;} else {$val5_warning = 0;}
-            if ($url_seo_friendly == "Seo Friendly") {$val6_warning = 0;} else {$val6_warning = 3.7;}
-            if (empty($word_count)) {$val8_warning = 3.7;} else {$val8_warning = 0;}
-            if ($page_words) {$val9_warning = 0;} else {$val9_warning = 3.7;}
+            if (empty($canonical)) {$val3_warning = 1;} else {$val3_warning = 0;}
+            if (!empty($img_miss_alt)) {$val5_warning = 1;} else {$val5_warning = 0;}
+            if ($url_seo_friendly == "Seo Friendly") {$val6_warning = 0;} else {$val6_warning = 1;}
+            if (empty($word_count)) {$val8_warning = 1;} else {$val8_warning = 0;}
+            if ($page_words) {$val9_warning = 0;} else {$val9_warning = 1;}
             if (!empty($cache)) {
                 $val10_warning = 0;
             } else {
-                $val10_warning = 3.7;
+                $val10_warning = 1;
             }
             if (!empty($robot)) {
                 $val18_warning = 0;
             } else {
-                $val18_warning = 3.7;
+                $val18_warning = 1;
             }
-            if (!empty($sitemap)) {$val19_warning = 0;} else {$val19_warning = 3.7;}
+            if (!empty($sitemap)) {$val19_warning = 0;} else {$val19_warning = 1;}
 
-            if (!empty($favicon)) {$val20_pass = 0;} else {$val20_pass = 3;}
-            if ($page_words > 300) {$val12_pass = 0;} else {$val12_pass = 3.7;}
+            if (!empty($favicon)) {$val20_pass = 0;} else {$val20_pass = 1;}
+            if ($page_words > 300) {$val12_pass = 0;} else {$val12_pass = 1;}
 
-            if(!empty($internal_link)){ $val13_pass = 0;}else{ $val13_pass = 3.7;}
+            if(!empty($internal_link)){ $val13_pass = 0;}else{ $val13_pass = 1;}
 
-            if($page_text_ratio > 10){$val14_pass = 0;}else{$val14_pass = 3.7;}
+            if($page_text_ratio > 10){$val14_pass = 0;}else{$val14_pass = 1;}
 
-            $warning_score = $val3_warning + $val5_warning + $val6_warning
+            $total_warning_score = $val3_warning + $val5_warning + $val6_warning
                 + $val8_warning + $val9_warning + $val10_warning + $val18_warning + $val19_warning+$val20_pass+$val13_pass+$val14_pass;
+            $warning_score = round(($total_warning_score/11)*100);
         } catch (Exception $e) {}
 
         //Page Score Error
         try {
 
             if (!empty($status404)) {
-                $val1_error = 3.7;
+                $val1_error = 1;
             } else {
                 $val1_error = 0;
             }
             if ($page_https == "Page using HTTPS") {
                 $val2_error = 0;
             } else {
-                $val2_error = 3.7;
+                $val2_error = 1;
             }
             if (!empty($a_https) && !empty($link_https)  && !empty($script_https)) {
-                $val3_error = 3.7;
+                $val3_error = 1;
             } else {
                 $val3_error = 0;
             }
             if ($h1_tags > 0) {
                 $val4_error = 0;
             } else {
-                $val4_error = 3.7;
+                $val4_error = 1;
             }
             if ($h2_tags > 0) {
                 $val5_error = 0;
             } else {
-                $val5_error = 3.7;
+                $val5_error = 1;
             }
             if ($h3_tags > 0) {
                 $val6_error = 0;
             } else {
-                $val6_error = 3.7;
+                $val6_error = 1;
             }
-            if ($title_length < 50 || $title_length > 60) {$val7_error = 3.7;} else {$val7_error = 0;}
-            if ($meta_length < 120 || $meta_length > 160) {$val8_error = 3.7;} else {$val8_error = 0;}
-            if (empty($iframe)) {$val9_error = 0;} else {$val9_error = 3.7;}
-            if($mobile_friendly === 'MOBILE_FRIENDLY'){$val10_error = 0;}elseif($mobile_friendly === 'NOT_MOBILE_FRIENDLY'){$val10_error = 3;}
+            if ($title_length < 50 || $title_length > 60) {$val7_error = 1;} else {$val7_error = 0;}
+            if ($meta_length < 120 || $meta_length > 160) {$val8_error = 1;} else {$val8_error = 0;}
+            if (empty($iframe)) {$val9_error = 0;} else {$val9_error = 1;}
+            if($mobile_friendly === 'MOBILE_FRIENDLY'){$val10_error = 0;}elseif($mobile_friendly === 'NOT_MOBILE_FRIENDLY'){$val10_error = 1;}
 
-            $error_score = $val1_error + $val2_error + $val3_error + $val4_error + $val5_error
+            $total_error_score = $val1_error + $val2_error + $val3_error + $val4_error + $val5_error
                             + $val6_error + $val7_error +$val8_error +$val9_error +$val10_error;
+            $error_score = round(($total_error_score/10)*100);
         } catch (Exception $e) {}
        
         //page Notices
@@ -1310,30 +1391,30 @@ class analysisController extends Controller
             if (!empty($img_data)) {
                 $val1_notice = 0;
             } else {
-                $val1_notice = 3.7;
+                $val1_notice = 1;
             }
             if (!empty($schema_tags)) {
                 $val2_notice = 0;
             } else {
-                $val2_notice = 3.7;
+                $val2_notice = 1;
             }
             if (!empty($robot)) {
-                $val3_notice = 3.7;
+                $val3_notice = 1;
             } else {
                 $val3_notice = 0;
             }
             if (!empty($social_media_link)) {
                 $val4_notice = 0;
             } else {
-                $val4_notice = 3.7;
+                $val4_notice = 1;
             }
             if (!empty($social_schema)) {
                 $val5_notice = 0;
             } else {
-                $val5_notice = 3.7;
+                $val5_notice = 1;
             }
             if(empty($all_img_src)){
-                $val6_notice = 3.7;
+                $val6_notice = 1;
             }else{
                 $val6_notice = 0;
             }
@@ -1394,7 +1475,10 @@ class analysisController extends Controller
             'score_description',
             'word',
             'domains_num',
-            'urls_num'));
+            'urls_num',
+            'keyword_list',
+            'schema_types',
+            'semrush_links'));
 
     }
 

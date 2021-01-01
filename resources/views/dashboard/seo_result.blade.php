@@ -1,11 +1,11 @@
     <div class="row audit-text pt-3 pb-3">
-        <div class="col-md-5">
+        <div class="col-md-7 text-left">
             <h5 id="url"><STRONG>SEO Analysis:</STRONG> {{$url}}</h5>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-1">
 
         </div>
-        <div class="col-md-5 text-right">
+        <div class="col-md-4 text-right">
             <h5>{{ $time }}</h5>
         </div>
     </div>
@@ -101,14 +101,15 @@
 
             <div class="row">
                 <div class="col-md-3">
-                @if($title_length > 30 && $title_length <= 60)
-                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Title Tag</h6>
-                @elseif($title_length <= 30)
-                    <h6><span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>Title Tag</h6>
-                @elseif($title_length > 60)
-                    <h6><span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>Title Tag</h6>
-
-                @endif
+                    <h6>
+                        @if($title_length > 30 && $title_length <= 60)
+                            <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
+                             @elseif($title_length <= 30)
+                                 <span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                             @elseif($title_length > 60)
+                                 <span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                        @endif
+                        Title Tag <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="The title tag is the text that Google often uses to display your website link in SERPs (search engine results pages)."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     <p>{{$title}}</p>
@@ -118,12 +119,13 @@
                 <hr>
             <div class="row">
                 <div class="col-md-3">
+                     <h6>
                 @if($meta_length >= 120 && $meta_length <= 160)
-
-                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Meta Description Tag</h6>
+                   <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                 @else
-                    <h6><span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>Meta Description Tag</h6>
+                    <span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                 @endif
+                Meta Description Tag <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="The meta description is the text that Google often uses to display your webpage information in SERPs (search engine results pages)."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     <p>{{$meta}}</p>
@@ -133,11 +135,14 @@
                 <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if(!empty($canonical))
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Canonical Tag</h6>
+                        <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>Canonical Tag</h6>
+                        <span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
                     @endif
+                    Canonical Tag <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="These tags tell search engines what the correct URL of the page should be. "><i class="fa fa-info-circle" ></i></a></h6>
+                    
                 </div>
                 <div class="col-md-9">
                     <p>{{$canonical ?? 'Your canonical tag is missing. Canonical tags are important because they tell search engines what the correct URL of the page should be.'}}</p>
@@ -152,18 +157,20 @@
                     <div class="google-preview">
                     <h5 style="color:#1a0dab;">{{$title}}</h5>
                     <h6 style="font-size:14px;color:green;">{{$url}}</h6>
-                    <p>{{$meta}}</p>
+                    <p>{{ \Illuminate\Support\Str::limit($meta, 160, '...') }}</p>
                 </div>
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if(!empty($favicon))
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Favicon</h6>
+                       <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color: #0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>Favicon</h6>
+                        <span style="margin-right: 9px;color: #0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>
                     @endif
+                    Favicon <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="These tags tell search engines what the correct URL of the page should be. "><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9 favicon">
                     @if(!empty($favicon))
@@ -176,15 +183,17 @@
             <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if($mobile_friendly === 'MOBILE_FRIENDLY')
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Mobile Friendly</h6>
+                        <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @elseif(!empty($mobile_friendly) && $mobile_friendly === 'NOT_MOBILE_FRIENDLY')
-                    <h6><span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>Mobile Friendly</h6>
+                    <h6><span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                     @endif
+                    Mobile Friendly <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="With a mobile responsive website, you will rank better in the mobile index."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     @if($mobile_friendly === 'MOBILE_FRIENDLY')
-                        <p>Your website is Mobile-Friendly.</p>
+                        <p>Your website is mobile-friendly.</p>
                     @elseif($mobile_friendly === 'NOT_MOBILE_FRIENDLY')
                         <p>Your website is not mobile responsive.</p>
                     @endif
@@ -199,15 +208,22 @@
 
             <div class="row">
                 <div class="col-md-3">
-                    @if(!empty($schema))
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Schema Tags</h6>
+                    <h6>
+                        @if(!empty($schema))
+                        <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>Schema Tags</h6>
+                       <span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>
                     @endif
+                    Schema Tags <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Schema tags help crawlers determine certain information about a website, business, product or video."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     @if(!empty($schema))
-                        <p>Schema tags found on your page.</p>
+                        <p>Schema tags found on your page:</p>
+                        <ul style="list-style-type:none">
+                             @foreach($schema_types as $type)
+                             <li><span style="margin-right: 2px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span> {{ $type }}</li>
+                             @endforeach
+                        </ul>
                     @else
                         <p>Your page is missing schema tags.</p>
                     @endif
@@ -218,14 +234,16 @@
                 <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                 @if(empty($all_img_src))
-                    <h6><span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>Alt Tags</h6>
+                    <span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>
                 @else
                     @if(empty($img_miss_alt))
-                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Alt Tags</h6>
+                   <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                    <h6><span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>Alt Tags</h6>
+                    <span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
                     @endif
+                    Alt Tags <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Alt tags tell search engines what your images are about since they can only read text."><i class="fa fa-info-circle" ></i></a></h6>
                 @endif
                 </div>
                 <div class="col-md-9">
@@ -251,24 +269,28 @@
                 <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if($url_seo_friendly == "SEO-Friendly")
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>SEO Friendly URL</h6>
+                    <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @elseif($url_seo_friendly == "Unfriendly SEO URLs")
-                        <h6><span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>SEO Friendly URL</h6>
+                    <span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                     @endif
+                    SEO Friendly URL <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Keywords are not only important in your content but your URLs as well."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
-                    <p>{{$url}}  {{$url_seo_friendly}}</p>
+                    <p>{{$url}}  {{$url_seo_friendly}} URL</p>
                 </div>
             </div>
                 <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                 @if(!empty($iframe))
-                    <h6><span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>Flash/Iframes</h6>
+                <span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                 @else
-                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Flash/Iframes</h6>
+                <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                 @endif
+                Flash/Iframes <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Iframes and flash are not good for SEO. Google can't crawl or read them so its good to keep them off your website."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                @if(!empty($iframe))
@@ -281,17 +303,197 @@
             </div>
         </div>
     </section>
+    <section id='Rankings'>
+        <h2 style="margin-bottom: 30px;margin-top: 30px;">Rankings</h2>
+        <div class="keyword-section">
+           
+          <div class="row">
+                <div class="col-md-3">
+                        <h6>
+                     @if($keyword_list != 'empty')
+                    <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
+                    @else
+                    <span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>
+                    @endif
+                    Organic Keywords <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Organic keywords are the queries that your page ranks for in search engines."><i class="fa fa-info-circle" ></i></a></h6>
 
+                </div>
+                <div class="col-md-9">
+                @if($keyword_list == 'payme')
+                 <div class="upgrade-tease"><a class="btn upgrade-btn btn-warning" href="/subscription">FREE TRIAL</a><img src="{{ asset('../images/keywords.png')}}" style="width:100%" class="responsive" alt="keywords"/></div>
+                @else
+
+                    @if($keyword_list == 'empty')
+                        <p>You aren't ranked for any organic keywords.</p>
+                     @endif
+                     @if($keyword_list != 'empty')
+                     <table class="table image-table">
+                      @foreach($keyword_list as  $key => $val)
+                        @if($key == 0)
+                       <thead class="thead-light">
+                        <tr>
+                          @foreach($val as $heady)
+                             <th>{{ $heady }}</th>
+                             @endforeach
+                        </tr>
+                        </thead>
+                        @endif
+                        @if($key > 0)
+                              <tr>
+                                @foreach($val as $key => $bod)
+                                @if($key == 0)
+                                 <td><a href="https://www.google.com/search?q={{$bod}}" target="_blank">{{ $bod }} <i class="fa fa-external-link" aria-hidden="true"></i></a></td>
+                                 @else
+                                 <td>{{ $bod }}</td>
+                                 @endif
+                               @endforeach
+                                </tr>
+
+                        @endif
+                          @endforeach
+                          </table>
+                    @endif
+                @endif
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id='links'>
+        <h2 style="margin-bottom: 30px;margin-top: 30px;">Links</h2>
+        <div class="links-section">
+            <div class="row">
+                <div class="col-md-3">
+                    <h6>
+                @if(!empty($internal_link))
+                    <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
+                @else
+                    <span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                @endif
+                Internal Linking <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Linking to all of your internal pages helps users and crawlers find all of your pages."><i class="fa fa-info-circle" ></i></a></h6>
+                </div>
+                <div class="col-md-9">
+                    @if(!empty($internal_link))
+                        <p>Internal links were found on your page.</p>
+                    @else
+                        <p>Internal links were not found on your page.</p>
+                    @endif
+                </div>
+            </div>
+            <hr>
+      
+            <div class="row">
+                <div class="col-md-3">
+                    <h6>
+                    @if(!empty($status404))
+                        <span style="margin-right: 9px;color: red;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                    @else
+                        <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
+                    @endif
+                    Broken Links <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Linking to broken or nonexistent pages can hurt your own pages."><i class="fa fa-info-circle" ></i></a></h6>
+                </div>
+                <div class="col-md-9">
+                    @if(!empty($status404))
+                        <p>You have broken links on your page. Those links are sending users to a page that does not exist.</p>
+                    @else
+                        <p>No broken links found.</p>
+                    @endif
+                </div>
+            </div>
+            <hr>
+                  <div class="row">
+                <div class="col-md-3">
+                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Referring Domains <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="The number of domains that are linking to your URL."><i class="fa fa-info-circle" ></i></a></h6>
+
+                </div>
+                <div class="col-md-9">
+                    @if($domains_num == 'payme')
+                        <p>Upgrade to view backlink data. <a class="btn btn-sm btn-warning" href="/subscription">FREE TRIAL</a></p>
+                    @else
+                        @if($domains_num != 'empty')
+                        <p>{{ $domains_num }} domains are pointing to your page.</p>
+                         @else
+                        <p>No Backlinks Found</p>
+                        @endif
+                    @endif
+
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-3">
+                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Total Backlinks <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="The total number of backlinks linking to your URL."><i class="fa fa-info-circle" ></i></a></h6>
+                </div>
+                <div class="col-md-9">
+                     @if($urls_num == 'payme')
+                        <p>Upgrade to view backlink data. <a class="btn btn-sm btn-warning" href="/subscription">FREE TRIAL</a></p>
+                    @else
+                        @if(!empty($urls_num))
+                        <p>{{ $urls_num }} backlinks are pointing to your page.</p>
+                         @else
+                        <p>N/A</p>
+                        @endif
+                    @endif
+                </div>
+            </div>
+            <hr>
+             <div class="row">
+                <div class="col-md-3">
+                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Top 5 Backlinks <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="This shows the top backlinks pointing to your URL. The more quality links pointing to your page, the better it will rank in search engines."><i class="fa fa-info-circle" ></i></a></h6>
+                </div>
+                <div class="col-md-9">
+                   @if($semrush_links == 'payme')    
+                   <div class="upgrade-tease"><a class="btn upgrade-btn btn-warning" href="/subscription">FREE TRIAL</a><img src="{{ asset('../images/backlinks.png')}}" style="width:100%" class="responsive" alt="backlinks"/></div>
+                   @else
+                        @if($semrush_links == 'empty')
+                         <p>You don't have any backlinks.</p>
+                        @else
+                        <table class="table image-table">
+                      @foreach($semrush_links as  $key => $val)
+                    @if($key == 0)
+                       <thead class="thead-light">
+                        <tr>
+                          @foreach($val as $heady)
+                             <th>{{ $heady }}</th>
+                             @endforeach
+                        </tr>
+                        </thead>
+                          @endif
+                           @if($key > 0)
+                              <tr>
+                                @foreach($val as $key => $bod)
+                                @if($key == 0)
+                                 <td><a href="{{ $bod }}" target="_blank">{{ $bod }} <i class="fa fa-external-link" aria-hidden="true"></i></a></td>
+                                 @elseif($key == 4)
+                                 <td> {{ $bod }}</td>
+                                 @else
+                                 <td>{{ $bod }}</td>
+                                 @endif
+                               @endforeach
+                                </tr>
+
+                              @endif
+                                @endforeach
+                            </table>
+                             @endif
+                   @endif
+
+                </div>
+            </div>
+            <hr>
+        </div>
+    </section>
     <section id='Content'>
         <h2 style="margin-bottom: 30px;margin-top: 30px;">Content</h2>
         <div class="Technical-section">
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if($h1_tags > 0)
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>H1 tag</h6>
+                        <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>H1 tags</h6>
+                        <span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                     @endif
+                    H1 tag <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Heading tags are the section titles of your content. They should be structured correctly. The h1 tag should be used once and include the main keyword."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                      {{$h1_tags}} H1 tags were found on your page.
@@ -305,11 +507,13 @@
             <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if($h2_tags > 0)
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>H2 tags</h6>
+                    <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>H2 tags</h6>
+                    <span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                     @endif
+                    H2 tags <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Heading tags are the section titles of your content. They should be structured correctly. h2 tags are sub headings of the h1 tag."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     {{$h2_tags}} H2 tags were found on your page.
@@ -324,11 +528,13 @@
             <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if($h3_tags > 0)
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>H3 tags</h6>
+                    <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>H3 tags</h6>
+                    <span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                     @endif
+                    H3 tags <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Heading tags are the section titles of your content. They should be structured correctly."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     {{$h3_tags}} H3 tags were found on your page.
@@ -342,11 +548,13 @@
             <hr>
             <div class="row">
                 <div class="col-md-3">
+                     <h6>
                     @if(!empty($word_count))
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Keyword Density</h6>
+                       <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>Keyword Density </h6>
+                        <span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
                     @endif
+                    Keyword Density <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="The keywords most used on your pages are likely the keywords you will rank for."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     @if(!empty($word_count))
@@ -366,7 +574,7 @@
                             <tbody>
                                 <?php $i = 1;?>
                                     @foreach ($word_count as $key => $val)
-                                        @if($i < 11 && strlen($key)>2)
+                                        @if($i < 6 && strlen($key)>2)
                                             <tr>
                                                 <th>{{$key}}</th>
                                                 <td>{{$val}}</td>
@@ -410,11 +618,13 @@
             <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if($page_words < 300)
-                        <h6><span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>Thin Content</h6>
+                    <span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Thin Content</h6>
+                    <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @endif
+                    Thin Content <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Google loves content. The more content that’s on your pages, the more keywords, and traffic."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                         Page contains {{ number_format($page_words,0) }} words.
@@ -424,11 +634,13 @@
             <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                 @if($page_text_ratio > 10)
-                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Text-to-HTML ratio</h6>
+                    <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                 @else
-                    <h6><span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>Text-to-HTML ratio</h6>
+                    <span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
                 @endif
+                Text-to-HTML ratio <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Search engines need text to know what a page is about. You should shoot for a 10% or higher text-to-HTML ratio."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     <table class="table size-table">
@@ -460,7 +672,7 @@
         <div class="Technical-section">
             <div class="row">
                 <div class="col-md-3">
-                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>HTTP Request & Content Breakdown</h6>
+                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>HTTP Request & Content Breakdown <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Having a secure website can help build trust and will help you rank better."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     @foreach($http as $https)
@@ -471,7 +683,7 @@
             <hr>
             <div class="row">
                 <div class="col-md-3">
-                    <h6><span style="margin-right: 9px;color: green;" id="img_color"><i class="fa fa-check" aria-hidden="true" id="img_err"></i></span>JS/CSS Minification</h6>
+                    <h6><span style="margin-right: 9px;color: green;" id="img_color"><i class="fa fa-check" aria-hidden="true" id="img_err"></i></span>JS/CSS Minification <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Minifying your files and code can help speed up your website, which is good for SEO."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     <p id='css_minified'></p>
@@ -481,15 +693,17 @@
             <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if(empty($all_img_src))
-                        <h6><span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>Image Size Analysis </h6>
+                        <span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>
                     @else
                         @if(!empty($img_data))
-                            <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Image Size Analysis </h6>
+                           <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                         @else
-                            <h6><span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>Image Size Analysis </h6>
+                           <span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>
                         @endif
-                    @endif        
+                    @endif   
+                    Image Size Analysis <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Large images take longer to load, making your website slower. Optimize images for load time and size."><i class="fa fa-info-circle" ></i></a></h6>   
                 </div>
                 <div class="col-md-9">
                     @if(empty($all_img_src))
@@ -522,7 +736,7 @@
             <div class="row">
                 <div class="col-md-3">
                     
-                    <h6><span style="margin-right: 9px;color: green;" id="gzip_color"><i class="fa fa-check" aria-hidden="true" id="img_gzip"></i></span>GZIP Compression</h6>
+                    <h6><span style="margin-right: 9px;color: green;" id="gzip_color"><i class="fa fa-check" aria-hidden="true" id="img_gzip"></i></span>GZIP Compression <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="GZIP compression makes your website load faster."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     <p id='gzip_compression'></p>
@@ -531,11 +745,13 @@
              <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if(!empty($cache))
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Browser Caching</h6>
+                       <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>Browser Caching</h6>
+                        <span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
                     @endif
+                    Browser Caching <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Caching can help increase your page speed and retain users longer."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                    @if(!empty($cache))
@@ -547,82 +763,18 @@
             </div>
         </div>
     </section>
-
-    <section id='links'>
-        <h2 style="margin-bottom: 30px;margin-top: 30px;">Links</h2>
-        <div class="Technical-section">
-            <div class="row">
-                <div class="col-md-3">
-                @if(!empty($internal_link))
-                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Internal Linking</h6>
-                @else
-                    <h6><span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>Internal Linking</h6>
-                @endif
-                </div>
-                <div class="col-md-9">
-                    @if(!empty($internal_link))
-                        <p>Internal links were found on your page.</p>
-                    @else
-                        <p>Internal links were not found on your page.</p>
-                    @endif
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-3">
-                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Referring Domains</h6>
-                </div>
-                <div class="col-md-9">
-                    @if(!empty($domains_num))
-                        <p>{{ $domains_num }} Referring domains.</p>
-                    @else
-                        <p>N/A</p>
-                    @endif
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-3">
-                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Referring URLs</h6>
-                </div>
-                <div class="col-md-9">
-                         @if(!empty($urls_num))
-                        <p>{{ $urls_num }} Referring URLs.</p>
-                    @else
-                        <p>N/A</p>
-                    @endif
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-3">
-                    @if(!empty($status404))
-                        <h6><span style="margin-right: 9px;color: red;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>Broken Links</h6>
-                    @else
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Broken Links</h6>
-                    @endif
-                </div>
-                <div class="col-md-9">
-                    @if(!empty($status404))
-                        <p>You have broken links on your page. Those links are sending users to a page that does not exist.</p>
-                    @else
-                        <p>No broken links found.</p>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </section>
-
      <section id='security'>
         <h2 style="margin-bottom: 30px;margin-top: 30px;">Security</h2>
         <div class="Technical-section">
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if($page_https == "Page using HTTPS")
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>HTTPS</h6>
+                        <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color: red;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>HTTPS</h6>
+                        <span style="margin-right: 9px;color: red;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                     @endif
+                    HTTPS <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Having a secure website can help build trust and will help you rank better."><i class="fa fa-info-circle" ></i></a></h6> 
                 </div>
                 <div class="col-md-9">
                    @if(!empty($page_https))
@@ -634,11 +786,13 @@
              <hr>
                  <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if(!empty($ssl_certificate))
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>SSL Certificate</h6>
+                    <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color: red;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>SSL Certificate</h6>
+                    <span style="margin-right: 9px;color: red;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                     @endif
+                    SSL Certificate <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Having a secure website can help build trust and will help you rank better."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                   @if(!empty($ssl_certificate))
@@ -652,11 +806,13 @@
             <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if(!empty($a_https) && !empty($link_https) && !empty($script_https))
-                        <h6><span style="margin-right: 9px;color: red;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>Mixed Content Issues</h6>
+                    <span style="margin-right: 9px;color: red;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Mixed Content Issues</h6>
+                    <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @endif
+                     Mixed Content Issues <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Linking to non-https files can create a mixed content error on your SSL connection, making your website insecure."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     @if(!empty($a_https) && !empty($link_https)  && !empty($script_https))
@@ -674,11 +830,13 @@
         <div class="Technical-section">
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if(!empty($social_media_link))
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Links to Social Media Pages</h6>
+                    <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>Links to Social Media Pages</h6>
+                    <span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>
                     @endif
+                    Links to Social Media Pages <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Linking to social media and including URLs to schema.org social media profiles can help search engines find your business."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     <p>{{$social_media_link ?? 'Link to social media profiles not found.'}}</p>
@@ -687,11 +845,13 @@
             <hr>
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if(!empty($social_schema))
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Social Schema Tags</h6>
+                    <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                    <h6><span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>Social Schema Tags</h6>
+                    <span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>
                     @endif
+                    Social Schema Tags <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Linking to social media and including URLs to schema.org social media profiles can help search engines find your business."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     @if(!empty($social_schema))
@@ -710,11 +870,13 @@
         <div class="Technical-section">
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if(!empty($robot) && $robot[0] !== '<!doctype')
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Robots.txt</h6>
+                        <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>Robots.txt</h6>
+                       <span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>
                     @endif
+                    Robots.txt <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="This file tells crawlers what they can and can’t crawl on your website."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     @if(!empty($robot) && $robot[0] !== '<!doctype')
@@ -732,11 +894,13 @@
             <div class="sectionmap"> 
             <div class="row">
                 <div class="col-md-3">
+                    <h6>
                     @if(!empty($sitemap))
-                        <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>XML Sitemap</h6>
+                        <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                        <h6><span style="margin-right: 9px;color: #ff6600;"><i class="fa fa fa-exclamation-circle" aria-hidden="true"></i></span>XML Sitemap</h6>
+                        <span style="margin-right: 9px;color: #ff6600;"><i class="fa fa fa-exclamation-circle" aria-hidden="true"></i></span>
                     @endif
+                    XML Sitemap <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Having an XML sitemap can help search engines find your pages better."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     @if(!empty($sitemap))

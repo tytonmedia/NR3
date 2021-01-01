@@ -227,7 +227,7 @@
 }
 
 .heading-section,
-.Technical-section {
+.Technical-section,.links-section,.keyword-section {
     border: 1px solid #eee;
     padding: 20px;
 }
