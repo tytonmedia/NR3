@@ -693,7 +693,7 @@ class analysisController extends Controller
         }catch(Exception $e){}
         
        //backlink count
-        if($Payment->id != NULL) {
+        if($Payment != NULL) {
             // if is a paid user, show the backlink counts
         try{
 
@@ -739,7 +739,7 @@ class analysisController extends Controller
         } // end if
 
      //backlink data
-        if($Payment->id != NULL) {
+        if($Payment != NULL) {
             // if is a paid user, show the backlink data
         try{
             $semrush_backlinks = "https://api.semrush.com/analytics/v1/?key=247c8d4143eff74adb96fb2f0b3f3d8a&type=backlinks&target=".$url."&target_type=url&export_columns=source_url,anchor,external_num,internal_num&display_limit=5";
@@ -776,7 +776,7 @@ class analysisController extends Controller
         } // end if
 
          //top keywords
-        if($Payment->id != NULL) {
+        if($Payment != NULL) {
             // if is a paid user, show the organic keywords
         try{
             $semrush_keywords = "https://api.semrush.com/?key=247c8d4143eff74adb96fb2f0b3f3d8a&type=url_organic&database=us&url=".$url."&display_limit=10&export_columns=Ph,Po,Nq,Co,Kd,Tg";
