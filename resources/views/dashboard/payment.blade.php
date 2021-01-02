@@ -115,13 +115,13 @@
 	</br>
 		<label>After-Trial Price</label>:
 				@if($id == '1')
-					<strong>$29/month</strong>
+					<strong>$19/month</strong>
 				@endif
 				@if($id == '2')
-					<strong>$49/month</strong>
+					<strong>$29/month</strong>
 				@endif
 				@if($id == '3')
-					<strong>$99/month</strong>
+					<strong>$59/month</strong>
 				@endif
 		</br>
 		<label>First Billing Date</label>: <strong>{{$trial_end}}</strong>
@@ -146,13 +146,13 @@
 	<div style="border-top:1px solid #ddd;padding:5px;background:#eee">
 		<label style="font-size:18px;margin:0">Today's Charge</label>:
 			@if($id == '1')
-					<strong style="font-size:18px;color:green">$29</strong>
+					<strong style="font-size:18px;color:green">$19</strong>
 				@endif
 				@if($id == '2')
-					<strong style="font-size:18px;color:green">$49</strong>
+					<strong style="font-size:18px;color:green">$29</strong>
 				@endif
 				@if($id == '3')
-					<strong style="font-size:18px;color:green">$99</strong>
+					<strong style="font-size:18px;color:green">$59</strong>
 				@endif
 	</div>
 

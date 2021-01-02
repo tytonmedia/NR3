@@ -14,7 +14,7 @@
                 <div class="col-md-4 text-center Webmaster-col">
                     <h3>Webmaster</h3>
                     <p>Affordable Package for webmasters or small businesses wanting to enhance their SEO.</p>               
-                    <h5><strong>$29</strong></h5>
+                    <h5><strong>$19</strong></h5>
                     <h6>per month</h6>
                          @if($status == 1 && $product->id == 'prod_IQ583lkkZ3Ctwr')
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-lg" style="pointer-events: none;">CURRENT PLAN</a></h4>
@@ -30,7 +30,7 @@
                     <h6 style="color: white;background-color: #ff6600;position: relative;top:-27px;padding:3px;">MOST POPULAR</h6>
                     <h3>Business</h3>
                     <p>Our most popular package, perfect for businesses with multiple sites or clients looking to grow their traffic.</p>
-                    <h5><strong>$49</strong></h5>
+                    <h5><strong>$29</strong></h5>
                     <h6>per month</h6>
                         @if($status == 1 && $product->id == 'prod_IQ59BGbdGnCcmw')
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-lg" style="pointer-events: none;">CURRENT PLAN</a></h4>
@@ -47,7 +47,7 @@
                     <h3>Agency</h3>
                     <p>For agencies looking to grow their client’s traffic and keep on-page SEO health 100%.
 </p>
-                    <h5><strong>$99</strong></h5>
+                    <h5><strong>$59</strong></h5>
                     <h6>per month</h6>
                     @if($status == 1 && $product->id == 'prod_IQ5AeQ7uec9djJ')
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-lg" style="pointer-events: none;">CURRENT PLAN</a></h4>
@@ -122,9 +122,9 @@
 <tr>
     <tr>
 <td>Price</td>
+<td>$19/month</td>
 <td>$29/month</td>
-<td>$49/month</td>
-<td>$99/month</td>
+<td>$59/month</td>
 </tr>
 <tr>
 <td></td>
