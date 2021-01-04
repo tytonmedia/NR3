@@ -24,7 +24,7 @@
 						<div class="">
 							<a class="dropdown-item" href="#header"><i class="fa fa-code" aria-hidden="true"></i> HEADER</a>
 							<a class="dropdown-item" href="#technical"><i class="fa fa-cog" aria-hidden="true"></i> TECHNICAL</a>
-							<a class="dropdown-item" href="#Keywords"><i class="fa fa-bullseye" aria-hidden="true"></i> RANKINGS</a>
+							<a class="dropdown-item" href="#rankings"><i class="fa fa-bullseye" aria-hidden="true"></i> RANKINGS</a>
 							<a class="dropdown-item" href="#links"><i class="fa fa-link" aria-hidden="true"></i> LINKS</a>
 							<a class="dropdown-item" href="#Content"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> CONTENT</a>
 							<a class="dropdown-item" href="#performance"><i class="fa fa-bar-chart" aria-hidden="true"></i> PERFORMANCE</a>

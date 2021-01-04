@@ -1300,11 +1300,11 @@ class analysisController extends Controller
                 + $val10_pass + $val11_pass + $val12_pass + $val13_pass + $val14_pass + $val15_pass + $val16_pass + $val17_pass
                 + $val18_pass + $val20_pass + $val21_pass + $val22_pass + $val23_pass + $val24_pass +
                 $text_html_ration + $http_rquest + $val25_pass + $val26_pass + $val27_pass + $val28_pass;
-             $passed_score = round(((float)$total_passed_score/27)*100, 0);
+             $passed_score = round(((float)$total_passed_score/30)*100, 0);
             if($passed_score > 85 ){
-            $score_description = "Your page SEO is great!";
-            } elseif ($passed_score > 70) {
             $score_description = "Your page SEO is good!";
+            } elseif ($passed_score > 70) {
+            $score_description = "Your page SEO could be better!";
             } elseif ($passed_score > 60) {
             $score_description = "Your page SEO needs work!";
             } else {

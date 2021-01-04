@@ -89,7 +89,7 @@
                             <a class="btn btn-success" href="#">DOWNLOAD</a>
                         </div>
                 </div>
-                <p class="overview-desc" style="display:none">On this scan, {{ $passed_score ?? ''}} factors passed with {{$error_score ?? ''}} errors, {{$warning_score ?? ''}} warnings and {{$notice_score ?? ''}} notices. Errors are the most important to fix in order to rank higher in search engines.</p>
+                <p class="overview-desc" style="margin-top:15px;">On this scan, {{ $passed_score ?? ''}} factors passed with {{$error_score ?? ''}} errors, {{$warning_score ?? ''}} warnings and {{$notice_score ?? ''}} notices. Errors are the most important to fix in order to rank higher in search engines.</p>
             </div>
       
         </div>
@@ -104,9 +104,7 @@
                     <h6>
                         @if($title_length > 30 && $title_length <= 60)
                             <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
-                             @elseif($title_length <= 30)
-                                 <span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
-                             @elseif($title_length > 60)
+                             @elseif($title_length <= 30 || $title_length > 60)
                                  <span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                         @endif
                         Title Tag <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="The title tag is the text that Google often uses to display your website link in SERPs (search engine results pages)."><i class="fa fa-info-circle" ></i></a></h6>
@@ -117,6 +115,7 @@
                 </div>
             </div>
                 <hr>
+
             <div class="row">
                 <div class="col-md-3">
                      <h6>
@@ -303,7 +302,7 @@
             </div>
         </div>
     </section>
-    <section id='Rankings'>
+    <section id='rankings'>
         <h2 style="margin-bottom: 30px;margin-top: 30px;">Rankings</h2>
         <div class="keyword-section">
            

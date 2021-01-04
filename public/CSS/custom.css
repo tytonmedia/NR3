@@ -28,8 +28,10 @@ body .btn-warning {background:#f60;color:#fff;border-color:#f60;}
 body .btn-warning:hover {background:#d45602;color:#fff;}
 .table .thead-light th {    color: #fff;
     background-color: #3f3f3f;
-    padding: .5rem;}
-    .table td {padding:.4rem;border-top: 1px solid #ccc;}
+    padding: 4px;}
+    .table td { padding: 5px;
+    font-size: 15px;
+    border-top: 1px solid #ccc;}
 .table a i.fa {    font-size: 14px !important;}
 .export-tools {margin-top:30px;}
 .export-tools a {display:block;background:#0E6EEA;border-color:#0E6EEA;}
