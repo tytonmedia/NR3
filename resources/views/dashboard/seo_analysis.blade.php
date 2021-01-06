@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('title', 'SEO Analysis Tool - Ninja Reports')
 @section('content')
-<div class="col-md-10  overview">
+<div class="col-md-10 overview analysis-container">
         <div id="tool-desc" class="row">
-
+        
         <div class="col-md-12">
         <h3>SEO Analysis</h3>
         <p>Enter your URL into the toolbar including https:// or http:// and Ninja Reports will scan the page for over 55+ SEO factors. Analyze your URL to see how you can get better rankings in search engines.</p>
@@ -154,9 +154,9 @@
                             //analyzeURL();
                     }else{
                         var j$ = jQuery.noConflict();
+                        var analyze_url = $("#analyze").val();
                         j$("#loginModal").modal("show");
                         $("#login_btn").click(function(e){
-                            var analyze_url = $("#analyze").val();
                             if(analyze_url){
                                 window.location ="/login?page="+document.location.href+"&url="+analyze_url;
                             }else{
@@ -261,6 +261,7 @@
                             console.log(score);
                             var unminified_css = lighthouse.audits['unminified-css']['numericValue'];
                             var unminified_js = lighthouse.audits['unminified-javascript']['numericValue'];
+                            image
                             try {
                                 var wastBytes_css = lighthouse.audits['unminified-css']['details']['items'][1]['wastedBytes'];
                                 if(wastBytes_css){

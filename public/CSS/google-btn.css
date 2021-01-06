@@ -48,3 +48,84 @@
 .google-btn:active {
     background: #1669f2;
 }
+
+
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+/* Styles */
+.google-btn {
+    position: absolute;
+    width: 160px;
+    height: 36px;
+    background-color: #4285f4;
+    border-radius: 2px;
+    box-shadow: 0 3px 4px 0 rgb(0 0 0 / 25%);
+    right: 0;
+    margin-right: 10px;
+    margin-top: -3px;
+
+}
+
+.google-btn .google-icon-wrapper {
+    position: absolute;
+    margin-top: 3px;
+    margin-left: 3px;
+    width: 36px;
+    height: 30px;
+    border-radius: 2px;
+    background-color: #fff;
+}
+
+.google-btn .google-icon {
+    position: absolute;
+    margin-top: 6px;
+    margin-left: 9px;
+    width: 18px;
+    height: 18px;
+
+}
+
+.google-btn .btn-text {
+float: right;
+    margin: 8px 7px 0 0;
+    color: #fff;
+    font-size: 12px;
+    letter-spacing: 0.2px;
+    font-family: "Roboto";
+}
+
+.google-btn:hover {
+    box-shadow: 0 0 6px #4285f4;
+}
+
+.google-btn:active {
+    background: #1669f2;
+}
+
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen and (min-width : 321px) {
+/* Styles */
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width : 320px) {
+/* Styles */
+}
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+/* Styles */
+}
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+/* Styles */
+}
+
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+/* Styles */
+}

@@ -111,7 +111,7 @@
                 </div>
                 <div class="col-md-9">
                     <p>{{$title}}</p>
-                    <p>Length: {{$title_length}} Characters (Recommended: 60 characters)</p>
+                    <p>Length: <strong>{{$title_length}} Characters</strong> (Recommended: 60 characters)</p>
                 </div>
             </div>
                 <hr>
@@ -128,7 +128,7 @@
                 </div>
                 <div class="col-md-9">
                     <p>{{$meta}}</p>
-                    <p>Length: {{$meta_length}} Characters (Recommended: 120-160 characters)</p>
+                    <p>Length: <strong>{{$meta_length}} Characters</strong> (Recommended: 120-160 characters)</p>
                 </div>
             </div>
                 <hr>
@@ -409,7 +409,7 @@
                         <p>Upgrade to view backlink data. <a class="btn btn-sm btn-warning" href="/subscription">FREE TRIAL</a></p>
                     @else
                         @if($domains_num != 'empty')
-                        <p>{{ $domains_num }} domains are pointing to your page.</p>
+                        <p>{{ number_format($domains_num) }} domains are pointing to your page.</p>
                          @else
                         <p>You don't have any backlinks.</p>
                         @endif
@@ -427,7 +427,7 @@
                         <p>Upgrade to view backlink data. <a class="btn btn-sm btn-warning" href="/subscription">FREE TRIAL</a></p>
                     @else
                         @if($urls_num != 'empty')
-                        <p>{{ $urls_num }} backlinks are pointing to your page.</p>
+                        <p>{{ number_format($urls_num) }} backlinks are pointing to your page.</p>
                          @else
                         <p>ou don't have any backlinks.</p>
                         @endif
@@ -671,7 +671,7 @@
         <div class="Technical-section">
             <div class="row">
                 <div class="col-md-3">
-                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>HTTP Request & Content Breakdown <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Having a secure website can help build trust and will help you rank better."><i class="fa fa-info-circle" ></i></a></h6>
+                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>HTTP Request <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Having a secure website can help build trust and will help you rank better."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     @foreach($http as $https)
@@ -835,7 +835,7 @@
                     @else
                     <span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>
                     @endif
-                    Links to Social Media Pages <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Linking to social media and including URLs to schema.org social media profiles can help search engines find your business."><i class="fa fa-info-circle" ></i></a></h6>
+                    Links to Social Media <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Linking to social media and including URLs to schema.org social media profiles can help search engines find your business."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                     <p>{{$social_media_link ?? 'Link to social media profiles not found.'}}</p>

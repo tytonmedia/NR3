@@ -84,7 +84,7 @@
 			
 				<div class="modal-body">
 					<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-					<p>Please sign in with Google in order to run an SEO analysis.</p>
+					<p>You must be logged in to use Ninja Reports. Sign in using your Google account to test your website for 100+ SEO factors.</p>
 					<div class="google-btn">
 						<div class="google-icon-wrapper">
 							<img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>

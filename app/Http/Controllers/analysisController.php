@@ -1480,6 +1480,8 @@ class analysisController extends Controller
             'schema_types',
             'semrush_links'));
 
+         
+
     }
 
     public function stripUrlPath($url){

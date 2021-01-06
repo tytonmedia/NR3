@@ -39,6 +39,7 @@ class LoginController extends Controller
         
         try {
             $redirect = Session::get('page_url');
+
             $url = Session::get('url');
            
             $user = Socialite::driver('google')->user();
@@ -58,7 +59,7 @@ class LoginController extends Controller
                     }
                     elseif ($redirect != null && $url == null) {
                         return redirect($redirect);
-                    }else{
+                    } else {
                         return redirect()->intended('/home');
                     }
                 }

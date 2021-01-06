@@ -7,7 +7,7 @@
 
 .modal-header {
     border-bottom: none;
-    padding: 0px 10px;
+    padding: 10px;
 }
 
 .modal-body {
@@ -18,7 +18,7 @@
 .modal-body ul {
     padding-left: 0px !important;
 }
-
+.modal-body p {margin-bottom:15px;}
 .modal-footer {
     border-top: none;
     margin: auto;
@@ -69,10 +69,6 @@
     background-color: red;
 }
 
-.overview {
-    padding: 30px !important;
-    margin-top: 50px !important;
-}
 
 .Welcome-two-cols .Quick-col,
 .Welcome-two-cols .plan-col {

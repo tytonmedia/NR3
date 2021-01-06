@@ -1,5 +1,5 @@
 	<div class="row top-bar">
-		<div class="col-md-6 text-left">
+		<div class="col-md-6 text-left logo-container">
 			<span class="logo"><a href="https://www.ninjareports.com"><img src="{{asset('images/ninja reports white.png')}}" alt="logo"></a></span>
 			<!-- <span><img src="{{asset('images/logo1.png')}}" alt=""></span>	<h5>NINJA REPORTS</h5> -->
 		</div>

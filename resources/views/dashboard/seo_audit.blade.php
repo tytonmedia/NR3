@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('title', 'SEO Audit Tool - Ninja Reports')
 @section('content')
-<div class="col-md-10 overview">
+<div class="col-md-10 overview audit-container">
        <div id="tool-desc" class="row">
 
         <div class="col-md-12">
@@ -39,7 +39,7 @@
         </div>
     </div>
      <div id="error-box" style="display:none"><h4>Whoops!</h4><p>There was an error trying to run your website audit. Please check your URL and try again!</p></div>
-    <div id="text-container" class="audit-container"></div>
+    <div id="text-container" ></div>
      <!------------------------------------------Animation Script ProgressBarStart----------------------------------------------------->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
