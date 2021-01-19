@@ -11,7 +11,8 @@ class Keyword extends Model
         'payment_id',
         'site_url',
         'keyword', 
-        'position', 
+        'position',
+        'kd', 
         'volume', 
         'cpc',
         'competition',
@@ -19,7 +20,6 @@ class Keyword extends Model
         'traffic_cost',
         'results',
         'trends',
-        'kd',
         'features',
     ];
 
