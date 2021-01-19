@@ -21,6 +21,16 @@ class rankingsController extends Controller
     public function get_rankings_results(Request $request)
     {
         $url = $request->input('url');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, TRUE);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $a = curl_exec($ch);
+        if(preg_match('#Location: (.*)#', $a, $r)) {
+        $url = trim($r[1]);
+
+        }
         $time = date('F d Y, h:i:s A');
 
 		        try{
@@ -46,16 +56,7 @@ class rankingsController extends Controller
       public function get_rankings($url,$Payment,$time){
 
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HEADER, TRUE);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        $a = curl_exec($ch);
-        if(preg_match('#Location: (.*)#', $a, $r)) {
-        $url = trim($r[1]);
-
-        }
+        
         $parse = parse_url($url);
         $domain_name = $parse['host']; // prints 'google.com'
 
@@ -106,7 +107,7 @@ class rankingsController extends Controller
                    // save keywords to database
                     foreach ($competitor_array as $key => $value) {
                         $check_competitor = Competitor::where('domain', $value[0])->where('site_url', $url)->first();
-                                if(empty($check_url)){
+                                if(empty($check_competitor)){
                                 $comp = new Competitor;
                                 $comp->user_id = auth()->user()->id;
                                 $comp->payment_id = $Payment->id ?? 0;
@@ -244,7 +245,6 @@ class rankingsController extends Controller
                                   $features_array[$key] = explode(",", $value);
                                 }
 
-                               dd($keyword_array);
  
         }
            
