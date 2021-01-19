@@ -88,8 +88,15 @@ class rankingsController extends Controller
             if (strpos($resp,'ERROR ')===0) {
                     //error
                // dd('error: '.$resp);
-                return view("dashboard/no_results", compact('resp'));
-  
+                return view("dashboard/no_results", compact('response'));
+              if (strpos($resp,'ERROR 50')===0) {
+                $response = 'Sorry, there are no results for that URL. Please try another URL';
+                return view("dashboard/no_results", compact('response'));
+                } else {
+                $response = $resp;
+                return view("dashboard/no_results", compact('response'));
+
+                }
   
                 } else {
                 // no error
