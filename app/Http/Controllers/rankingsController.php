@@ -317,7 +317,7 @@ class rankingsController extends Controller
                   } else{
                     $serp_array = 'empty';
                   }
-
+                    print_r($serp_array);
                      $count1 = $count2 = $count3 = $count4 = 0;
                        for ($i = 0; $i < sizeof($positions); $i++) {
                            if($positions[$i] >= 1 && $positions[$i] <= 10 ) {

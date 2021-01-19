@@ -157,7 +157,7 @@ $(this).siblings(".competitor-details").hide();
     <div class="col-md-2">
          <h5>Serp Features</h5>
          <ul style="list-style-type:none;margin-left:5px;padding-left:5px;">
-            @if(count($serp_array) > 0)
+
             @foreach($serp_array as $key => $value)
             <li><i style="margin-right:5px;" class="{{ rankingsController::get_serp_feature_icon($key) }}"></i> {{ rankingsController::get_serp_feature($key) }}: {{$value}}</li>
 
@@ -166,7 +166,6 @@ $(this).siblings(".competitor-details").hide();
             $serpdatas[] = $value;
             @endphp
          @endforeach
-         @endif
      </ul>
     </div>
 <div class="col-md-2">
