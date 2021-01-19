@@ -429,7 +429,7 @@
                         @if($urls_num != 'empty')
                         <p>{{ number_format($urls_num) }} backlinks are pointing to your page.</p>
                          @else
-                        <p>ou don't have any backlinks.</p>
+                        <p>You don't have any backlinks.</p>
                         @endif
                     @endif
                 </div>

@@ -22,8 +22,15 @@ class backlinkController extends Controller
     public function get_backlink_results(Request $request)
     {
         $url = $request->input('url');
-        $parse_domain = parse_url($url);
-		$domain = $parse_domain['host'];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, TRUE);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $a = curl_exec($ch);
+        if(preg_match('#Location: (.*)#', $a, $r)) {
+        $url = trim($r[1]);
+        }
         $time = date('F d Y, h:i:s A');
 
 		        try{
@@ -48,27 +55,11 @@ class backlinkController extends Controller
 
       public function get_backlinks($url,$Payment,$time){
  
-
-        $parse_domain = parse_url($url);
-         stream_context_set_default(array(
-        'http' => array(
-            'method' => 'HEAD'
-        )
-    		));
-    		$headers = get_headers($url, 1);
-    			if ($headers !== false && isset($headers['Location'])) {
-       				 $url = $headers['Location'];
-    			}
-    			$url = $url;
-
-		$domain = $parse_domain['host'];
-        $time = date('F d Y, h:i:s A');
-
-        
+        $parse = parse_url($url);
+        $domain_name = $parse['host']; // prints 'google.com'
 
         //if URL is already in backlinks_results table, show data instead of using API.
-
-        $has_backlink_data = Backlink::where('target_url',$url)->where('created_at', '>=', Carbon::now()->subDays(14)->toDateTimeString())->first();
+        $has_backlink_data = Backlink::where('target_url',$url)->where('created_at', '>=', Carbon::now()->subDays(30)->toDateTimeString())->first();
 
         if(empty($has_backlink_data)) {
         	// get SEMRush data and save to database
