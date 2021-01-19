@@ -44,8 +44,9 @@ class rankingsController extends Controller
     }
 
       public function get_rankings($url,$Payment,$time){
- 
-          $ch = curl_init();
+
+
+        $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, TRUE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
@@ -53,8 +54,8 @@ class rankingsController extends Controller
         $a = curl_exec($ch);
         if(preg_match('#Location: (.*)#', $a, $r)) {
         $url = trim($r[1]);
-        }
 
+        }
         $parse = parse_url($url);
         $domain_name = $parse['host']; // prints 'google.com'
 
@@ -232,7 +233,16 @@ class rankingsController extends Controller
                                 $trend_array[] = $value[10];
                                 $features_array[] = $value[9];
 
+
                     }
+
+
+                                foreach ($trend_array as $key => $value) {
+                                  $trend_array[$key] = explode(",", $value);
+                                }
+                                foreach ($features_array as $key => $value) {
+                                  $features_array[$key] = explode(",", $value);
+                                }
  
         }
            
@@ -278,32 +288,31 @@ class rankingsController extends Controller
                                    $keyword_array = $newarray;
 
                        }
-                        $n = count($trend_array);
-                        $tmp = 0;
-                        $t_array = array();
-                          foreach ($trend_array as $key => $value) {
-                            # code...
+                   
+             
+                   $trend_count = count($trend_array);
+                   $t_array = array();
+                   $tempval = 0;
+                        foreach ($trend_array as $key => $value) {
                             foreach ($value as $key2 => $val) {
-                             
-                              if($key == $n-1){
-                                  $t_array[] = ($val*100) / $n;
-                              } else{
-                                    $val += $tmp;
+                              if($trend_count == $key){
+                                      $t_array[$key2] = $val / $trend_count;
+                              } else {
+                                $t_array[$key2] = $val + $tempval;
                               }
-
-                               $tmp = $val;
-
+                               $tempval = $val;
                             }
-                          }
-                        
+
+                        }
+
                     foreach ($features_array as $key => $value) {
                       foreach ($value as $key2 => $val) {
                         # code...
                         $serp_array[] = $val;
                       }
                     }
-                     $serp_array = array_count_values($serp_array);
 
+                    $serp_array = array_count_values($serp_array);
 
                      $count1 = $count2 = $count3 = $count4 = 0;
                        for ($i = 0; $i < sizeof($positions); $i++) {

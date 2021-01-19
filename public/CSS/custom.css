@@ -89,6 +89,7 @@ ul.serp_features {list-style-type: none;
 /* analysis results page */
 .analysis-container {}
 .backlinks-table {}
+.dataTables_wrapper {    top: -30px;}
 .new-icon{position: absolute;
     background: #f60;
     z-index: 999;
