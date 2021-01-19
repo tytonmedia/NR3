@@ -230,8 +230,8 @@ class rankingsController extends Controller
                                 $traffic_volume[] = $value[3] ?? 0;
                                 $traffic_vals[] = $value[7] ?? 0;
                                 $traffic_share[] = $value[6] ?? 0;
-                                $trend_array[] = $value[10];
-                                $features_array[] = $value[9];
+                                $trend_array[] = json_encode(explode(',',$value[10]));
+                                $features_array[] = json_encode(explode(',',$value[9]));
 
 
                     }
@@ -291,7 +291,7 @@ class rankingsController extends Controller
 
                        }
                    
-              dd($keyword_array);
+           //   dd($keyword_array);
 
                    $trend_count = count($trend_array);
                    $t_array = array();
