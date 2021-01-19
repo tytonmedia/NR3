@@ -50,6 +50,7 @@
        </div>
 
 <div class="row sub-cols">
+      <a href="/subscription" class="btn btn-warning btn-lg">FREE TRIAL</a>
     <div class="col-md-4">
     <h5>Keyword Trends (Last 12 Mo.)</h5>
     <script>
@@ -185,7 +186,9 @@
 </div>
        <div class="row" style="margin-top:25px;">
             <div class="col-md-12">
+
                 <h3>Organic Keywords</h3>
+                <a href="/subscription" class="btn btn-warning btn-lg">FREE TRIAL</a>
                             <table class="table backlinks-table">
 
                                 <thead class="thead-light">
