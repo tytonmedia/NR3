@@ -312,6 +312,7 @@ $(this).siblings(".competitor-details").hide();
                                         @elseif($key2 == 9)
                                         <td>
                                             <ul class="serp_features">
+                                              @if(is_array($val))
                                         @foreach($val as $key3 => $v)
                                         <li>
                                             <i class="serp-icon {{ rankingsController::get_serp_feature_icon($v) }}"></i> 
@@ -321,6 +322,7 @@ $(this).siblings(".competitor-details").hide();
                                         </div>
                                         </li> 
                                             @endforeach
+                                            @endif
                                         </ul></td>
                                         @endif
                    
