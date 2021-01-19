@@ -304,7 +304,8 @@ class rankingsController extends Controller
                             }
 
                         }
-
+                          $serp_array = array();
+                          if($features_array){
                     foreach ($features_array as $key => $value) {
                       foreach ($value as $key2 => $val) {
                         # code...
@@ -313,6 +314,9 @@ class rankingsController extends Controller
                     }
 
                     $serp_array = array_count_values($serp_array);
+                  } else{
+                    $serp_array = 'empty';
+                  }
 
                      $count1 = $count2 = $count3 = $count4 = 0;
                        for ($i = 0; $i < sizeof($positions); $i++) {
