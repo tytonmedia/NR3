@@ -20,6 +20,7 @@ class CreateKeywordsTable extends Migration
             $table->string('site_url');
             $table->string('keyword');
             $table->unsignedInteger('position');
+            $table->unsignedInteger('kd');
             $table->unsignedInteger('volume');
             $table->float('cpc');
             $table->float('competition');
@@ -27,6 +28,7 @@ class CreateKeywordsTable extends Migration
             $table->float('traffic_cost');
             $table->unsignedInteger('results');
             $table->json('trend');
+            $table->json('features');
             $table->timestamps();
         });
     }
