@@ -291,7 +291,7 @@ class rankingsController extends Controller
 
                        }
                    
-              dd($features_array);
+              dd($keyword_array);
 
                    $trend_count = count($trend_array);
                    $t_array = array();

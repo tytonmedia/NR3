@@ -11,9 +11,11 @@
         "php": "^7.2",
         "fabpot/goutte": "^4.0",
         "fideloper/proxy": "^4.0",
+        "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^6.2",
         "laravel/socialite": "^4.4",
         "laravel/tinker": "^2.0",
+        "nesk/puphpeteer": "^1.6",
         "spatie/browsershot": "^3.40",
         "stripe/stripe-php": "^7.62"
     },
