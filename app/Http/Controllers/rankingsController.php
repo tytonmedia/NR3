@@ -244,7 +244,7 @@ class rankingsController extends Controller
                                   $features_array[$key] = explode(",", $value);
                                 }
 
-                               
+                               print_r($keyword_array);
  
         }
            
