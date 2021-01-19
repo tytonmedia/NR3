@@ -22,7 +22,7 @@ class CreateBacklinksTable extends Migration
             $table->string('anchor');
             $table->string('page_ascore');
             $table->timestamp('first_seen');
-            $table->timestamp('first_seen');
+            $table->timestamp('last_seen');
             $table->string('external_num');
             $table->string('internal_num');
             $table->string('nofollow');
