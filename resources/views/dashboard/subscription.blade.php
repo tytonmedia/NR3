@@ -62,6 +62,79 @@
             </div>
     </div>
     <div class="container">
+        <div class="row">
+    <a name="detailed"></a>
+<table class="table detailed-pricing">
+<tbody>
+<tr>
+<th></th>
+<th>Webmaster</th>
+<th>Business</th>
+<th>Agency</th>
+</tr>
+<tr>
+<td>URL Analysis Reports</td>
+<td>300</td>
+<td>UNLIMITED</td>
+<td>UNLIMITED</td>
+</tr>
+<tr>
+<td>Site Audit Reports</td>
+<td>25</td>
+<td>100</td>
+<td>250</td>
+</tr>
+<td>Backlink Reports</td>
+<td>5</td>
+<td>50</td>
+<td>100</td>
+</tr>
+<td>Ranking/Keyword Reports</td>
+<td>10</td>
+<td>50</td>
+<td>100</td>
+</tr>
+<tr>
+    <tr>
+<td>Price</td>
+<td>$19/month</td>
+<td>$29/month</td>
+<td>$59/month</td>
+</tr>
+<tr>
+<td></td>
+<td>
+ @if($status == 1 && $product->id == 'prod_IQ583lkkZ3Ctwr')
+                       <h4><a href="javascript:void(0)" class="btn btn-secondary btn-sm" style="pointer-events: none;">CURRENT PLAN</a></h4>
+                         @elseif($status == 1)
+                        <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-sm">UPGRADE</a></h4>
+                         @endif
+                        @if($status == 0)
+                       <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-sm">FREE 7-DAY TRIAL</a></h4>
+                         @endif
+                         </td>
+<td>     @if($status == 1 && $product->id == 'prod_IQ59BGbdGnCcmw')
+                       <h4><a href="javascript:void(0)" class="btn btn-secondary btn-sm" style="pointer-events: none;">CURRENT PLAN</a></h4>
+                         @elseif($status == 1)
+                        <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-sm">UPGRADE</a></h4>
+                         @endif
+                        @if($status == 0)
+                       <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-sm">FREE 7-DAY TRIAL</a></h4>
+                         @endif</td>
+<td> @if($status == 1 && $product->id == 'prod_IQ5AeQ7uec9djJ')
+                       <h4><a href="javascript:void(0)" class="btn btn-secondary btn-sm" style="pointer-events: none;">CURRENT PLAN</a></h4>
+                         @elseif($status == 1)
+                        <h4><a href="{{route('payment',['id' => 3])}}" class="btn btn-primary btn-sm">UPGRADE</a></h4>
+                         @endif
+                        @if($status == 0)
+                       <h4><a href="{{route('payment',['id' => 3])}}" class="btn btn-primary btn-sm">FREE 7-DAY TRIAL</a></h4>
+                         @endif</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+    <div class="container">
           <div class="row Audit-image-text" style="width:100%;padding:25px;margin-top:50px;text-align:center">
 <div class="col-md-12"><h3>SEO software that helps grow your traffic, rankings, and sales online.</h3>
     <p>Ninja Report’s revolutionary SEO tools will allow you to get more organic traffic online and grow your business. Check out our features below to see how we can help you grow.</p>
@@ -96,45 +169,7 @@
             <label>Megan R.</label>
           </div>
     </div>
-<div class="row">
-    <h2 class="text-center">Detailed Pricing & Packages</h2>
-    <a name="detailed"></a>
-<table class="table detailed-pricing">
-<tbody>
-<tr>
-<th></th>
-<th>Webmaster</th>
-<th>Business</th>
-<th>Agency</th>
-</tr>
-<tr>
-<td>URL Analysis Reports</td>
-<td>300</td>
-<td>UNLIMITED</td>
-<td>UNLIMITED</td>
-</tr>
-<tr>
-<td>Site Audit Reports</td>
-<td>25</td>
-<td>100</td>
-<td>250</td>
-</tr>
-<tr>
-    <tr>
-<td>Price</td>
-<td>$19/month</td>
-<td>$29/month</td>
-<td>$59/month</td>
-</tr>
-<tr>
-<td></td>
-<td><a class="btn btn-primary btn-md"  href="{{route('payment',['id' => 1])}}">7-DAY TRIAL</a></td>
-<td><a class="btn btn-primary btn-md"  href="{{route('payment',['id' => 2])}}">7-DAY TRIAL</a></td>
-<td><a class="btn btn-primary btn-md"  href="{{route('payment',['id' => 3])}}">7-DAY TRIAL</a></td>
-</tr>
-</tbody>
-</table>
-</div>
+
     </div>
 </div>
 @endsection

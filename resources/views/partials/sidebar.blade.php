@@ -1,3 +1,11 @@
+
+@php
+if (isset($_GET['url'])) {
+	$url = $_GET['url'];
+} else {
+	$url = '';
+}
+@endphp
 <div class="row">
 	<div class="col-md-2 side-col">
 			<div class="side-bar">
@@ -9,7 +17,12 @@
 					<a style="display:none" class="nav-link" href="#" data-toggle="modal" data-target="#myModal">KEYWORD TRACKING</a></li>
 
 				<li class="nav-item">
+					@if($url != '')
+					<a class="{{(Request::is('audit') || Request::is('audit/')) ? 'active' : ''}} nav-link"  href="{!! route('audit',['url'=>$url]) !!}"><i class="fa fa-refresh" aria-hidden="true"></i> SITE AUDIT</a>
+					@else
 					<a class="{{(Request::is('audit') || Request::is('audit/')) ? 'active' : ''}} nav-link"  href="{{route('audit')}}"><i class="fa fa-refresh" aria-hidden="true"></i> SITE AUDIT</a>
+					@endif
+					
 					<div class="audit-item" style="display:none;">
 						<a class="dropdown-item" href="#overview"><i class="fa fa-bullseye" aria-hidden="true"></i> OVERVIEW</a>
 						<a class="dropdown-item" href="#errors"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ERRORS</a>
@@ -19,7 +32,13 @@
 				</li>
 
 				<li class="nav-item">
-					<a class="{{(Request::is('analysis') || Request::is('analysis/')) ? 'active' : ''}} nav-link" href="{{ route('analysis') }}"><i class="fa fa-search" aria-hidden="true"></i> SEO ANALYSIS</a>
+					@if($url != '')
+					<a class="{{(Request::is('analysis') || Request::is('analysis/')) ? 'active' : ''}} nav-link" href="{!! route('analysis',['url'=>$url]) !!}"><i class="fa fa-search" aria-hidden="true"></i> SEO REPORT</a>
+					@else
+					<a class="{{(Request::is('analysis') || Request::is('analysis/')) ? 'active' : ''}} nav-link" href="{{ route('analysis') }}"><i class="fa fa-search" aria-hidden="true"></i> SEO REPORT</a>
+					@endif
+
+					
 					<div class="analysis_section" style="display:none;">
 						<div class="">
 							<a class="dropdown-item" href="#header"><i class="fa fa-code" aria-hidden="true"></i> HEADER</a>
@@ -34,12 +53,18 @@
 						</div>
 					</div>
 				</li>
+				@if($url != '')
+					<li class="nav-item"><i class="new-icon">NEW</i><a class="{{(Request::is('backlinks') || Request::is('backlinks/')) ? 'active' : ''}} nav-link" href="{!! route('backlinks',['url'=>$url]) !!}"><i class="fa fa-link" aria-hidden="true"></i> BACKLINKS</a></li>
+					@else
+					<li class="nav-item"><i class="new-icon">NEW</i><a class="{{(Request::is('backlinks') || Request::is('backlinks/')) ? 'active' : ''}} nav-link" href="{{ route('backlinks') }}"><i class="fa fa-link" aria-hidden="true"></i> BACKLINKS</a></li>
+					@endif
+						@if($url != '')
+					<li class="nav-item"><i class="new-icon">NEW</i><a class="{{(Request::is('rankings') || Request::is('rankings/')) ? 'active' : ''}} nav-link" href="{!! route('rankings',['url'=>$url]) !!}"><i class="fa fa-bar-chart" aria-hidden="true"></i> RANKINGS</a></li>
+					@else
+					<li class="nav-item"><i class="new-icon">NEW</i><a class="{{(Request::is('rankings') || Request::is('rankings/')) ? 'active' : ''}} nav-link" href="{{ route('rankings') }}"><i class="fa fa-bar-chart" aria-hidden="true"></i> RANKINGS</a></li>
+					@endif
+				
 				<li class="nav-item"><a class="{{(Request::is('subscription') || Request::is('subscription/')) ? 'active' : ''}} nav-link" href="/subscription"><i class="fa fa-tachometer" aria-hidden="true"></i> PRICING</a></li>
-				<li class="nav-item">
-					<a class="nav-link" target="_blank" href="https://ninjareports.zendesk.com/hc/en-us"><i class="fa fa-lightbulb-o" aria-hidden="true"></i> KNOWLEDGE BASE</a></li>
-
-				<li class="nav-item">
-					<a class="nav-link" target="_blank" href="https://ninjareports.zendesk.com/hc/en-us/requests/new"><i class="fa fa-life-ring" aria-hidden="true"></i> SUPPORT</a></li>
 			</ul>
 
 			<div class="footer">
@@ -114,7 +139,7 @@
 					<!-- Modal body -->
 					<div class="modal-body" style="padding:20px;">
 					<h2>Whoops!</h2>
-						<p>Free accounts can only run 1 SEO analysis per 24 hour period. Come back in 24 hours or try our <a style="text-decoration:underline" href="{{route('subscription')}}">free trial</a> to run more SEO analysis!</p>
+						<p>Free accounts can only run 1 SEO analysis per 24 hour period. Come back in 24 hours or try our <a style="text-decoration:underline" href="{{route('subscription')}}">free trial</a> to run more SEO analysis, audits, reports and more!</p>
 						
 					</div>
 
@@ -127,5 +152,31 @@
 			</div>
 		</div>
 
+
+		<div class="modal" id="addprojectmodal" tabindex="-1" role="dialog" aria-labelledby="addprojectmodal" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<h3>Add a Website</h3>
+						<button type="button" class="close" data-dismiss="modal" id="close">&times;</button>
+					</div>
+
+					<!-- Modal body -->
+					<div class="modal-body" style="padding:20px;">
+						<p>Add your website URL below:</p>
+						<input type="text" class="form-control" placeholder="Website URL" name="project_url" id="project_url">
+						<br/>
+					</div>
+
+					<!-- Modal footer -->
+					<div class="modal-footer" style="margin:auto;">
+					<a class="btn-warning btn-md" href="{{route('add_website')}}" id='add_website_btn' style='padding:7px;text-decoration:none;'>ADD PROJECT</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
 
 	</div>

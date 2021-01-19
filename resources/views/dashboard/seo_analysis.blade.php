@@ -88,42 +88,6 @@
             }
 
             $(document).ready(function($) {
-               // $(".progress-bar1").css("animation-play-state", "paused");
-               
-                function animateElements() {
-                    $('.Progress').each(function() {
-                        var elementPos = $(this).offset().top;
-                        var topOfWindow = $(window).scrollTop();
-                        var percent = $(this).find('.circle').attr('data-percent');
-                        
-                        var percentage = parseInt(percent, 10) / parseInt(100, 10);
-                        
-                        var animate = $(this).data('animate');
-                        if (elementPos < topOfWindow + $(window).height() - 30 && !animate) {
-                        $(this).data('animate', true);
-                        $(this).find('.circle').circleProgress({
-                            startAngle: -Math.PI / 2,
-                            value: percent / 100,
-                            thickness: 13,
-                            size: 190,
-                            lineCap: "round",
-                            emptyFill: "#f2f2f2",
-                            fill: {
-                            color: '#1B58B8'
-                            }
-                        }).on('circle-animation-progress', function(event, progress, stepValue){
-                            $(this).find('div').text((stepValue * 100).toFixed(0) + "%");
-                        }).stop();
-                        }
-                    });
-                }
-
-                // Show animated elements
-                
-               //$(window).scroll(animateElements);
-
-               // <!------------------------------------------Animation Script ProgressBar End----------------------------------------------------->
-
 
                 $.ajaxSetup({
                     headers: {
@@ -134,19 +98,28 @@
                 var loggedIn = {{ auth()->check() ? 'true' : 'false' }};
                 var analyze_url =  $("#analyze").val();
                 
+                analyze_url = ((analyze_url.indexOf('://') === -1)) ? 'https://' + analyze_url : analyze_url;
+
                     if(analyze_url && loggedIn){
                         if(isUrl(analyze_url) != false){
                          //   $(".progress-bar1").css("animation-play-state", "running");
                             analyzeURL();
                         }else{
-                            //alert("The link doesn't have http or https");
+                            //no url on load
+                          //  alert("The link doesn't have http or https");
                         }
                     }
                
-
+                $(document).bind('keypress', function(e) {
+            if(e.keyCode==13){
+                 $('#analyse').trigger('click');
+             }
+        });
+                
                 $(".btn").click(function(e){
                     e . preventDefault();
                     var url =  $("#analyze").val();
+
                      if(isUrl(url)) {
                     if(loggedIn){
                         
@@ -223,7 +196,7 @@
                                         $('#progressBar').css('width', 80 + '%').text(80 + '%');
                                         runPagespeed();
                                         $('#analyse').removeAttr('disabled');
-                                        animateElements();
+                                        $('#analyse').val(url);
                                         
                                     }
                                     
@@ -232,6 +205,7 @@
                                 $('#waiting').hide();
                                 $('#analyse').removeAttr('disabled');
                                 $('#error-box').show();
+
                                 }
                             });
                         }else{

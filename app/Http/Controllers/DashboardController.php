@@ -39,7 +39,12 @@ class DashboardController extends Controller
     public function seo_audit(){
         return view('dashboard/seo_audit');
     }
-
+public function seo_backlinks(){
+        return view('dashboard/backlinks');
+    }
+    public function seo_rankings(){
+        return view('dashboard/rankings');
+    }
     public function seo_analysis(){
         return view('dashboard/seo_analysis');
     }

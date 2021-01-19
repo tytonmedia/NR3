@@ -1,49 +1,39 @@
 @extends('layouts.master')
-@section('title', 'SEO Audit Tool - Ninja Reports')
+@section('title', 'Backlink Checker Tool - Ninja Reports')
 @section('content')
-<div class="col-md-10 overview audit-container">
+<div class="col-md-10 overview backlinks-container">
        <div id="tool-desc" class="row">
 
         <div class="col-md-12">
-        <h3>SEO Audit</h3>
-        <p>Enter your domain into the toolbar including https:// or http:// and Ninja Reports will scan your entire website and check over 55+ SEO factors and tell you know how to fix them and rank higher.</p>
+        <h3>Backlinks</h3>
+        <p>Enter your domain into the toolbar including https:// or http:// and Ninja Reports will find all backlinks pointing to your website.</p>
     </div>
 
 </div>
     <div class="row Analyze ">
         <div class="col-md-10">
-            <input type="text" id="seo_audit" class="form-control" value="{{$_GET['url'] ?? ''}}" placeholder="Enter URL">
+            <input type="text" id="backlink_audit" class="form-control" value="{{$_GET['url'] ?? ''}}" placeholder="Enter URL">
         </div>
         <div class="col-md-2">
-            <button class="btn" id="analyse">CRAWL</button>
-        </div>
-    </div>
-    <div class="row progressbar">
-        <div class="col-md-12">
-            <div class="progress">
-                <div class="progress-bar1" style="width: 100%;"></div>
-            </div>
-            <!-- <div class="progress">
-                <div class="progress-bar progress-bar-danger" id="progress" role="progressbar" aria-valuenow="70"
-                aria-valuemin="0" aria-valuemax="100" style="width:0%">
-                Crawling Pages...
-                </div>
-            </div> -->
+            <button class="btn" id="analyse">ANALYZE</button>
         </div>
     </div>
         <div id="waiting" style="display:none;">
         <div class="loading-box">
             <img src="{{asset('images/806.gif')}}" alt="loading"/>
-            <h4>Crawling...</h4>
-            <p>Please wait while we crawl your pages. This process can take a few minutes.</p>
+            <h4>Finding Backlinks...</h4>
+            <p>Please wait while we find the backlinks. This process can take a few minutes.</p>
         </div>
     </div>
-     <div id="error-box" style="display:none"><h4>Whoops!</h4><p>There was an error trying to run your website audit. Please check your URL and try again!</p></div>
+     <div id="error-box" style="display:none"><h4>Whoops!</h4><p>There was an error trying to run your backlink audit. Please check your URL and try again!</p></div>
     <div id="text-container" ></div>
      <!------------------------------------------Animation Script ProgressBarStart----------------------------------------------------->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
     <!-- <script src="scripts/index.js"></script> -->
     <Script>
 
@@ -81,9 +71,6 @@
             }
 
         $(document).ready(function($) {
-           
-
-          
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -91,39 +78,41 @@
             });
 
             var loggedIn = {{ auth()->check() ? 'true' : 'false' }};
-            var analyze_url =  $("#seo_audit").val();
+            var analyze_url =  $("#backlink_audit").val();
+
             analyze_url = ((analyze_url.indexOf('://') === -1)) ? 'https://' + analyze_url : analyze_url;
 
-            if (analyze_url && loggedIn) {
-                if(isUrl(analyze_url) != false){
-                    get_audit();
-                }else{
-                    //alert("The link doesn't have http or https");
-                }    
-            }
-           
-            $(document).bind('keypress', function(e) {
+                if(analyze_url && loggedIn){
+                        if(isUrl(analyze_url) != false){
+                         //   $(".progress-bar1").css("animation-play-state", "running");
+                            get_backlinks();
+                        }else{
+                            //alert("The link doesn't have http or https");
+                        }
+                    }
+           // enter keyd
+        $(document).bind('keypress', function(e) {
             if(e.keyCode==13){
-                 $('#seo_audit').trigger('click');
+                 $('#backlink_audit').trigger('click');
              }
         });
 
             $(".btn").click(function(e){
                     e.preventDefault();
-                    var url =  $("#seo_audit").val();
+                    var url =  $("#backlink_audit").val();
                     url = ((url.indexOf('://') === -1)) ? 'https://' + url : url;
-                    
+
                     if(isUrl(url)) {
                     if(loggedIn){
                         !!url && insertParam('url', url);
-                        //get_audit();
+                        get_backlinks();
                     }else{
                         var j$ = jQuery.noConflict();
                         j$("#loginModal").modal("show");
                         $("#login_btn").click(function(e){
-                            var analyze_url = $("#seo_audit").val();
+                            var analyze_url = $("#backlink_audit").val();
                             if(analyze_url){
-                                window.location ="/login?page="+document.location.href+"&url="+analyze_url;
+                                window.location ="/login?url="+encodeURIComponent(analyze_url)+"&page="+document.location.href;
                             }else{
                                 window.location ="/login?page="+document.location.href;
                             }
@@ -131,40 +120,39 @@
                     }
 
                 } else {
-                    alert('The URL you entered is not valid. Be sure to add https:// or http://');
+                    alert('URL not valid');
                 }
                 });
-                function get_audit(){
-                    var url =  $("#seo_audit").val();
+                function get_backlinks(){
+                    var url =  $("#backlink_audit").val();
                     url = ((url.indexOf('://') === -1)) ? 'https://' + url : url;
+                    
                         if(url.length != 0){
                             if(isUrl(url) !== false){
 
                                         gtag('event', 'click', {
-                                      'event_category': 'audit',
+                                      'event_category': 'backlinks',
                                       'event_label': 'click',
                                       'value': url
                                     });
-
-
 
                                 $.ajax({
                                     xhr : function() {
                                         var xhr = new window.XMLHttpRequest();
                                         xhr.upload.addEventListener('progress', function(e) {
                                             if (e.lengthComputable) {
+                                                var percent = Math.round((e.loaded / e.total) * 100)-60;
                                                 //console.log(percent);
                                                 $('#error-box').hide();
                                                 $('#waiting').show();
                                                 $('#tool-desc').slideUp();
                                                 $('#analyse').attr('disabled','disabled');
-
                                             }
                                         });
                                         return xhr;
                                     },
                                     type:'POST',
-                                    url:'/seo_audit',
+                                    url:'/seo_backlinks',
                                     data:{url:url},
                                     
                                     success:function(data){
@@ -172,12 +160,10 @@
                                             $('#waiting').hide();
                                             $('#myModal').show();
                                         }else{
-                                            $('#progress').css('width', 100 + '%').text(100 + '%'); 
                                             $('div#text-container').append(data);
-                                            $('.audit-item').show();
                                             $('#waiting').hide();
                                             $('#analyse').removeAttr('disabled');
-                                            animateElements();
+                                          
                                         }
                                     }
                                     ,
@@ -195,21 +181,24 @@
                     }
                 }
 
-            // var j$ = jQuery.noConflict();
-            // //console.log(loggedIn);
-            // if (!loggedIn){
-            //     $(".btn").click(function(){
-            //         j$('#loginModal').modal('show');
-            //         $("#login_btn").click(function(e){
-            //             var analyze_url = $("#seo_audit").val();
-            //             if(analyze_url){
-            //                 window.location ="/login?page="+document.location.href+"&url="+analyze_url;
-            //             }else{
-            //                 window.location ="/login?page="+document.location.href;
-            //             }
-            //         });
-            //     });
-            // }
+            var j$ = jQuery.noConflict();
+            //console.log(loggedIn);
+            if (!loggedIn){
+                $(".btn").click(function(){
+                    j$('#loginModal').modal('show');
+                    $("#login_btn").click(function(e){
+                        var analyze_url = $("#backlink_audit").val();
+                        if(analyze_url){
+
+                            window.location ="/login?page="+document.location.href+"&url="+analyze_url;
+                        }else{
+
+                            window.location ="/login?page="+document.location.href;
+                        }
+                    });
+                });
+            }
+
             function animateElements() {
                 $('.Progress').each(function() {
                     var elementPos = $(this).offset().top;

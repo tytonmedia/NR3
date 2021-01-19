@@ -126,6 +126,16 @@
 		</br>
 		<label>First Billing Date</label>: <strong>{{$trial_end}}</strong>
 		</br>
+		<label>Package</label>:
+		@if($id == '1')
+					<strong>Webmaster</strong>
+				@endif
+				@if($id == '2')
+					<strong>Business</strong>
+				@endif
+				@if($id == '3')
+					<strong>Agency</strong>
+				@endif
 		<div style="border-top:1px solid #ddd;padding:5px;background:#eee">
 		<label style="font-size:19px;margin:0">Today's Charge</label>: <strong style="font-size:19px;color:green">$0.00</strong>
 	</div>
@@ -157,7 +167,7 @@
 	</div>
 
 	@endif
-		<p style="font-size:13px;color:#666;padding:3px;margin-top:5px;"><i class="fa fa-info-circle" aria-hidden="true"></i> You can cancel anytime in the <a href="/account">My Account</a> area.</p>
+
 	</div>
 </div>
 

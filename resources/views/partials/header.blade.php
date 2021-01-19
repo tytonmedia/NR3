@@ -17,6 +17,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <meta name="csrf-token" content="{{csrf_token()}}" />
 	<title>@yield('title')</title>
+	<meta  name="description" content="Ninja Reports SEO Reporting Tools.">
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-79012395-19"></script>
 <script>

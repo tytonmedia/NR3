@@ -11,19 +11,20 @@
 
 <script>
 $(document).ready(function($){
+
 	 $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+
     $('.close').click(function(e){
         $(this).closest('.modal').hide();
     });
+
     $("#login_button").click(function(e){
         var url = window.location.href;
         window.location ="/login?page="+url;
-   
-});
+    });
+
 });
 </script>
-<!-- Start of ninjareports Zendesk Widget script -->
-<script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=ebb41629-5af1-47a6-8db6-e8816aa0c264"> </script>
-<!-- End of ninjareports Zendesk Widget script -->
+
 </body>
 </html>

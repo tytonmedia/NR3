@@ -140,6 +140,7 @@
 .overview .Analyze {
     padding: 20px;
     background-color: #0e6eea;
+        border-radius: 3px;
 }
 
 .overview .progressbar {
@@ -222,10 +223,12 @@
     justify-content: center;
 }
 
-.heading-section,
-.Technical-section,.links-section,.keyword-section {
+.heading-section, .Technical-section,.links-section,.keyword-section {
     border: 1px solid #eee;
-    padding: 20px;
+}
+.heading-section .col-md-3, .Technical-section .col-md-3,.links-section .col-md-3,.keyword-section .col-md-3,
+.heading-section .col-md-9, .Technical-section .col-md-9,.links-section .col-md-9,.keyword-section .col-md-9 {
+    padding: 15px;
 }
 
 .heading-section img,
