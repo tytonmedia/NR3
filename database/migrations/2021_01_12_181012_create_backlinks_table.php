@@ -21,8 +21,8 @@ class CreateBacklinksTable extends Migration
             $table->string('target_url');
             $table->string('anchor');
             $table->string('page_ascore');
-            $table->timestamp('first_seen');
-            $table->timestamp('last_seen');
+            $table->timestamp('first_seen')->nullable();
+            $table->timestamp('last_seen')->nullable();
             $table->string('external_num');
             $table->string('internal_num');
             $table->string('nofollow');
