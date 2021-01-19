@@ -291,8 +291,8 @@ class rankingsController extends Controller
 
                        }
                    
-              print_r($features_array);
-              
+              dd($features_array);
+
                    $trend_count = count($trend_array);
                    $t_array = array();
                    $tempval = 0;
