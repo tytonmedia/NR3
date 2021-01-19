@@ -346,7 +346,11 @@ class rankingsController extends Controller
                        $position_array = ["1-10" => $count1, "11-20" => $count2, "21-50" => $count3, "51-100" => $count3, "100+" => $count4];
                        $traffic_share = array_sum($traffic_share);
 
+                       if(count($positions) > 0){
                     $avg_position = array_sum($positions)/count($positions); 
+                  } else{
+                    $avg_position = 0;
+                  }
       
                      $traffic_value  = array_sum($traffic_vals);
                      $volume_total = array_sum($traffic_volume);
