@@ -132,7 +132,7 @@ class rankingsController extends Controller
 
     }
  	      $has_keyword_data = Keyword::where('site_url',$url)->first();
-            if(empty($has_keyword_data)){
+            if(empty($has_keyword_data)) {
             //no keywords in db, pull SEMrush data and save to DB
                 if(env('APP_ENV', 'production')){
                 $display_limit=999;
@@ -244,7 +244,7 @@ class rankingsController extends Controller
                                   $features_array[$key] = explode(",", $value);
                                 }
 
-                                print_r($features_array);
+                               
  
         }
            
@@ -291,7 +291,8 @@ class rankingsController extends Controller
 
                        }
                    
-             
+              print_r($features_array);
+              
                    $trend_count = count($trend_array);
                    $t_array = array();
                    $tempval = 0;
