@@ -16,11 +16,57 @@
                      <h4>Page SEO Score</h4>
                 <div class="blue text-center">
                     <div class="score-wrapper">
-                    <div class="Progress" id="score" data-animate="false">
-                        <div class="circle" data-percent="<?php echo $passed_score ?? 0; ?>">
-                            <div></div>
-                        </div>
-                    </div>
+                         <canvas id="seo-chart" width="200" height="200"></canvas>
+                          <script>
+                            Chart.pluginService.register({
+  beforeDraw: function(chart) {
+    var width = chart.chart.width,
+        height = chart.chart.height,
+        ctx = chart.chart.ctx;
+
+    ctx.restore();
+    var fontSize = (height / 100).toFixed(2);
+    ctx.font = fontSize + "em sans-serif";
+    ctx.textBaseline = "middle";
+
+    var text = '<?php echo $passed_score;?>%',
+        textX = Math.round((width - ctx.measureText(text).width) / 2),
+        textY = height / 2;
+
+    ctx.fillText(text, textX, textY);
+    ctx.save();
+  }
+});
+
+                    var opp = <?php echo 100 - $passed_score;?>;
+                          new Chart(document.getElementById("seo-chart"), {
+                      type: 'doughnut',
+                      data: {
+                        labels: ["SEO Score"],
+                        datasets: [
+                          {
+                            label: "",
+                            backgroundColor: ["#0E6EEA", "#eee"],
+                            data: [<?php echo $passed_score;?>,opp]
+                          }
+                        ]
+                      },
+                      options: {
+                         cutoutPercentage: 70,
+                        tooltips: {
+                             enabled: false
+                        },
+                         legend: {
+                              display: false
+                           },
+                        responsive: false,
+                        title: {
+                          display: false,
+                          text: 'SEO Score'
+                        }
+                      }
+                  });
+                  </script>
                     </div>
                 </div>
                 <h3 style="text-align:center">{{$score_description ?? ''}}</h3>

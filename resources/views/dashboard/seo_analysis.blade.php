@@ -52,6 +52,7 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
         <!-- <script src="scripts/index.js"></script> -->
         <script>
             /**
@@ -98,7 +99,7 @@
                 var loggedIn = {{ auth()->check() ? 'true' : 'false' }};
                 var analyze_url =  $("#analyze").val();
                 
-                analyze_url = ((analyze_url.indexOf('://') === -1)) ? 'https://' + analyze_url : analyze_url;
+                analyze_url = ((analyze_url.indexOf('://') === -1)) ? 'https://www.' + analyze_url : analyze_url;
 
                     if(analyze_url && loggedIn){
                         if(isUrl(analyze_url) != false){
@@ -119,7 +120,7 @@
                 $(".btn").click(function(e){
                     e . preventDefault();
                     var url =  $("#analyze").val();
-
+                        url = ((url.indexOf('://') === -1)) ? 'https://www.' + url : url;
                      if(isUrl(url)) {
                     if(loggedIn){
                         
@@ -128,6 +129,7 @@
                     }else{
                         var j$ = jQuery.noConflict();
                         var analyze_url = $("#analyze").val();
+                        analyze_url = ((analyze_url.indexOf('://') === -1)) ? 'https://www.' + analyze_url : analyze_url;
                         j$("#loginModal").modal("show");
                         $("#login_btn").click(function(e){
                             if(analyze_url){
@@ -138,13 +140,14 @@
                         });
                     }
                 } else {
-                alert('The URL you entered is not valid. Be sure to add https:// or http://');
+                alert('The URL you entered is not valid.');
                 }
 
                 });
 
                 function analyzeURL(){
                     var url =  $("#analyze").val();
+                    url = ((url.indexOf('://') === -1)) ? 'https://www.' + url : url;
                     if(url.length != 0){
                     if(isUrl(url) != false){
                          //send analytics event
@@ -193,7 +196,6 @@
                                         $('#waiting').hide();
                                         $('div#text-container').append(data);
                                         $('.analysis_section').show();
-                                        $('#progressBar').css('width', 80 + '%').text(80 + '%');
                                         runPagespeed();
                                         $('#analyse').removeAttr('disabled');
                                         $('#analyse').val(url);
@@ -292,8 +294,8 @@
                                 $("#passed_progress").css("width", add_vale + "%");
                                 $("#img_gzip").attr("class", "fa fa-check");
                             }
-                            //$('.circle').attr('data-percent', score);
-                            // animateElements();
+                           // $('.circle').attr('data-percent', score);
+                           //  animateElements();
                             //$(window).scroll(animateElements);
                           //  $('#progressBar').css('width', 100 + '%').text(100 + '%');
                           //  $(".progress-bar1").css("animation-play-state", "paused");

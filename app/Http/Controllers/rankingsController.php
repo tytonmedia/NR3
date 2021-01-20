@@ -35,7 +35,7 @@ class rankingsController extends Controller
 
 		        try{
             
-            $Payment = Payment::withCount('analysis')->where('user_id',auth()->user()->id)->where('status',1)->first();
+            $Payment = Payment::withCount('ranking_results')->where('user_id',auth()->user()->id)->where('status',1)->first();
             
         }catch(Exception $e){}
 
@@ -43,9 +43,13 @@ class rankingsController extends Controller
                return view("partials/upgrade_rankings", compact('time','url'));
         }else if($Payment->status == 0){
             return 'notsuccessful';
-        }else if ($Payment->plan_id== 1 && $Payment->no_allowed_analysis <= $Payment->analysis_count ){
+        }else if ($Payment->plan_id == 1 && $Payment->no_allowed_rankings <= $Payment->ranking_results_count){
             return 'exceeded';
-        }
+        } else if ($Payment->plan_id == 2 && $Payment->no_allowed_rankings <= $Payment->ranking_results_count){
+            return 'exceeded';
+        } else if ($Payment->plan_id == 3 && $Payment->no_allowed_rankings <= $Payment->ranking_results_count){
+            return 'exceeded';
+        } 
         else
         {
            return  $this->get_rankings($url,$Payment,$time);
@@ -55,8 +59,6 @@ class rankingsController extends Controller
 
       public function get_rankings($url,$Payment,$time){
 
-
-        
         $parse = parse_url($url);
         $domain_name = $parse['host']; // prints 'google.com'
 
@@ -142,7 +144,7 @@ class rankingsController extends Controller
             if(empty($has_keyword_data)) {
             //no keywords in db, pull SEMrush data and save to DB
                 if(env('APP_ENV', 'production')){
-                $display_limit=999;
+                $display_limit=500;
             } else{
                 $display_limit=2;
             }

@@ -35,15 +35,21 @@ class backlinkController extends Controller
 
 		        try{
             
-            $Payment = Payment::withCount('analysis')->where('user_id',auth()->user()->id)->where('status',1)->first();
-            
-        }catch(Exception $e){}
+        $Payment = Payment::withCount('backlink_results')->where('user_id',auth()->user()->id)->where('status',1)->first();
+           // dd($Payment);
+        }catch(Exception $e){
+           // dd($e);
+        }
 
         if(empty($Payment)){
                return view("partials/upgrade_backlinks", compact('url'));
         }else if($Payment->status == 0){
             return 'notsuccessful';
-        }else if ($Payment->plan_id== 1 && $Payment->no_allowed_analysis <= $Payment->analysis_count ){
+        }else if ($Payment->plan_id == 1 && $Payment->no_allowed_backlinks <= $Payment->backlink_results_count){
+            return 'exceeded';
+        }else if ($Payment->plan_id == 2 && $Payment->no_allowed_backlinks <= $Payment->backlink_results_count){
+            return 'exceeded';
+        }else if ($Payment->plan_id == 3 && $Payment->no_allowed_backlinks <= $Payment->backlink_results_count){
             return 'exceeded';
         }
         else
@@ -339,7 +345,7 @@ class backlinkController extends Controller
         			foreach ($value as $key2 => $val) {
         				# code...
         				if($key2 == 4) {
-        					if($val > 125){
+        					if($val > 250){
         							$linktoxicity += 1; 
         						}
         				}
@@ -376,8 +382,8 @@ class backlinkController extends Controller
 
         			$anchor_array = array_count_values($anchor_array);
         			//build toxicity score
-        			if($urls_num > 0 && $linktoxicity > 0){
-        					$linktoxicity = number_format($urls_num/$linktoxicity);
+        			if(!empty($backlink_array) && $linktoxicity > 0){
+        					$linktoxicity = number_format(count($backlink_array)/$linktoxicity);
         			} else{
         					$linktoxicity = 0;
         			}
@@ -420,7 +426,7 @@ public function getTimeAgo($carbonObject) {
 
   public static function get_linkpower_color($linkpower)
     {
-            if($linkpower == 0 && $linkpower < 25){
+            if($linkpower == 0 || $linkpower < 25){
                             return "#ff0000";
             }elseif($linkpower > 25 && $linkpower < 50) {
                                 return "#ff6600";
@@ -435,7 +441,7 @@ public function getTimeAgo($carbonObject) {
 
   public static function get_toxicity_color($linktoxicity)
     {
-            if($linktoxicity > 0 && $linktoxicity < 25){
+            if($linktoxicity >= 0 && $linktoxicity < 25){
                             return "green";
             }elseif($linktoxicity > 25 && $linktoxicity < 50) {
                                 return "yellow";

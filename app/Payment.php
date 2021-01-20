@@ -12,6 +12,8 @@ class Payment extends Model
         'plan_id',
         'no_allowed_analysis', 
         'no_allowed_audits', 
+        'no_allowed_backlinks', 
+        'no_allowed_rankings', 
         'currency', 
         'amount',
         'interval',
@@ -32,5 +34,13 @@ class Payment extends Model
     public function audit()
     {
         return $this->hasMany(Audit::class);
+    }
+       public function backlink_results()
+    {
+        return $this->hasMany(BacklinkResults::class);
+    }
+     public function ranking_results()
+    {
+        return $this->hasMany(KeywordResults::class);
     }
 }

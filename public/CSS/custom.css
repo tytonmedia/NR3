@@ -139,6 +139,7 @@ body .btn-warning:hover {background:#d45602;color:#fff;}
     margin-bottom:15px;
     color:#3f3f3f;
 }
+#seo-chart {margin:0 auto 25px auto;}
 .table thead th {padding: 5px 7px;}
 .rankings-container {margin-top:60px;}
 .audit-container .table th:first-child, .audit-container .table td:first-child {width:400px;word-break: break-all;}

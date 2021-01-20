@@ -88,7 +88,7 @@
             var loggedIn = {{ auth()->check() ? 'true' : 'false' }};
             var analyze_url =  $("#backlink_audit").val();
 
-            analyze_url = ((analyze_url.indexOf('://') === -1)) ? 'https://' + analyze_url : analyze_url;
+            analyze_url = ((analyze_url.indexOf('://') === -1)) ? 'https://www.' + analyze_url : analyze_url;
             
                 if(analyze_url && loggedIn){
                         if(isUrl(analyze_url) != false){
@@ -104,7 +104,7 @@
             $(".btn").click(function(e){
                     e.preventDefault();
                     var url =  $("#backlink_audit").val();
-                    url = ((url.indexOf('://') === -1)) ? 'https://' + url : url;
+                    url = ((url.indexOf('://') === -1)) ? 'https://www.' + url : url;
                     if(isUrl(url)) {
                     if(loggedIn){
                         !!url && insertParam('url', url);
@@ -129,7 +129,7 @@
                 function get_backlinks(){
                     var url =  $("#backlink_audit").val();
                         if(url.length != 0){
-                        url = ((url.indexOf('://') === -1)) ? 'https://' + url : url;
+                        url = ((url.indexOf('://') === -1)) ? 'https://www.' + url : url;
                             if(isUrl(url) !== false){
 
                                         gtag('event', 'click', {
@@ -159,7 +159,7 @@
                                     success:function(data){
                                         if(data == 'notsuccessful' || data == 'Expired' || data == 'exceeded' ){
                                             $('#waiting').hide();
-                                            $('#myModal').show();
+                                            $('#rankingsUpgrade').show();
                                         }else{
                                             $('div#text-container').append(data);
                                             $('#waiting').hide();

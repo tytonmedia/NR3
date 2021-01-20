@@ -93,7 +93,7 @@
            // enter keyd
         $(document).bind('keypress', function(e) {
             if(e.keyCode==13){
-                 $('#backlink_audit').trigger('click');
+                 $('#analyse').trigger('click');
              }
         });
 
@@ -158,7 +158,7 @@
                                     success:function(data){
                                         if(data == 'notsuccessful' || data == 'Expired' || data == 'exceeded' ){
                                             $('#waiting').hide();
-                                            $('#myModal').show();
+                                            $('#backlinksUpgrade').show();
                                         }else{
                                             $('div#text-container').append(data);
                                             $('#waiting').hide();

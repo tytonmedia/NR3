@@ -71,6 +71,54 @@ if (isset($_GET['url'])) {
 				<p class="text-center">© Copyright Ninja Brands LLC, 2020</p>
 			</div>
 		</div>
+			<!--The Model-->
+		<div class="modal" id="rankingsUpgrade" tabindex="-1" role="dialog" aria-labelledby="rankingsUpgrade" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" id="close">&times;</button>
+					</div>
+
+					<!-- Modal body -->
+					<div class="modal-body" style="padding:20px;">
+						<h2>Whoops!</h2>
+						<p>You have reached the limit on the ranking analysis you can run for your billing period. You must upgrade in order to run more ranking analysis.
+					</div>
+
+					<!-- Modal footer -->
+					<div class="modal-footer" style="margin:auto;">
+					<a class="btn-warning btn-md" href="{{route('subscription')}}" id='paybtn' style='padding:7px;text-decoration:none;'>UPGRADE</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!--The Model-->
+		<div class="modal" id="backlinksUpgrade" tabindex="-1" role="dialog" aria-labelledby="backlinksUpgrade" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" id="close">&times;</button>
+					</div>
+
+					<!-- Modal body -->
+					<div class="modal-body" style="padding:20px;">
+						<h2>Whoops!</h2>
+						<p>You have reached the limit on the backlink analysis you can run for your billing period. You must upgrade in order to run more backlink analysis.
+					</div>
+
+					<!-- Modal footer -->
+					<div class="modal-footer" style="margin:auto;">
+					<a class="btn-warning btn-md" href="{{route('subscription')}}" id='paybtn' style='padding:7px;text-decoration:none;'>UPGRADE</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
 		<!--The Model-->
 		<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
 			<div class="modal-dialog">

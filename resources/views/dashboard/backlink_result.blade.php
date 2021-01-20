@@ -22,22 +22,94 @@
     <section id="analysis" class="analysis-page">
        <div class="row four-cols" style="margin-bottom:15px;">
             <div class="col-md-3">
-                Total Backlinks <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Total backlinks is the total number of domains that point to your website."><i class="fa fa-info-circle" ></i></a>
+                Total Backlinks <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Total backlinks is the total number of domains that point to your URL."><i class="fa fa-info-circle" ></i></a>
                     <h2>{{ number_format($urls_num) }}</h2>
             </div>
             <div class="col-md-3">
-                    Referring Domains <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Referring domains is the total number of domains that point to your website."><i class="fa fa-info-circle" ></i></a>
+                    Referring Domains <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Referring domains is the total number of domains that point to your URL."><i class="fa fa-info-circle" ></i></a>
                     <h2>{{ number_format($domains_num) }}</h2>
             </div>
             <div class="col-md-3">
-                        Link Toxicity <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Link toxicity score is calculated by the number of toxic domains pointing to your website."><i class="fa fa-info-circle" ></i></a>
+              <div class="row">
+                  <div class="col-md-7">
+                     Link Toxicity <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Link toxicity score is calculated by the number of toxic domains pointing to your URL. The more toxic backlinks pointing to your URL will result in a higher toxicity score."><i class="fa fa-info-circle" ></i></a>
                         <h2 style="color:{{ backlinkController::get_toxicity_color($linktoxicity) }}">{{ $linktoxicity }}%</h2>
-            </div>
+                  </div>
+                  <div class="col-md-4">
+                    <canvas id="doughnut-chart" width="75" height="75"></canvas>
+                  </div>
+                </div>
+              </div>
+                   <script>
+                    var opp = <?php echo 100 - $linktoxicity;?>;
+                          new Chart(document.getElementById("doughnut-chart"), {
+                      type: 'doughnut',
+                      data: {
+                        labels: ["Toxicity"],
+                        datasets: [
+                          {
+                            label: "",
+                            backgroundColor: ["<?php echo backlinkController::get_toxicity_color($linktoxicity)?>", "#eee"],
+                            data: [<?php echo $linktoxicity;?>,opp]
+                          }
+                        ]
+                      },
+                      options: {
+                        tooltips: {
+                             enabled: false
+                        },
+                         legend: {
+                              display: false
+                           },
+                        responsive: false,
+                        title: {
+                          display: false,
+                          text: 'Link Toxicity'
+                        }
+                      }
+                  });
+                  </script>
             <div class="col-md-3">
-                         Link Power <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="The link power is calculated by the number of backlinks and backlink quality."><i class="fa fa-info-circle" ></i></a>
+              <div class="row">
+                  <div class="col-md-7">
+                         Link Power <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="The link power is calculated by the number of backlinks and backlink quality. The higher the link power the better your website will rank."><i class="fa fa-info-circle" ></i></a>
                  <h2 style="color:{{ backlinkController::get_linkpower_color($linkpower) }}">{{ $linkpower }}%</h2>
                       
+                 </div>
+                  <div class="col-md-4">
+                    <canvas id="linkpower-doughnut-chart" width="75" height="75"></canvas>
+                  </div>
                 </div>
+              </div>
+                   <script>
+                    var opp = <?php echo 100 - $linkpower;?>;
+                          new Chart(document.getElementById("linkpower-doughnut-chart"), {
+                      type: 'doughnut',
+                      data: {
+                        labels: ["Link Power"],
+                        datasets: [
+                          {
+                            label: "Population (millions)",
+                            backgroundColor: ["<?php echo backlinkController::get_linkpower_color($linkpower)?>", "#eee"],
+                            data: [<?php echo $linkpower;?>,opp]
+                          }
+                        ]
+                      },
+                      options: {
+                        tooltips: {
+                             enabled: false
+                        },
+                         legend: {
+                              display: false
+                           },
+                        responsive: false,
+                        title: {
+                          display: false,
+                          text: 'Link Power'
+                        }
+                      }
+                  });
+                  </script>
 
 
        </div>
@@ -53,7 +125,7 @@
 </div>
 <div class="col-md-3">
     <h5>Link Profile</h5>
-     <canvas id="nofollowChart" style=" width:100%;height:200px;"></canvas>
+     <canvas id="nofollowChart" style=" width:100%;height:175px;"></canvas>
     </div>
     <div class="col-md-2">
         <h5>Referring TLDs</h5>
@@ -203,7 +275,7 @@ var myChart = new Chart(ctx, {
 </script>
        </div>
        <br/>
-       <div class="row" style="margin-top:50px;">
+       <div class="row">
             <div class="col-md-12">
                 <h3>Backlinks</h3>
                             <table class="table backlinks-table">

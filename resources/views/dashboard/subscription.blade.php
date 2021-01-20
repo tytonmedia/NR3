@@ -74,7 +74,7 @@
 </tr>
 <tr>
 <td>URL Analysis Reports</td>
-<td>300</td>
+<td>100</td>
 <td>UNLIMITED</td>
 <td>UNLIMITED</td>
 </tr>
@@ -86,16 +86,16 @@
 </tr>
 <td>Backlink Reports</td>
 <td>5</td>
-<td>50</td>
+<td>15</td>
 <td>100</td>
 </tr>
 <td>Ranking/Keyword Reports</td>
 <td>10</td>
-<td>50</td>
+<td>25</td>
 <td>100</td>
 </tr>
 <tr>
-    <tr>
+    <tr style="color:green;font-weight:bold;">
 <td>Price</td>
 <td>$19/month</td>
 <td>$29/month</td>
