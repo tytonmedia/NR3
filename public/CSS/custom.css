@@ -90,17 +90,17 @@ ul.serp_features {list-style-type: none;
 .analysis-container {}
 .backlinks-table {}
 .dataTables_wrapper {    top: -30px;}
-.new-icon{position: absolute;
-    background: #f60;
+.new-icon{background: #f60;
     z-index: 999;
     color: #fff;
-    border-radius: 2px;
-    font-size: 9px;
-    padding: 1px 7px;
+    border-radius: 3px;
+    font-size: 10px;
+    padding: 0px 5px;
     text-decoration: none;
-    margin-top: 10px;
+    position: relative;
     font-style: normal;
-    margin-left: 135px;}
+    top: -2px;
+    }
 .backlinks-table td:first-child {max-width:350px;word-wrap:break-word; }
 .my-account {margin-top:60px;}
 body .btn-warning {background:#f60;color:#fff;border-color:#f60;}

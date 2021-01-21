@@ -74,32 +74,32 @@
 </tr>
 <tr>
 <td>URL Analysis Reports</td>
-<td>100</td>
+<td>100/mo</td>
 <td>UNLIMITED</td>
 <td>UNLIMITED</td>
 </tr>
 <tr>
 <td>Site Audit Reports</td>
-<td>25</td>
-<td>100</td>
-<td>250</td>
+<td>25/mo</td>
+<td>100/mo</td>
+<td>250/mo</td>
 </tr>
 <td>Backlink Reports</td>
-<td>5</td>
-<td>15</td>
-<td>100</td>
+<td>5/mo</td>
+<td>15/mo</td>
+<td>100/mo</td>
 </tr>
 <td>Ranking/Keyword Reports</td>
-<td>10</td>
-<td>25</td>
-<td>100</td>
+<td>10/mo</td>
+<td>25/mo</td>
+<td>100/mo</td>
 </tr>
 <tr>
     <tr style="color:green;font-weight:bold;">
 <td>Price</td>
-<td>$19/month</td>
-<td>$29/month</td>
-<td>$59/month</td>
+<td>$19/mo</td>
+<td>$29/mo</td>
+<td>$59/mo</td>
 </tr>
 <tr>
 <td></td>

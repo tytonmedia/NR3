@@ -54,14 +54,14 @@ if (isset($_GET['url'])) {
 					</div>
 				</li>
 				@if($url != '')
-					<li class="nav-item"><i class="new-icon">NEW</i><a class="{{(Request::is('backlinks') || Request::is('backlinks/')) ? 'active' : ''}} nav-link" href="{!! route('backlinks',['url'=>$url]) !!}"><i class="fa fa-link" aria-hidden="true"></i> BACKLINKS</a></li>
+					<li class="nav-item"><a class="{{(Request::is('backlinks') || Request::is('backlinks/')) ? 'active' : ''}} nav-link" href="{!! route('backlinks',['url'=>$url]) !!}"><i class="fa fa-link" aria-hidden="true"></i> BACKLINKS <i class="new-icon">NEW</i></a></li>
 					@else
-					<li class="nav-item"><i class="new-icon">NEW</i><a class="{{(Request::is('backlinks') || Request::is('backlinks/')) ? 'active' : ''}} nav-link" href="{{ route('backlinks') }}"><i class="fa fa-link" aria-hidden="true"></i> BACKLINKS</a></li>
+					<li class="nav-item"><a class="{{(Request::is('backlinks') || Request::is('backlinks/')) ? 'active' : ''}} nav-link" href="{{ route('backlinks') }}"><i class="fa fa-link" aria-hidden="true"></i> BACKLINKS <i class="new-icon">NEW</i></a></li>
 					@endif
 						@if($url != '')
-					<li class="nav-item"><i class="new-icon">NEW</i><a class="{{(Request::is('rankings') || Request::is('rankings/')) ? 'active' : ''}} nav-link" href="{!! route('rankings',['url'=>$url]) !!}"><i class="fa fa-bar-chart" aria-hidden="true"></i> RANKINGS</a></li>
+					<li class="nav-item"><a class="{{(Request::is('rankings') || Request::is('rankings/')) ? 'active' : ''}} nav-link" href="{!! route('rankings',['url'=>$url]) !!}"><i class="fa fa-bar-chart" aria-hidden="true"></i> RANKINGS <i class="new-icon">NEW</i></a></li>
 					@else
-					<li class="nav-item"><i class="new-icon">NEW</i><a class="{{(Request::is('rankings') || Request::is('rankings/')) ? 'active' : ''}} nav-link" href="{{ route('rankings') }}"><i class="fa fa-bar-chart" aria-hidden="true"></i> RANKINGS</a></li>
+					<li class="nav-item"><a class="{{(Request::is('rankings') || Request::is('rankings/')) ? 'active' : ''}} nav-link" href="{{ route('rankings') }}"><i class="fa fa-bar-chart" aria-hidden="true"></i> RANKINGS <i class="new-icon">NEW</i></a></li>
 					@endif
 				
 				<li class="nav-item"><a class="{{(Request::is('subscription') || Request::is('subscription/')) ? 'active' : ''}} nav-link" href="/subscription"><i class="fa fa-tachometer" aria-hidden="true"></i> PRICING</a></li>
