@@ -91,7 +91,7 @@ class rankingsController extends Controller
                     //error
                // dd('error: '.$resp);
               if (strpos($resp,'ERROR 50')===0) {
-                $response = 'Sorry, there are no results for that URL. Please try another URL';
+                $response = 'Sorry, there are no results for that URL. Make sure your URL is the final URL after any redirects.';
                 return view("dashboard/no_results", compact('response'));
                 } else {
                 $response = $resp;
@@ -238,16 +238,17 @@ class rankingsController extends Controller
                                 $traffic_volume[] = $value[3] ?? 0;
                                 $traffic_vals[] = $value[7] ?? 0;
                                 $traffic_share[] = $value[6] ?? 0;
-                                $trend_array[] = json_encode(explode(',',$value[10]));
-                                $features_array[] = json_encode(explode(',',$value[9]));
+                                $trend_array[] = $value[10];
+                                $features_array[] = $value[9];
 
 
                     }
 
-
+                                
                                 foreach ($trend_array as $key => $value) {
                                   $trend_array[$key] = explode(",", $value);
                                 }
+
                                 foreach ($features_array as $key => $value) {
                                   $features_array[$key] = explode(",", $value);
                                 }
@@ -303,6 +304,7 @@ class rankingsController extends Controller
                    $trend_count = count($trend_array);
                    $t_array = array();
                    $tempval = 0;
+                  // print_r($trend_array);
                         foreach ($trend_array as $key => $value) {
                             foreach ($value as $key2 => $val) {
                               if($trend_count == $key){
@@ -325,8 +327,8 @@ class rankingsController extends Controller
                     }
 
                     $serp_array = array_count_values($serp_array);
-
-                     $count1 = $count2 = $count3 = $count4 = 0;
+                 //   print_r($positions);
+                     $count1 = $count2 = $count3 = $count4 = $count5 = 0;
                        for ($i = 0; $i < sizeof($positions); $i++) {
                            if($positions[$i] >= 1 && $positions[$i] <= 10 ) {
                                $count1++;
@@ -337,21 +339,18 @@ class rankingsController extends Controller
                            if($positions[$i] >= 21 && $positions[$i] <= 50 ) {
                                $count3++;
                            }
-                           if($positions[$i] >= 21 && $positions[$i] <= 50 ) {
-                               $count3++;
-                           }
                            if($positions[$i] >= 51 && $positions[$i] <= 100 ) {
                                $count4++;
                            }
                            if($positions[$i] >= 100) {
-                               $count4++;
+                               $count5++;
                            }
                        } // end for loop
 
                       // print_r($trend_array);
 
                        $position_array = array();
-                       $position_array = ["1-10" => $count1, "11-20" => $count2, "21-50" => $count3, "51-100" => $count3, "100+" => $count4];
+                       $position_array = ["1-10" => $count1, "11-20" => $count2, "21-50" => $count3, "51-100" => $count4, "100+" => $count5];
                        $traffic_share = array_sum($traffic_share);
 
                        if(count($positions) > 0){
