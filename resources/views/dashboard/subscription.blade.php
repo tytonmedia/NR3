@@ -62,8 +62,9 @@
             </div>
     </div>
     <div class="container">
-        <div class="row">
+        <div class="row three-cols">
     <a name="detailed"></a>
+    <div class="col-md-11" style="margin-top:25px;"><h4>Pricing Details</h4>
 <table class="table detailed-pricing">
 <tbody>
 <tr>
@@ -134,26 +135,13 @@
 </table>
 </div>
 </div>
+</div>
     <div class="container">
-          <div class="row Audit-image-text" style="width:100%;padding:25px;margin-top:50px;text-align:center">
+          <div class="row Audit-image-text" style="width:100%;padding:25px;margin-top:0px;text-align:center">
 <div class="col-md-12"><h3>SEO software that helps grow your traffic, rankings, and sales online.</h3>
     <p>Ninja Report’s revolutionary SEO tools will allow you to get more organic traffic online and grow your business. Check out our features below to see how we can help you grow.</p>
 </div>
           </div>
-          <hr>
-            <div class="row Audit-image-text" style="padding:25px;margin-top:50px;">
-                <div class="col-md-7">
-                    <h2>Full On-Page SEO Analysis</h2>
-                    <p>Run a full on-page SEO audit on your whole website, finding any errors keeping you from ranking high in search engines.</p>
-
-<p>ROur Website SEO Audit Tool will crawl all of your pages and check for SEO errors using our 55-point on-page scan.</p>
-
-<p>RWith the SEO Website Audit Tool, your website’s health will always be at 100%, allowing you to dominate the search engines.</p>
-                </div>
-                <div class="col-md-5">
-                    <img src="images/seo-analysis.png" style="width:100%">
-                </div>
-            </div>
             <hr>
      <div class="row testimonials Audit-image-text" style="padding:25px;margin-top:50px;">
           <div class="col-md-6">

@@ -90,6 +90,12 @@
 
             $(document).ready(function($) {
 
+                $(document).bind('keypress', function(e) {
+            if(e.keyCode==13){
+                 $('#analyse').trigger('click');
+             }
+                 });
+                
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -111,11 +117,7 @@
                         }
                     }
                
-                $(document).bind('keypress', function(e) {
-            if(e.keyCode==13){
-                 $('#analyse').trigger('click');
-             }
-        });
+
                 
                 $(".btn").click(function(e){
                     e . preventDefault();
