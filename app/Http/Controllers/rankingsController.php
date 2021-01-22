@@ -386,7 +386,7 @@ class rankingsController extends Controller
                     Session::put('serp_array', $serp_array);
 
 
-        	 return view("dashboard/ranking_result", compact('time','url','keyword_array','num_keywords','avg_position','traffic_value','top_keyword','volume_total','position_array','t_array','competitor_array','traffic_share','features_array', 'serp_array'));
+        	 return view("dashboard/ranking_result", compact('time','url','keyword_array','num_keywords','avg_position','traffic_value','top_keyword','volume_total','position_array','t_array','competitor_array','traffic_share','features_array', 'serp_array','trend_array'));
 
 		}
 
