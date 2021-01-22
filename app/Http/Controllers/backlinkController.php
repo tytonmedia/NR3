@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Exception;
 use Goutte\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Spatie\Browsershot\Browsershot;
 use App\BacklinkResults;
 use App\Backlink;
@@ -148,7 +149,7 @@ class backlinkController extends Controller
            
 
         } catch(Exception $e){
-        	dd($e);
+            Log::warning($e);
         }
 
 
