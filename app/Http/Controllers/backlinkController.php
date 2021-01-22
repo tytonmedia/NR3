@@ -72,9 +72,9 @@ class backlinkController extends Controller
 
         	//if prod get all backlinks, else get 20 to save API credits
         	if(env('APP_ENV', 'production')){
-        		$display_limit=5;
+                $display_limit=999;
         	} else{
-        		$display_limit=999;
+        		$display_limit=5;
         	}
         	 try{
       
@@ -213,9 +213,9 @@ class backlinkController extends Controller
                $urls_num = $backlink_count_array[0]['backlinks_num'];
     }
     	if(env('APP_ENV', 'production')){
-        		$display_limit=1;
-        	} else{
         		$display_limit=6;
+        	} else{
+                $display_limit=1;
         	}
         			
                        try{
