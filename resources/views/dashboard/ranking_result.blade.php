@@ -238,7 +238,6 @@ $(this).siblings(".competitor-details").hide();
                                  <th>Traffic Cost</th>
                                  <th>Results</th>
                                  <th>SERP Features</th>
-                                 <th>Keyword Trend</th>
                                
                                     </tr>
                             </thead>
@@ -254,60 +253,8 @@ $(this).siblings(".competitor-details").hide();
                                         @elseif($key2 == 4 || $key2 == 7)
                                         <td> ${{ number_format($val, 2) }}  </td>
                                         @elseif($key2 == 10)
-                                                        <td>
-                                            <canvas id="keywordchart-{{$key}}" style=" width:250px;height:50px;"></canvas>
-                                             <script>
-                                                 var ctx = document.getElementById("keywordchart-{{ $key }}").getContext("2d");
-                                                  window.myBar = new Chart(ctx, {
-                                             type: 'line',
-                                             data: {
-                                        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11, 12],
-                                             datasets: [
-                                                 {
-                                             backgroundColor: "#cdddf1",
-                                             borderColor: "#0E6EEA",
-                                             pointBackgroundColor: "#0E6EEA",
-                                      data: <?php echo json_encode($val);?>
-                                                    }
-                                                     ]
-                                            },
-                                             options: {
-                                                layout: {
-                                                padding: {
-                                                    left: 5,
-                                                    right: 5,
-                                                    top: 5,
-                                                    bottom: 5
-                                                }
-                                            },
-                                                scaleShowLabels : false,
-                                                scales:{
-                                            xAxes: [{
-                                                        display: false //this will remove all the x-axis grid lines
-                                            }],
-                                                    yAxes: [{
-                                                        display: false //this will remove all the x-axis grid lines
-                                                    }]
-                                                     },
-                                                legend: {
-                                                display: false
-                                                    },
-                                                   elements: {
-                                                    point:{
-                        radius: 0
-                    },
-                                                rectangle: {
-                                                 borderWidth: 1,
-                                                 borderColor: '#333333',
-                                             }
-                                                 },
-                                            responsive: false,
-                                         title: {
-                                              display: false,
-                                            }
-                                     }
-                                 });
-                                     </script>
+                                                        <td style="display:none;">
+                                          
                                         </td>
                                         @elseif($key2 == 9)
                                         <td>
