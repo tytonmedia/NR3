@@ -61,6 +61,8 @@ class CreateSeoResultsTable extends Migration
             $table->string('favicon')->nullable();
             $table->string('mobile_friendly')->nullable();
             $table->string('ssl_certificate')->nullable();
+            $table->string('ssl_certificate')->nullable();
+            $table->string('page_words_size')->nullable();
             $table->unsignedInteger('notice_score');
             $table->binary('image')->nullable();
             $table->string('score_description')->nullable();
