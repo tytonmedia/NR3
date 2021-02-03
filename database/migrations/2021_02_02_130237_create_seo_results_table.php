@@ -41,7 +41,7 @@ class CreateSeoResultsTable extends Migration
             $table->unsignedInteger('page_words')->nullable();
             $table->string('page_size')->nullable();
             $table->string('page_text_ratio')->nullable();
-            $table->string('page_word_size')->nullable();
+            $table->string('page_words_size')->nullable();
             $table->string('http')->nullable();
             $table->json('cache')->nullable();
             $table->string('page_https')->nullable();
@@ -61,8 +61,6 @@ class CreateSeoResultsTable extends Migration
             $table->string('favicon')->nullable();
             $table->string('mobile_friendly')->nullable();
             $table->string('ssl_certificate')->nullable();
-            $table->string('ssl_certificate')->nullable();
-            $table->string('page_words_size')->nullable();
             $table->unsignedInteger('notice_score');
             $table->binary('image')->nullable();
             $table->string('score_description')->nullable();
