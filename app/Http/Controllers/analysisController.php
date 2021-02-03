@@ -2082,7 +2082,7 @@ try {
        // $html = \View::make('dashboard/seo_result', compact('seo_audit_details'))->render();
         $html = view('dashboard/seo_result', compact('seo_audit_details', 'white_label'))->render();
         
-        Browsershot::html($html)->setNodeBinary('C:\wamp64\bin\nodejs\node.exe')->setNodeModulePath("C:\wamp64\bin\nodejs\node_modules")->setChromePath("C:\Programs\\Google\\Chrome\\Application\\chrome.exe")->setIncludePath('C:\wamp64\bin')->noSandbox()->pdf();
+        Browsershot::html($html)->noSandbox()->pdf();
 
          return 'done';
 
