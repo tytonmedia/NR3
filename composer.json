@@ -10,7 +10,6 @@
     "require": {
         "php": "^7.2",
         "aws/aws-sdk-php": "^3.172",
-        "barryvdh/laravel-dompdf": "^0.9.0",
         "chrome-php/chrome": "^0.9.0",
         "fabpot/goutte": "^4.0",
         "fideloper/proxy": "^4.0",
