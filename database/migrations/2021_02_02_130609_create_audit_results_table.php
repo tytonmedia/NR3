@@ -37,7 +37,7 @@ class CreateAuditResultsTable extends Migration
             $table->unsignedInteger('status_302')->nullable();
             $table->json('status_404')->nullable();
             $table->unsignedInteger('status_500')->nullable();
-            $table->string('page_miss_title ')->nullable();
+            $table->string('page_miss_title')->nullable();
             $table->string('duplicate_title')->nullable();
             $table->string('twitter')->nullable();
             $table->string('link_302')->nullable();
