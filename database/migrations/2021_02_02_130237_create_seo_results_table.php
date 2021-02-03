@@ -79,9 +79,9 @@ class CreateSeoResultsTable extends Migration
             $table->string('responsive_images')->nullable();
             $table->string('css_min')->nullable();
             $table->string('css_min_bytes')->nullable();
-            $table->string('jss_min')->nullable();
-            $table->string('jss_min_score')->nullable();
-            $table->string('jss_min_bytes')->nullable();
+            $table->string('js_min')->nullable();
+            $table->string('js_min_score')->nullable();
+            $table->string('js_min_bytes')->nullable();
             $table->string('gzip_compression')->nullable();
             $table->timestamps();
         });
