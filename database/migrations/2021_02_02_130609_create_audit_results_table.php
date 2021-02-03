@@ -20,7 +20,7 @@ class CreateAuditResultsTable extends Migration
             $table->string('site_url');
             $table->longText('short_title')->nullable();
             $table->string('url_length')->nullable();
-            $table->string('less_page_words ')->nullable();
+            $table->string('less_page_words')->nullable();
             $table->string('graph_data ')->nullable();
             $table->string('links_more_h1')->nullable();
             $table->string('links_empty_h1')->nullable();
