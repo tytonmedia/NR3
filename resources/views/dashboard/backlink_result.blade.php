@@ -510,7 +510,7 @@ var myChart = new Chart(ctx, {
       <div class="modal-dialog">
         <div class="modal-content">
            <form id='seo_email_form'>
-            <input type="hidden" id="report_url" name="report_url" value="{{ $backlink_details['url'] }}">
+            <input type="hidden" id="report_url" name="report_url" value="{{ $backlink_details['site_url'] }}">
             <input type="hidden" id="report_id" name="report_id" value="{{ $backlink_details['id'] }}">
           <!-- Modal Header -->
           <div class="modal-header">
