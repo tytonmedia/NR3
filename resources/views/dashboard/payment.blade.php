@@ -81,7 +81,7 @@
 
 <script src="https://js.stripe.com/v3/"></script>
 <div class="col-md-10 overview">
-	<div class="row" style="margin-top:50px;">
+	<div class="row" style="margin-top:75px;">
 		<div class="col-md-1">
 		</div>
 	<div class="col-md-4">
@@ -103,44 +103,15 @@
 					<div id="card-errors" role="alert"></div>
 				</div>
 				<div style="text-align:center;"><input type="checkbox" id="policy" name="policy" checked="checked"> <label for="policy" style="font-size:13px;padding-top:7px;color:#999">I have read and I agree to the <a target="_blank" href="https://www.ninjareports.com/terms-conditions/">Terms of Use</a>.</label></div>
-				<button class="btn btn-lg btn-warning" style="font-weight:bold;font-size:21px;">SUBSCRIBE &nbsp;<i class="fa fa-caret-right" aria-hidden="true"></i></button>
+				<button class="btn btn-lg btn-warning" style="font-weight:bold;font-size:21px;">GET ACCESS &nbsp;<i class="fa fa-caret-right" aria-hidden="true"></i></button>
 			</form>
 			
 	</div>
 	<div class="col-md-4" style="padding:65px 15px 15px 15px;">
 		
 		<h3>Subscription Details</h3>
-		@if($status == 0)
-		<label>Free Trial Length</label>: <strong>7 Days</strong>
-	</br>
-		<label>After-Trial Price</label>:
-				@if($id == '1')
-					<strong>$19/month</strong>
-				@endif
-				@if($id == '2')
-					<strong>$29/month</strong>
-				@endif
-				@if($id == '3')
-					<strong>$59/month</strong>
-				@endif
-		</br>
-		<label>First Billing Date</label>: <strong>{{$trial_end}}</strong>
-		</br>
-		<label>Package</label>:
-		@if($id == '1')
-					<strong>Webmaster</strong>
-				@endif
-				@if($id == '2')
-					<strong>Business</strong>
-				@endif
-				@if($id == '3')
-					<strong>Agency</strong>
-				@endif
-		<div style="border-top:1px solid #ddd;padding:5px;background:#eee">
-		<label style="font-size:19px;margin:0">Today's Charge</label>: <strong style="font-size:19px;color:green">$0.00</strong>
-	</div>
-	@else
-<label>Billing Cycle</label>: <strong>{{$next_billing}}</strong>
+
+<label>Next Billing Date</label>: <strong>{{$next_billing}}</strong>
 </br>
 <label>Package</label>:
 		@if($id == '1')
@@ -152,21 +123,33 @@
 				@if($id == '3')
 					<strong>Agency</strong>
 				@endif
-
-	<div style="border-top:1px solid #ddd;padding:5px;background:#eee">
-		<label style="font-size:18px;margin:0">Today's Charge</label>:
-			@if($id == '1')
-					<strong style="font-size:18px;color:green">$19</strong>
+				<br/>
+<label>Savings</label>: <strong style="color:#ff0000">
+		@if($id == '1')
+					35%
 				@endif
 				@if($id == '2')
-					<strong style="font-size:18px;color:green">$29</strong>
+					40%
 				@endif
 				@if($id == '3')
-					<strong style="font-size:18px;color:green">$59</strong>
+					40%
+				@endif
+</strong>
+<br/>
+	<div style="border-top:1px solid #ddd;padding:5px;background:#f2f2f2">
+		<label style="margin:0">Price</label>:
+			@if($id == '1')
+					<strong style="font-size:18px;color:green"><strike style="color:#999">$29</strike> $19</strong>
+				@endif
+				@if($id == '2')
+					<strong style="font-size:18px;color:green"><strike style="color:#999">$49</strike> $29</strong>
+				@endif
+				@if($id == '3')
+					<strong style="font-size:18px;color:green"><strike style="color:#999">$99</strike> $59</strong>
 				@endif
 	</div>
 
-	@endif
+
 
 	</div>
 </div>

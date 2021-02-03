@@ -2,33 +2,76 @@
 @section('title', 'Organic Ranking Report | Ninja Reports')
 @section('content')
 <div class="col-md-10 overview rankings-container">
+     <div class="inner">
        <div id="tool-desc" class="row">
 
         <div class="col-md-12">
-        <h3>Organic Rankings</h3>
+        <h3>Organic Rankings Report</h3>
         <p>Enter your domain into the toolbar including https:// or http:// and Ninja Reports will find the organic traffic, keywords and rankings for your URL.</p>
     </div>
 
 </div>
-    <div class="row Analyze ">
-        <div class="col-md-10">
-            <input type="text" id="backlink_audit" class="form-control" value="{{$_GET['url'] ?? ''}}" placeholder="Enter URL">
-        </div>
-        <div class="col-md-2">
-            <button class="btn" id="analyse">ANALYZE</button>
-        </div>
-    </div>
-        <div id="waiting" style="display:none;">
-        <div class="loading-box">
-            <img src="{{asset('images/806.gif')}}" alt="loading"/>
-            <h4>Finding Rankings...</h4>
-            <p>Please wait while we find the keywords. This process can take a few minutes.</p>
-        </div>
-    </div>
-     <div id="error-box" style="display:none"><h4>Whoops!</h4><p>There was an error trying to run your ranking report. Please check your URL and try again!</p></div>
-    <div id="text-container" ></div>
-     <!------------------------------------------Animation Script ProgressBarStart----------------------------------------------------->
+    <div class="row">
+    <div class="col-md-12">
+        <div class="row">
 
+        <div class="col-md-6" style="padding-left:0">
+                <form id='analyse_form'>
+        <div class="row Analyze">
+            <div class="col-md-8" style="padding-left:0">
+                <input type="text" id='ranking_audit' class="form-control" value="{{$_GET['url'] ?? ''}}"  placeholder="Enter URL">
+            </div>
+            <div class="col-md-4">
+                <button class="btn" id='analyse'>CRAWL</button><img src="{{asset('images/762.gif')}}" alt="loading" id="loading" style="display:none;"/>
+            </div>
+        </div>
+    </form>
+        </div>
+    </div>
+
+</div>
+</div>
+
+   <div class="row">
+    <div class="col-md-12">
+    <table class="table table-striped seo-report-table" style="margin-top:25px;">
+        <thead class="light">
+            <tr>
+                <th>#</th>
+                <th>URL</th>
+                <th>Status</th>
+                <th>Keywords</th>
+                <th>Crawl Date</th>
+                <th></th>
+            </tr> 
+        </thead>
+            @if(!empty($ranking_results))
+            @foreach($ranking_results as $key => $value)
+            <tr class="report-{{$value['id']}}" data-id="<?php echo $value['id'];?>">
+                <td>{{$key + 1}}</td>
+                <td>{{$value['site_url']}}</td>
+                <td id="status">Crawled</td>
+                <td>{{$value['keywords']}}</td>
+
+                 <td>{{date("F j, Y, g:i a", strtotime($value['updated_at'])) }}</td>
+                 <td>
+                        <a class="btn btn-primary btn-sm" href="{{ url('rankings', $value['id'])}}">View</a>
+                        <a class="btn btn-success btn-sm" target="_blank" href="{{ url('download_ranking_report', $value['id'])}}">PDF</a>
+                        <a class="btn btn-info btn-sm" href=""><i class="fa fa-refresh" aria-hidden="true"></i></a>
+                        <a class="btn btn-warning btn-sm delete-report" data-id="<?php echo $value['id'];?>" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                </td> 
+            </tr>
+            @endforeach
+            @else
+            <tr class="empty"><td colspan="7">No data in table. Add a URL above to run a Organic Keyword Report.</td></tr>
+            @endif
+    </table>
+
+</div>
+</div>
+</div>
+     <!------------------------------------------Animation Script ProgressBarStart----------------------------------------------------->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
@@ -37,48 +80,22 @@
     <!-- <script src="scripts/index.js"></script> -->
     <script type="text/javascript">
 
-        /**
-            * index.js
-            * - All our useful JS goes here, awesome!
-            Maruf-Al Bashir Reza
-            */
-        function insertParam(key, value) {
-                key = encodeURIComponent(key);
-                value = encodeURIComponent(value);
-
-                // kvp looks like ['key1=value1', 'key2=value2', ...]
-                var kvp = document.location.search.substr(1).split('&');
-                let i=0;
-
-                for(; i<kvp.length; i++){
-                    if (kvp[i].startsWith(key + '=')) {
-                        let pair = kvp[i].split('=');
-                        pair[1] = value;
-                        kvp[i] = pair.join('=');
-                        break;
-                    }
-                }
-
-                if(i >= kvp.length){
-                    kvp[kvp.length] = [key,value].join('=');
-                }
-
-                // can return this or...
-                let params = kvp.join('&');
-
-                // reload page with new params
-                document.location.search = params;
-            }
 
         $(document).ready(function($) {
-
- $(document).bind('keypress', function(e) {
+         $(document).bind('keypress', function(e) {
             if(e.keyCode==13){
                  $('#analyse').trigger('click');
              }
         });
-
-
+<?php
+if(!empty($ranking_results)) {
+    ?>
+ $('.table').DataTable({
+            "autoWidth": true,
+            "lengthChange": false,
+            "pageLength": 10
+        });
+<?php } ?>
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -86,30 +103,51 @@
             });
 
             var loggedIn = {{ auth()->check() ? 'true' : 'false' }};
-            var analyze_url =  $("#backlink_audit").val();
+            var analyze_url =  $("#ranking_audit").val();
 
-            analyze_url = ((analyze_url.indexOf('://') === -1)) ? 'https://www.' + analyze_url : analyze_url;
-            
-                if(analyze_url && loggedIn){
-                        if(isUrl(analyze_url) != false){
-                         //   $(".progress-bar1").css("animation-play-state", "running");
-                            get_backlinks();
-                        }else{
-                            //alert("The link doesn't have http or https");
-                        }
-                    }
+        
+                // if(analyze_url && loggedIn){
+                //         if(isUrl(analyze_url) != false){
+                //          //   $(".progress-bar1").css("animation-play-state", "running");
+                //             if(payment) {
+                //                 get_backlinks();
+                //                 } else {
+                //                     //pay
+                //                     $("#ranking_audit").val();
+                //             }
+                //         }else{
+                //             //alert("The link doesn't have http or https");
+                //         }
+                //     }
                
+            $(".delete-report").click(function(e){
+                    e . preventDefault();
+                    var id = $(this).attr("data-id");
+                    $.ajax({
+                        type:'POST',
+                        url:'/delete_ranking_report/' + id,
+                        data: id,
+                        dataType: 'json',
+                        success: function (data) {
+                            //   $("tr[data-id=]").hide();
+                             $('tr[data-id=' + data + ']').hide();
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    });
+                
+                });
 
-
-            $(".btn").click(function(e){
+            $("#analyse").click(function(e){
                     e.preventDefault();
-                    var url =  $("#backlink_audit").val();
-                    url = ((url.indexOf('://') === -1)) ? 'https://www.' + url : url;
+                    var url =  $("#ranking_audit").val();
+               
                     if(isUrl(url)) {
                     if(loggedIn){
-                        !!url && insertParam('url', url);
                         get_backlinks();
                     }else{
+                       // alert('yes');
                         var j$ = jQuery.noConflict();
                         j$("#loginModal").modal("show");
                         $("#login_btn").click(function(e){
@@ -123,13 +161,18 @@
                     }
 
                 } else {
-                    alert('The URL you entered is not valid');
+                    Swal.fire({
+                              title: 'Error!',
+                              text: 'The URL you entered is not valid. Make sure to add http:// or https:// and www or non-www in your URL. EX: https://www.ninjareports.com.',
+                              icon: 'error',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            })
                 }
                 });
                 function get_backlinks(){
-                    var url =  $("#backlink_audit").val();
+                    var url =  $("#ranking_audit").val();
                         if(url.length != 0){
-                        url = ((url.indexOf('://') === -1)) ? 'https://www.' + url : url;
                             if(isUrl(url) !== false){
 
                                         gtag('event', 'click', {
@@ -144,9 +187,9 @@
                                         xhr.upload.addEventListener('progress', function(e) {
                                             if (e.lengthComputable) {
                                                 //console.log(percent);
-                                                $('#error-box').hide();
-                                                $('#waiting').show();
-                                                $('#tool-desc').slideUp();
+                                               // $('#error-box').hide();
+                                                //$('#waiting').show();
+                                               // $('#tool-desc').slideUp();
                                                 $('#analyse').attr('disabled','disabled');
                                             }
                                         });
@@ -157,12 +200,28 @@
                                     data:{url:url},
                                     
                                     success:function(data){
-                                        if(data == 'notsuccessful' || data == 'Expired' || data == 'exceeded' ){
+                                        if(data == 'notsuccessful' || data == 'Expired' || data == 'exceeded' || data == 'payme'){
                                             $('#waiting').hide();
                                             $('#rankingsUpgrade').show();
+                                              }else if(data == 'duplicate'){
+                                           // alert("That URL is already scanned. Check the table below.")
+                                                        Swal.fire({
+                                          title: 'Error!',
+                                          text: 'That URL is already scanned. Check the table below.',
+                                          icon: 'error',
+                                          showConfirmButton: 'false',
+                                          showCloseButton: 'true',
+                                             })
+                                    
+                                             $('#analyse').removeAttr('disabled');
+                                             $('#analyse').text('CRAWL');
+                                             $("#backlink_audit").val('');
+                                              $('#loading').hide();
+                                                $('.table tr.temp').remove();
+
                                         }else{
-                                            $('div#text-container').append(data);
-                                            $('#waiting').hide();
+                                           // $('div#text-container').append(data);
+                                           // $('#waiting').hide();
                                             $('#analyse').removeAttr('disabled');
                                           
                                         }
@@ -178,7 +237,14 @@
                             alert("The URL is not a valid URL.");
                         }
                     }else{
-                        alert('add url');
+                     
+                        Swal.fire({
+                              title: 'Error!',
+                              text: 'Please add a URL in the input below to run a backlink analysis.',
+                              icon: 'error',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            })
                     }
                 }
 

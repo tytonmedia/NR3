@@ -5,10 +5,18 @@ use Exception;
 use Goutte\Client;
 use Illuminate\Http\Request;
 use Spatie\Browsershot\Browsershot;
+use Illuminate\Support\Facades\Log;
+use Redirect;
 use App\Analysis;
 use App\User;
 use App\Payment;
 use App\Audit;
+use App\AuditResults;
+use App\SeoResult;
+use VerumConsilium\Browsershot\Facades\PDF;
+use HeadlessChromium\BrowserFactory;
+use App\WhiteLabel;
+use Mail;
 use GuzzleHttp\Client as guzzler;
 
 ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
@@ -34,13 +42,20 @@ class analysisController extends Controller
         try{
             
             $Payment = Payment::withCount('analysis')->where('user_id',auth()->user()->id)->where('status',1)->first();
-            
-        }catch(Exception $e){}
+            $already_ran = SeoResult::where('url',$url)->where('user_id',auth()->user()->id)->first();
+
+        }catch(Exception $e){
+             Log::error($e);
+        }
 
         if(empty($Payment)){
             $analysis = Analysis::where('user_id',auth()->user()->id)->whereDay('created_at', '=', date('d'))->latest()->first();
             if(empty($analysis)){
+                 if(!empty($already_ran)) {
+                return 'duplicate';
+                } else{
                 return  $this->get_seo($url,$Payment,$time);
+                }
             }else{
                 return 'upgrade';
             }
@@ -49,6 +64,8 @@ class analysisController extends Controller
             return 'notsuccessful';
         }else if ($Payment->plan_id== 1 && $Payment->no_allowed_analysis <= $Payment->analysis_count ){
             return 'exceeded';
+        }else if(!empty($already_ran)) {
+                return 'duplicate';
         }
         else
         {
@@ -72,7 +89,10 @@ class analysisController extends Controller
 
         try{
             $Payment = Payment::withCount('audit')->where('user_id',auth()->user()->id)->where('status',1)->first();
-        }catch(Exception $e){}
+            $already_ran = AuditResults::where('site_url',$url)->where('user_id',auth()->user()->id)->first();
+        }catch(Exception $e){
+             Log::error($e);
+        }
       
         if(empty($Payment) || $Payment->status == 0){
             return 'notsuccessful';
@@ -84,37 +104,47 @@ class analysisController extends Controller
         }
         else if ($Payment->plan_id== 3 && $Payment->no_allowed_audits <= $Payment->audit_count ){
             return 'exceeded';
+        }else if(!empty($already_ran)) {
+                return 'duplicate';
         }
         else
         {
             $client = new Client();
             $crawler = $client->request('GET', $url);
 
-            $create_analysis = new Audit;
-            $create_analysis->user_id =auth()->user()->id;
-            $create_analysis->site_url = $url;
-            $create_analysis->payment_id = $Payment->id;
-            $create_analysis->save();
-
             //get internal links
+            $external_link = array();
+            $internal_link = array();
             try{
                     foreach ($crawler->filter('a') as $a) {
                         $a_links[] = $a->getAttribute('href');
                     }
-
+                       //  dd($a_links);
                     //extract Domain
                     $domain = parse_url($url, PHP_URL_HOST);
+
                     $domain_url = str_replace('www.', '', $domain);
-                    //dd($domain_url);
+                    
                     foreach ($a_links as $lnk) {
+                 
                         if (strpos($lnk, $domain_url) !== false) {
                             $internal_link[] = $lnk;
                         } else {
                             $external_link[] = $lnk;
+                            
                         }
                     }
-                    $pages_link = array_unique(array_filter($internal_link));
-            
+                       //filter out hashtag links ?query parameters and maito, tel links
+                        foreach ($internal_link as $key => $value) {
+                            # code...
+                            if(strpos($value, '#') === false || strpos($value, 'mailto') === false || strpos($value, '?') === false){
+                                    $internal_link_filter[] = $value;
+                            }
+                        }
+                           // dd($internal_link_filter);
+                    $pages_link = array_unique(array_filter($internal_link_filter));
+                
+
                     foreach ($pages_link as $val) {
                         if (parse_url($val, PHP_URL_SCHEME) === 'https' || parse_url($val, PHP_URL_SCHEME) === 'http') {
                             $internal_pages[] = $val;
@@ -125,9 +155,10 @@ class analysisController extends Controller
                         $internal_pages = array_unique($links['InternalLinks']);
                     }
             }catch(Exception $e){
-                $internal_pages[] = $url;
+               $internal_pages[] = $url;
+              // dd($e);
             }
- 
+
                 try{
                     $a = '/';
                     $pages = array();
@@ -141,20 +172,51 @@ class analysisController extends Controller
                                 }
                         }
                     }
-                }catch(Exception $e){}
+                }catch(Exception $e){
+                    Log::error($e);
+                }
                 $internal_page = array_unique($pages);
                
                 
             try {
+                    // $short_meta_description = array();
+                    // $long_meta_description = array();
+                    // $page_link_description = array();
+                    // $page_null_description = array();
+                    // $status301 = array();
+                    // $status302 = array();
+                    // $status404 = array();
+                    // $status500 = array();
+                    // $link_301 = array();
+                    // $link_302 = array();
+                    // $link_404 = array();
+                    // $link_500 = array();
+                    // $total_meta = array();
+                    // $links_more_h1 = array();
+                    // $duplicate_h1 = array();
+                    // $links_empty_h1 = array();
+                    // $long_title = array();
+                    // $url_length = array();
+                    // $less_page_words = array();
+                    // $graph_data = array();
+                    // $less_code_ratio = array();
+                    // $page_miss_meta = array();
+                    // $page_incomplete_card = array();
+                    // $page_incomplete_graph = array();
+                    // $page_miss_title = array();
+                    // $duplicate_title = array();
+                    // $twitter = array();
+                    // $passed_pages = array();
+                    // $page_without_canonical = array();
+                //$duplicate_meta_description = array();
                 foreach ($internal_page as $val) {
-                    
                     
                     $crawler = $client->request('GET', $val);
                     
                     $h1 = $crawler->filter('h1')->each(function ($node) {
                         return $node->text();
                     });
-
+           
                     if (count($h1) > 1) {
                         $links_more_h1[] = $val;
                     }elseif (count($h1) < 1 && strpos($val,"twitter") == false && strpos($val,"facebook") == false && strpos($val,"linkedin") == false && strpos($val,"instagram") == false ) {
@@ -163,14 +225,7 @@ class analysisController extends Controller
                     if(count(array_unique($h1)) < count($h1)){
                         $duplicate_h1[] = $val;
                     }
-
-                    foreach ($h1 as $data) {
-                        if (strlen($data) > 60) {
-                            $h1_greater[] = $val;
-                        } elseif (strlen($data) < 5) {
-                            $h1_short[] = $val;
-                        }
-                    }
+                    
                     $card = $crawler->filter('meta[name="twitter:card"]')->each(function ($node) {
                         return $node->attr('content');
                     });
@@ -229,7 +284,8 @@ class analysisController extends Controller
                     }
 
                     $b = array();
-                    $graph_data[] = array_push($b, $graph_type, $graph_title, $graph_description, $graph_image, $graph_name, $graph_url);
+         
+                   // $graph_data[] = null;
 
                     $title = $crawler->filter('title')->html();
                     if (!empty($title)) {
@@ -238,7 +294,8 @@ class analysisController extends Controller
                         $page_miss_title[] = $val;
                     
                     }
-                    if (strlen($title) < 45) {
+                   
+                    if (strlen($title) < 50) {
                         $short_title[] = $val;
                     } elseif (strlen($title) > 60) {
                         $long_title[] = $val;
@@ -249,12 +306,13 @@ class analysisController extends Controller
                     if(strlen($val)>115){
                         $url_length[] = $val;
                     }
-
+                       // dd($val);
                     //page word count
                     $page = strip_tags($crawler->html());
                     $exp = explode(" ", $page);
                     $page_words = count($exp);
                 
+                   
                     if ($page_words < 600) {
                         $less_page_words[] = $val;
                     }
@@ -264,7 +322,7 @@ class analysisController extends Controller
                     $page_size = round(strlen($crawler->html()) / 1024, 4);
                     $page_text_ratio = $page_words / $size * 100;
                     $page_words_size = round($page_words / 1024, 4);
-                    if ($page_text_ratio < 25) {
+                    if ($page_text_ratio < 10) {
                         $less_code_ratio[] = $val;
                     }
                     //$less_page[] = $page_words;
@@ -291,13 +349,12 @@ class analysisController extends Controller
                     }
                     
                     //meta description
-                    
                     foreach ($crawler->filter('meta[name="description"]') as $desc) {
                         $meta = $desc->getAttribute('content');
                       
                         if (!empty($meta)) {
                             $linkss[] = $val;
-                            if (strlen($meta) < 70) {
+                            if (strlen($meta) < 120) {
                                 $short_meta_description[] = $val;
                             } elseif (strlen($meta) > 160) {
                                 $long_meta_description[] = $val;
@@ -314,56 +371,60 @@ class analysisController extends Controller
                     $redirect_links = get_headers($val);
                     preg_match('/\s(\d+)\s/', $redirect_links[0], $matches);
                     if($matches[0] == 200){
-                        $status200[] = $matches[0];
+                        $status_200[] = $matches[0];
                         $link_200[] = $val;
                     }elseif($matches[0] == 301) {
-                        $status301[] = $matches[0];
+                        $status_301[] = $matches[0];
                         $link_301[] = $val;
                     } elseif ($matches[0] == 302) {
-                        $status302[] = $matches[0];
+                        $status_302[] = $matches[0];
                         $link_302[] = $val;
                     } elseif ($matches[0] == 404) {
-                        $status404[] = $matches[0];
+                        $status_404[] = $matches[0];
                         $link_404[] = $val;
                     
                     } elseif ($matches[0] == 500) {
-                        $status500[] = $matches[0];
+                        $status_500[] = $matches[0];
                         $link_500[] = $val;
                         
                     }
                     $pages[] = $val;
 
-                }
-            } catch (Exception $e) {}
 
-            //H1 Tags Length
-            try {
-                $page_h1_greater = array_unique($h1_greater);
-                $page_h1_less = array_unique($h1_short);
-            } catch (Exception $e) {}
-            
+                }
+
+            } catch (Exception $e) {
+              Log::error($e);
+            }
+        
             //meta duplicate
             try {
+    
                 $arr = array_combine($linkss,$total_meta);
                 $counts = array_count_values($arr);
                 $duplicate_meta_description  = array_filter($arr, function ($value) use ($counts) {
                     return $counts[$value] > 1;
                 });
 
-            } catch(Exception $e) {}
+            } catch(Exception $e) {
+                // Log::error($e);
+            }
 
             //Robot.txt
             try {
                 $get_robot = file_get_contents($url . "/robots.txt");
                 $robots = explode(" ", (str_replace("\r\n", " ", $get_robot)));
                 $robot_txt = array_chunk($robots, 1);
+                $robot= array();
                 foreach ($robot_txt as $dat) {
                     $rob = $dat;
                     foreach ($rob as $data) {
                         $robot[] = $data;
                     }
                 }
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+                // Log::error($e);
+            }
             
             // miss canonical and page miss meta
             try{
@@ -382,7 +443,9 @@ class analysisController extends Controller
                         array_push($page_without_canonical,$d);
                     }
                 }
-            }catch(Exception $e){}
+            }catch(Exception $e){
+                 Log::error($e);
+            }
             
             //duplicate title
             try{
@@ -392,23 +455,13 @@ class analysisController extends Controller
                     return $counts[$value] > 1;
                 });
                 
-            }catch(Exception $e){}
+            }catch(Exception $e){
+                 Log::error($e);
+            }
            
             //Notices Score Count
             try{
-            
-                if(!empty($page_h1_greater)){
-                    $h1_count_greater = count($page_h1_greater);
-                    }else{
-                    $h1_count_greater = 0;
-                }
-
-                if(!empty($page_h1_less)){
-                    $h1_count_less = count($page_h1_less);
-                }else{
-                    $h1_count_less = 0;
-                }
-
+        
                 if(!empty($links_more_h1)){
                     $h1_count_more = count($links_more_h1);
                 }else{
@@ -444,13 +497,10 @@ class analysisController extends Controller
                     $page_incomplete_graph_count = 0;
                 }
 
-                $notices = $h1_count_greater+$h1_count_less+$h1_count_more+$twitter_count+
-                            $graph_count+
-                            $url_length_count+$robot_count+$page_incomplete_graph_count;
+            $notices = $h1_count_more+$twitter_count+$graph_count+$url_length_count+$robot_count+$page_incomplete_graph_count;
+
             }catch(Exception $e){
-                if(empty($notices)){
-                    $notices=0;
-                }
+                 Log::error($e);
             }
             //dd($robot_count);
             //Warning Score Count
@@ -496,6 +546,7 @@ class analysisController extends Controller
 
                 
             }catch(Exception $e){
+                 Log::error($e);
             }
            // dd($short_title_count);
             $warning = $less_page_words_count + $duplicate_h1_count + $page_incomplete_card_count
@@ -550,6 +601,7 @@ class analysisController extends Controller
                     array_push($health,array_keys($short_title));
                 }else{
                     $short_title_count = 0;
+                    $short_title = 0;
                 }
 
                 if(!empty($long_title)){
@@ -580,6 +632,7 @@ class analysisController extends Controller
                 if(empty($errors)){
                     $errors = 0;
                 }
+                 Log::error($e);
             }
             try{
                 $page_with_errors = []; 
@@ -590,7 +643,11 @@ class analysisController extends Controller
                     $page_with_errors[] = $value; 
                     } 
                 }
+                        if(count($pages) > 0){
                 $data = count(array_unique($page_with_errors))/count($pages);
+             } else {
+                $data = 0;
+             }
                 $health_score = (1-($data))*100;
                 $pages = count($pages);
                 $passed_pages = $pages - count($page_with_errors);
@@ -601,18 +658,314 @@ class analysisController extends Controller
             } else {
               $audit_description = "Your website SEO is weak!";  
             }
-            }catch(Exception $e){}
-            return view("dashboard/audit_result",
-            compact('url', 'time', 'page_h1_greater', 'page_h1_less', 'long_title', 'short_title','url_length',
-                'graph_data', 'links_more_h1', 'less_code_ratio', 'short_meta_description',
-                'long_meta_description', 'robot', 'less_page_words', 'links_empty_h1', 'duplicate_h1',
-                'page_miss_meta', 'duplicate_meta_description', 'page_incomplete_card', 'page_incomplete_graph', 'status301',
-                'status302', 'status404', 'status500', 'page_miss_title', 'duplicate_title','twitter',
-                'link_302','link_301','link_404','link_500','page_without_canonical','notices','warning','errors','passed_pages'
-                ,'health_score','pages','audit_description'
-            ));
+            }catch(Exception $e){
+             //   dd($e);
+                 Log::error($e);
+            }
+
+                if(empty($link_302)){
+                    $link_302 = null;
+                } else {
+                    $link_302 = json_encode($link_302);
+                }
+                if(empty($link_301)){
+                    $link_301 = null;
+                } else {
+                    $link_301 = json_encode($link_301);
+                }
+                if(empty($link_404)){
+                    $link_404 = null;
+                } else {
+                    $link_404 = json_encode($link_404);
+                }
+                if(empty($link_500)){
+                    $link_500 = null;
+                } else {
+                    $link_500 = json_encode($link_500);
+                }
+                if(empty($status_302)){
+                    $status_302 = null;
+                } else {
+                    $status_302 = json_encode($status_302);
+                }
+                if(empty($status_301)){
+                    $status_301 = null;
+                } else {
+                    $status_301 = json_encode($status_301);
+                }
+                if(empty($status_404)){
+                    $status_404 = null;
+                } else {
+                    $status_404 = json_encode($status_404);
+                }
+                if(empty($status_500)){
+                    $status_500 = null;
+                } else {
+                    $status_500 = json_encode($status_500);
+                }
+                 if(empty($less_page_words)){
+                    $less_page_words = null;
+                } else {
+                    $less_page_words = json_encode($less_page_words);
+                }
+                 if(empty($duplicate_h1)){
+                    $duplicate_h1 = null;
+                } else {
+                    $duplicate_h1 = json_encode($duplicate_h1);
+                }
+
+                 if(empty($long_meta_description)){
+                    $long_meta_description = null;
+                } else {
+                    $long_meta_description = json_encode($long_meta_description);
+                }
+
+                 if(empty($short_meta_description)){
+                    $short_meta_description = null;
+                } else {
+                    $short_meta_description = json_encode($short_meta_description);
+                }
+
+                 if(empty($long_title)){
+                    $long_title = null;
+                } else {
+                    $long_title = json_encode($long_title);
+                }
+             
+                 if(empty($short_title)){
+                    $short_title = null;
+                } else {
+                    $short_title = json_encode($short_title);
+                }
+
+                  if(empty($links_more_h1)){
+                    $links_more_h1 = null;
+                } else {
+                    $links_more_h1 = json_encode($links_more_h1);
+                }
+                   if(empty($links_empty_h1)){
+                    $links_empty_h1 = null;
+                } else {
+                    $links_empty_h1 = json_encode($links_empty_h1);
+                }
+                if(empty($graph_data)){
+                    $graph_data = null;
+                } else {
+                    $graph_data = json_encode($graph_data);
+                }
+                if(empty($less_code_ratio)){
+                    $less_code_ratio = null;
+                } else {
+                    $less_code_ratio = json_encode($less_code_ratio);
+                }
+                if(empty($robot)){
+                    $robot = null;
+                } else {
+                    $robot = json_encode($robot);
+                }
+                 if(empty($url_length)){
+                    $url_length = null;
+                } else {
+                    $url_length = json_encode($url_length);
+                }
+                   if(empty($page_miss_meta)){
+                    $page_miss_meta = null;
+                } else {
+                    $page_miss_meta = json_encode($page_miss_meta);
+                }
+                   if(empty($duplicate_meta_description)){
+                    $duplicate_meta_description = null;
+                } else {
+                    $duplicate_meta_description = json_encode($duplicate_meta_description);
+                }
+                   if(empty($page_incomplete_card)){
+                    $page_incomplete_card = null;
+                } else {
+                    $page_incomplete_card = json_encode($page_incomplete_card);
+                }
+                   if(empty($page_incomplete_graph)){
+                    $page_incomplete_graph = null;
+                } else {
+                    $page_incomplete_graph = json_encode($page_incomplete_graph);
+                }
+                   if(empty($page_miss_title)){
+                    $page_miss_title = null;
+                } else {
+                    $page_miss_title = json_encode($page_miss_title);
+                }
+                   if(empty($duplicate_title)){
+                    $duplicate_title = null;
+                } else {
+                    $duplicate_title = json_encode($duplicate_title);
+                }
+                   if(empty($twitter)){
+                    $twitter = null;
+                } else {
+                    $twitter = json_encode($twitter);
+                }
+                   if(empty($page_without_canonical)){
+                    $page_without_canonical = null;
+                } else {
+                    $page_without_canonical = json_encode($page_without_canonical);
+                }
+            // return view("dashboard/audit_result",
+            // compact('url', 'time', 'page_h1_greater', 'page_h1_less', 'long_title', 'short_title','url_length',
+            //     'graph_data', 'links_more_h1', 'less_code_ratio', 'short_meta_description',
+            //     'long_meta_description', 'robot', 'less_page_words', 'links_empty_h1', 'duplicate_h1',
+            //     'page_miss_meta', 'duplicate_meta_description', 'page_incomplete_card', 'page_incomplete_graph', 'status301',
+            //     'status302', 'status404', 'status500', 'page_miss_title', 'duplicate_title','twitter',
+            //     'link_302','link_301','link_404','link_500','page_without_canonical','notices','warning','errors','passed_pages'
+            //     ,'health_score','pages','audit_description'
+            // ));
+$errors = $link_404_count+$link_500_count+$duplicate_title_count+
+                $duplicate_meta_description_count+$page_miss_meta_count+
+                $links_empty_h1_count+$short_title_count+$long_title_count+$short_meta_description_count+$long_meta_description_count;
+
+
+                             $seo_audit_data = new Audit;
+                                $seo_audit_data->user_id = auth()->user()->id;
+                                $seo_audit_data->payment_id = $Payment->id ?? 0;
+                                $seo_audit_data->site_url = $url;
+                                $seo_audit_data->long_title = $long_title;
+                                $seo_audit_data->short_title = $short_title;
+                                $seo_audit_data->url_length = $url_length;
+                                $seo_audit_data->graph_data = $graph_data;
+                                $seo_audit_data->links_more_h1 = $links_more_h1;
+                                $seo_audit_data->less_code_ratio = $less_code_ratio;
+                                $seo_audit_data->short_meta_description = $short_meta_description;
+                                $seo_audit_data->long_meta_description = $long_meta_description;
+                                $seo_audit_data->robot = $robot;
+                                $seo_audit_data->less_page_words = $less_page_words;
+                                $seo_audit_data->links_empty_h1 = $links_empty_h1;
+                                $seo_audit_data->duplicate_h1 =$duplicate_h1;
+                                $seo_audit_data->page_miss_meta = $page_miss_meta;
+                                $seo_audit_data->duplicate_meta_description = $duplicate_meta_description;
+                                $seo_audit_data->page_incomplete_card = $page_incomplete_card;
+                                $seo_audit_data->page_incomplete_graph = $page_incomplete_graph;
+                                $seo_audit_data->status_301 = $status_301;
+                                $seo_audit_data->status_302 = $status_302;
+                                $seo_audit_data->status_404 = $status_404;
+                                $seo_audit_data->status_500 = $status_500;
+                                $seo_audit_data->page_miss_title = $page_miss_title;
+                                $seo_audit_data->duplicate_title = $duplicate_title;
+                                $seo_audit_data->twitter = $twitter;
+                                $seo_audit_data->link_302 = $link_302;
+                                $seo_audit_data->link_301 = $link_301;
+                                $seo_audit_data->link_404 = $link_404;
+                                $seo_audit_data->link_500 = $link_500;
+                                $seo_audit_data->page_without_canonical = $page_without_canonical;
+                                $seo_audit_data->notices = $notices;
+                                $seo_audit_data->warning = $warning;
+                                $seo_audit_data->errors = $errors;
+                                $seo_audit_data->passed_pages = $passed_pages;
+                                $seo_audit_data->health_score = $health_score;
+                                $seo_audit_data->pages = $pages;
+                                $seo_audit_data->audit_description = $audit_description;
+                                $seo_audit_data->save();
+
+
+                                $create_audit = new AuditResults;
+                                $create_audit->user_id =auth()->user()->id;
+                                $create_audit->site_url = $url;
+                                $create_audit->audit_id = $seo_audit_data->id;
+                                $create_audit->payment_id = $Payment->id;
+                                $create_audit->save();
+
+
+                       $data = json_encode(array(
+                                    'id' => $seo_audit_data->id,
+                                    'url' => $url,
+                                    'errors' => $errors,
+                                    'updated_at' => date('F j, Y, g:i a', time())
+                   
+                                ));
+
+                        return $data;
+
         }
     }
+
+    public function seo_audit_details($id){
+        $audit_results = AuditResults::all()->where('id', $id)->toArray();
+           // dd($audit_results);
+            $audit_results = current($audit_results); 
+        $audit_details = Audit::all()->where('id', $audit_results['audit_id'])->toArray();
+        $audit_details = current($audit_details);     
+       // dd($audit_details);  
+        $user = User::where('id',auth()->user()->id)->first()->toArray();
+        $white_label=WhiteLabel::where('user_id',auth()->user()->id)->first();
+
+        //dd($audit_results);
+        if($white_label) {
+            $white_label = $white_label->image_path;
+        } else{
+            $white_label = 0;
+        }
+
+        if($audit_details['user_id'] == $user['id']){
+                return view('dashboard/audit_result',compact('audit_details','white_label'));
+        } else{
+                return redirect::to('/');
+        }
+        
+           }
+
+ public function delete_audit_report($id){
+        Audit::where('id', $id)->delete();
+        AuditResults::where('audit_id', $id)->delete();
+        return $id;
+           }
+
+    public function download_audit_report($id){
+             
+                // replace default 'chrome' with 'chromium-browser'
+                   // $browserFactory = new BrowserFactory('C:\Programs\\Google\\Chrome\\Application\\chrome.exe');
+                 //   $browser = $browserFactory->createBrowser();
+
+        $audit_details = AuditResults::all()->where('id', $id)->toArray();
+        $audit_details = current($audit_details);
+         $white_label=WhiteLabel::where('user_id',auth()->user()->id)->first();
+        if(!empty($white_label)) {
+            $white_label = $white_label->image_path;
+        } else{
+            $white_label = 0;
+        }
+       // $html = \View::make('dashboard/seo_result', compact('seo_audit_details'))->render();
+        $html = view('dashboard/audit_result', compact('audit_details', 'white_label'))->render();
+        
+        Browsershot::html($html)->setNodeBinary('C:\wamp64\bin\nodejs\node.exe')->setNodeModulePath("C:\wamp64\bin\nodejs\node_modules")->setChromePath("C:\Programs\\Google\\Chrome\\Application\\chrome.exe")->setIncludePath('C:\wamp64\bin')->noSandbox()->pdf();
+
+         return 'done';
+
+
+           }
+
+    public function email_audit_report(Request $request){
+  
+        $send_to = $request->input('send_to');
+             $url = $request->input('url');
+             $id = $request->input('id');
+
+                // send seo report email
+        $audit_details = AuditResults::select('site_url','notices','warnings','errors','passed_pages','health_score','pages','audit_description','created_at')->where('id', $id)->get()->toArray();
+            $audit_details = current($audit_details);
+            
+          // print_r($seo_audit_details);
+           
+                Mail::send('emails/audit_report', compact('audit_details', 'send_to', 'message'), function ($message) use ($send_to, $seo_audit_details, $url)
+                        {
+                            $message->from('admin@ninjareports.com', 'Ninja Reports');
+                            $message->to($send_to);
+                            $message->subject('SEO Audit of '.$url);
+                });
+                      // check for failures
+               if (Mail::failures()) {
+                 // return response showing failed emails
+                  return 0;
+                     } else {
+                      return 1;
+                     }
+           }
 
     public function get_a_href($url){
         $url = htmlentities(strip_tags($url));
@@ -624,6 +977,8 @@ class analysisController extends Controller
         $CountOfLinks = count($linksInArray);
         $InternalLinkCount = 0;
         $ExternalLinkCount = 0;
+        $ExternalDomainsInArray = array();
+        $InternalDomainsInArray = array();
         for($Counter=0;$Counter<$CountOfLinks;$Counter++){
          if($linksInArray[$Counter] == "" || $linksInArray[$Counter] == "#")
           continue;
@@ -640,7 +995,7 @@ class analysisController extends Controller
         preg_match('/'.$DomainName.'/',$Link,$Check);
         if($Check == NULL)
         {
-        preg_match('/http:\/\//',$Link,$ExternalLinkCheck);
+        preg_match('/(http|https):\/\//',$Link,$ExternalLinkCheck);
         if($ExternalLinkCheck == NULL)
         {
         $InternalDomainsInArray[$InternalLinkCount] = $Link;
@@ -668,12 +1023,6 @@ class analysisController extends Controller
     public function get_seo($url,$Payment,$time){
         $client = new Client();
         $crawler = $client->request('GET', $url);
-
-        $create_analysis = new Analysis;
-        $create_analysis->user_id = auth()->user()->id;
-        $create_analysis->site_url = $url;
-        $create_analysis->payment_id = $Payment->id ?? Null;
-        $create_analysis->save();
               
         //Mobile Friendly test
         try{
@@ -709,6 +1058,52 @@ class analysisController extends Controller
                 $mobile_friendly = 'Error';
             }     
         }catch(Exception $e){}
+
+
+          //pagespeed test
+        try{
+
+            $url_req = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url='.$url.'&screenshot=true&key=AIzaSyAHRm6Jkj3mkwZkpvUK1H4haBgGT7_mj8k';  
+
+                if (function_exists('file_get_contents')) {    
+                    $result = @file_get_contents($url_req);
+                  }    
+                  if ($result == '') {    
+                  $ch = curl_init();    
+                  $timeout = 60;    
+                  curl_setopt($ch, CURLOPT_URL, $url_req);    
+                  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);   
+                  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);  
+                  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);  
+                  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);  
+                  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);    
+                  $result = curl_exec($ch);    
+                  curl_close($ch);    
+                 }    
+
+                $pagespeed = json_decode($result, true);
+
+                // Grab the Screenshot data.
+               // $screenshot = $pagespeed['screenshot']['data'];
+
+            $screenshot = str_replace('_','/',$pagespeed['lighthouseResult']['audits']['final-screenshot']['details']['data']);
+            $performance_score = $pagespeed['lighthouseResult']['categories']['performance']['score'];
+            $loadtime = $pagespeed['lighthouseResult']['audits']['speed-index']['displayValue'];
+            $fcp = $pagespeed['lighthouseResult']['audits']['first-contentful-paint']['displayValue'];
+            $lcp = $pagespeed['lighthouseResult']['audits']['largest-contentful-paint']['displayValue'];
+            $cls = $pagespeed['lighthouseResult']['audits']['cumulative-layout-shift']['displayValue'];
+            $responsive_images = $pagespeed['lighthouseResult']['audits']['uses-responsive-images']['displayValue'] ?? null;
+            $css_min = $pagespeed['lighthouseResult']['audits']['unminified-css']['displayValue'] ?? null;
+            $css_min_score = $pagespeed['lighthouseResult']['audits']['unminified-css']['score'] ?? null; 
+            $css_min_bytes = $pagespeed['lighthouseResult']['audits']['unminified-css']['details']['items'][1]['wastedBytes'] ?? null;
+            $js_min = $pagespeed['lighthouseResult']['audits']['unminified-javascript']['displayValue'] ?? null;
+            $js_min_score = $pagespeed['lighthouseResult']['audits']['unminified-javascript']['score'] ?? null;
+            $js_min_bytes = $pagespeed['lighthouseResult']['audits']['unminified-javascript']['details']['items'][1]['wastedBytes'] ?? null;
+            $gzip_compression = $pagespeed['lighthouseResult']['audits']['uses-text-compression']['details']['items'][1]['wastedBytes'] ?? null;
+            
+        }catch(Exception $e){
+            //dd($e);
+        }
         
        //backlink count
         if($Payment != NULL) {
@@ -760,7 +1155,7 @@ class analysisController extends Controller
         if($Payment != NULL) {
             // if is a paid user, show the backlink data
         try{
-            $semrush_backlinks = "https://api.semrush.com/analytics/v1/?key=247c8d4143eff74adb96fb2f0b3f3d8a&type=backlinks&target=".$url."&target_type=url&export_columns=source_url,anchor,external_num,internal_num&display_limit=5";
+            $semrush_backlinks = "https://api.semrush.com/analytics/v1/?key=247c8d4143eff74adb96fb2f0b3f3d8a&type=backlinks&target=".$url."&target_type=url&export_columns=source_url,anchor,external_num,internal_num&display_limit=3";
 
             $curl = curl_init($semrush_backlinks);
             curl_setopt($curl, CURLOPT_URL, $semrush_backlinks);
@@ -797,7 +1192,7 @@ class analysisController extends Controller
         if($Payment != NULL) {
             // if is a paid user, show the organic keywords
         try{
-            $semrush_keywords = "https://api.semrush.com/?key=247c8d4143eff74adb96fb2f0b3f3d8a&type=url_organic&database=us&url=".$url."&display_limit=10&export_columns=Ph,Po,Nq,Co,Kd,Tg";
+            $semrush_keywords = "https://api.semrush.com/?key=247c8d4143eff74adb96fb2f0b3f3d8a&type=url_organic&database=us&url=".$url."&display_limit=5&export_columns=Ph,Po,Nq,Co,Kd,Tg";
 
             $curl = curl_init($semrush_keywords);
             curl_setopt($curl, CURLOPT_URL, $semrush_keywords);
@@ -813,7 +1208,7 @@ class analysisController extends Controller
 
              if (strpos($resp,'ERROR ')===0) {
                 //error
-                $keyword_list = 'empty';
+                $keyword_list = NULL;
                 }
                  else {
                 // no error
@@ -879,7 +1274,6 @@ class analysisController extends Controller
 
             }
         } catch (Exception $e) {}
-
         //SSL Checker
         try {
             $orignal_parse = parse_url($url, PHP_URL_HOST);
@@ -896,17 +1290,40 @@ class analysisController extends Controller
                 $a_links[] = $a->getAttribute('href');
             }
             //extract Domain
-            $domain = parse_url($url, PHP_URL_HOST);
-            $domain_url = str_replace('www.', '', $domain);
+            $internal_link = array();
+            $external_link = array();
+            $link_url = parse_url( $url );
+            $home_url = parse_url( $_SERVER['HTTP_HOST'] );     
 
-            foreach ($a_links as $lnk) {
-                if (strpos($lnk, $domain_url) !== false || strpos($lnk, "/") == '0') {
-                    $internal_link[] = $lnk;
-                } else {
-                    $external_link[] = $lnk;
-                }
-            }
+                   
+                    //dd($domain_url);
+                    foreach ($a_links as $lnk) {
+
+                            if( empty($link_url['host']) ) {
+                                    // Is an internal link
+         
+                                $internal_link[] = $lnk;
+                             } elseif( $link_url['host'] == $home_url['host'] ) {
+                                            // Is an internal link
+          
+                                $internal_link[] = $lnk;
+                             } else {
+                                         // Is an external link
+                                $external_link[] = $lnk;
+                        }
+                            }
+
+                        $external_link = array_unique(array_filter($external_link));
+                        $internal_link = array_unique(array_filter($internal_link));
+
+                            if(empty($internal_link)){
+                        $links = $this->get_a_href($url);
+                        $internal_link = array_unique($links['InternalLinks']);
+                            }
+
+                       
         } catch (Exception $e) {}
+
         //Link To Social Media Page
         try {
             $social_link = array('facebook', 'linkedin', 'twitter', 'youtube', 'instagram');
@@ -955,7 +1372,7 @@ class analysisController extends Controller
                 if (parse_url($val, PHP_URL_SCHEME) !== 'https') {
                     $link_https = $count + 1;
                 } else {
-                    $link_https = '';
+                    $link_https = 0;
                 }
                 $count++;
             }
@@ -980,7 +1397,7 @@ class analysisController extends Controller
             $robots = explode(" ", (preg_replace("/\r|\n/", " ", $get_robot)));
             $robot_txt = array_chunk($robots, 1);
             if (in_array("Sitemap:", $robots)) {
-                $sitemap = "found";
+                $sitemap = 1;
             }
             foreach ($robot_txt as $val) {
                 $rob = $val;
@@ -996,11 +1413,11 @@ class analysisController extends Controller
                 $headers = get_headers($ext);
                 preg_match('/\s(\d+)\s/', $headers[0], $matches);
                 if ($matches[0] == 301) {
-                    $status301[] = $matches[0];
+                    $status_301[] = $matches[0];
                 } elseif ($matches[0] == 302) {
-                    $status302[] = $matches[0];
+                    $status_302[] = $matches[0];
                 } elseif ($matches[0] == 404) {
-                    $status404[] = $matches[0];
+                    $status_404[] = $matches[0];
                 }
             }
         } catch (Exception $e) {}
@@ -1011,6 +1428,8 @@ class analysisController extends Controller
             foreach ($headers as $header) {
                 if (stripos($header, "Cache-Control") !== false) {
                     $cache = $header;
+                } else{
+                    $cache = null;
                 }
             }
         } catch (Exception $e) {
@@ -1038,7 +1457,6 @@ class analysisController extends Controller
 
         $contents = preg_replace($search," ", $str);
 
-        
         $word_count = $this->extractKeyWords(strip_tags($contents))[0];
         $words = str_word_count(strtolower($contents),1);
         $t =preg_replace("/[^A-Za-z0-9 ]/", '', strip_tags($contents));
@@ -1059,12 +1477,11 @@ class analysisController extends Controller
         $word = count($result);
 
 
-
         $word_page  = array_filter($page_w, function ($value) use ($item) {
             return !is_numeric($value);
         });
         $page_words = count($word_page);
-        
+
         //Text-HTML ratio
         $size = strlen(implode(' ', array_unique(explode(' ', $contents))));
         $page_size = round(strlen($crawler->html()) / 1024, 4);
@@ -1106,14 +1523,41 @@ class analysisController extends Controller
 
         //Favicon
         try {
+            $newUrl = $this->stripUrlPath($url);
+            $newUrl = rtrim($newUrl,"/");
             foreach ($crawler->filter('link') as $a) {
                 if(strpos($a->getAttribute('href'), 'favicon') !== false){
+
                 $favicon = $a->getAttribute('href');
+                $parsed = parse_url($favicon);
+
+                        if($parsed['scheme'] == 'https' || $parsed['scheme'] == 'http'){
+                            
+                             $favicon = $favicon;
+                        } else{
+                             $favicon =  $newUrl.$favicon;
+                        }
                 }elseif(strpos($a->getAttribute('rel'), 'shortcut') !== false){
+
                     $favicon = $a->getAttribute('href');
+                    $parsed = parse_url($favicon);
+                   if($parsed['scheme'] == 'https' || $parsed['scheme'] == 'http'){
+                            $favicon = $favicon;
+                        } else{
+                           
+                              $favicon =  $newUrl.$favicon;
+                        }
                 }
                 else{
                     $favicon = $crawler->filterXpath('//link[@rel="icon"]')->attr('href');
+
+                    $parsed = parse_url($favicon);
+                   if($parsed['scheme'] == 'https' || $parsed['scheme'] == 'http'){
+                             $favicon = $favicon;
+                        } else{
+                           
+                             $favicon =  $newUrl.$favicon;
+                        }
                 }
             }
         }catch(Exception $e){}
@@ -1123,7 +1567,8 @@ class analysisController extends Controller
                 $favicon = $crawler->filterXpath('//link[@rel="shortcut icon"]')->attr('href');
             }
         }catch(Exception $e){}
-        
+
+
         //iframe
         try {
             foreach ($crawler->filter('iframe') as $frame) {
@@ -1164,14 +1609,14 @@ class analysisController extends Controller
 
             $img_alt = count($all_img_src) - count($img_without_alt);
             if (empty($img_without_alt)) {
-                $img_miss_alt = '';
+                $img_miss_alt = null;
             } else {
                 $img_miss_alt = count($img_without_alt);
             }
 
         } catch (Exception $e) {
         }
-       
+
         //Page Score Passed
         try {
             if ($title_length > 50 && $title_length <= 60) {
@@ -1311,25 +1756,25 @@ class analysisController extends Controller
             }else{
                 $val28_pass = 0;
             }   
-            $text_html_ration = 1;
+         
             $http_rquest = 1;
 
             $total_passed_score = $val1_pass + $val2_pass + $val3_pass + $val4_pass + $val5_pass + $val6_pass + $val7_pass + $val8_pass + $val9_pass
                 + $val10_pass + $val11_pass + $val12_pass + $val13_pass + $val14_pass + $val15_pass + $val16_pass + $val17_pass
-                + $val18_pass + $val20_pass + $val21_pass + $val22_pass + $val23_pass + $val24_pass +
-                $text_html_ration + $http_rquest + $val25_pass + $val26_pass + $val27_pass + $val28_pass;
+                + $val18_pass + $val20_pass + $val21_pass + $val22_pass + $val23_pass + $val24_pass +  $http_rquest + $val25_pass + $val26_pass + $val27_pass + $val28_pass;
              $passed_score = round(((float)$total_passed_score/30)*100, 0);
             if($passed_score > 80 ){
-            $score_description = "Your page SEO is good!";
+            $score_description = "Your on-page SEO is good!";
             } elseif ($passed_score > 70) {
-            $score_description = "Your page SEO could be better!";
+            $score_description = "Your on-page SEO could be better!";
             } elseif ($passed_score > 60) {
-            $score_description = "Your page SEO needs work!";
+            $score_description = "Your on-page SEO needs work!";
             } else {
-              $score_description = "Your page SEO is weak!";  
+              $score_description = "Your on-page SEO is weak!";  
             }
         } catch (Exception $e) {}
     
+
         //Page Score Warning
         try {
             if (empty($canonical)) {$val3_warning = 1;} else {$val3_warning = 0;}
@@ -1347,7 +1792,7 @@ class analysisController extends Controller
             } else {
                 $val18_warning = 1;
             }
-            if (!empty($sitemap)) {$val19_warning = 0;} else {$val19_warning = 1;}
+            if ($sitemap == 1) {$val19_warning = 0;} else {$val19_warning = 1;}
 
             if (!empty($favicon)) {$val20_pass = 0;} else {$val20_pass = 1;}
             if ($page_words > 300) {$val12_pass = 0;} else {$val12_pass = 1;}
@@ -1358,6 +1803,7 @@ class analysisController extends Controller
 
             $total_warning_score = $val3_warning + $val5_warning + $val6_warning
                 + $val8_warning + $val9_warning + $val10_warning + $val18_warning + $val19_warning+$val20_pass+$val13_pass+$val14_pass;
+             //   dd($total_warning_score);
             $warning_score = round(($total_warning_score/11)*100);
         } catch (Exception $e) {}
 
@@ -1439,68 +1885,248 @@ class analysisController extends Controller
             $notice_score = $val1_notice+$val2_notice+$val3_notice+$val4_notice+$val5_notice+$val6_notice;
             $notice_score = round($notice_score);
         }catch(Exception $e){}
-        //dd($notice_score);
-         return view("dashboard/seo_result", compact(
-            'url',
-            'title',
-            'title_length',
-            'meta',
-            'meta_length',
-            'img_alt',
-            'img_miss_alt',
-            'iframe',
-            'all_img_src',
-            'canonical',
-            'time',
-            'img_without_alt',
-            'url_seo_friendly',
-            'h1',
-            'h1_tags',
-            'h2',
-            'h2_tags',
-            'h3',
-            'h3_tags',
-            'word_count',
-            'numWords',
-            'density_message',
-            'keyword_title',
-            'page_words',
-            'page_size',
-            'page_text_ratio',
-            'page_words_size',
-            'http',
-            'cache',
-            'page_https',
-            'status404',
-            'internal_link',
-            'a_https',
-            'link_https',
-            'script_https',
-            'social_media_link',
-            'robot',
-            'sitemap',
-            'schema',
-            'social_schema',
-            'passed_score',
-            'warning_score',
-            'error_score',
-            'img_data',
-            'favicon',
-            'mobile_friendly',
-            'ssl_certificate',
-            'notice_score',
-            'image',
-            'score_description',
-            'word',
-            'domains_num',
-            'urls_num',
-            'keyword_list',
-            'schema_types',
-            'semrush_links'));
 
+        if(empty($schema_tags)){
+            $schema_tags = null;
+        }
+        if(empty($schema_types)){
+            $schema_types = null;
+        } else{
+            $schema_types = json_encode($schema_types);
+        }
+         try {
+            if(empty($ssl_certificate)){
+            $ssl_certificate = 0;
+            } else {
+                $ssl_certificate = 1;
+            }
+            if(empty($robot)){
+            $robot = 0;
+            } else {
+                $robot = 1;
+            }
+            if(empty($img_without_alt)){
+               $img_without_alt = null;
+            } else{
+                $img_without_alt = json_encode($img_without_alt);
+            }
+            if(empty($all_img_src)){
+                $all_img_src = null;
+            } else{
+                $all_img_src = json_encode($all_img_src);
+            }
+            if(empty($internal_link)){
+                $internal_link = null;
+            } else{
+                $internal_link = json_encode($internal_link);
+            }
+            if(empty($img_data)){
+                $img_data = null;
+            }
+            if(empty($social_schema)){
+                $social_schema = null;
+            } else{
+                $social_schema = json_encode($social_schema);
+            }
+            if($keyword_list != null){
+                $keyword_list = json_encode($keyword_list);
+            } 
+                if($cache != null){
+                $cache = 1;
+            } else{
+                $cache = 0;
+            }
+                if(empty($schema_org)){
+                $schema_org = null;
+            } else{
+                $schema_org = json_encode($schema_org);
+            }
+               if(empty($warning_score)){
+                $warning_score = 0;
+            } else{
+                $warning_score = $warning_score;
+            }
 
+                                $seo_result_data = new SeoResult;
+                                $seo_result_data->user_id = auth()->user()->id;
+                                $seo_result_data->payment_id = $Payment->id ?? 0;
+                                $seo_result_data->url = $url;
+                                $seo_result_data->title = $title;
+                                $seo_result_data->title_length = $title_length;
+                                $seo_result_data->meta = $meta;
+                                $seo_result_data->meta_length = $meta_length;
+                                $seo_result_data->img_alt = $img_alt ?? 0;
+                                $seo_result_data->img_miss_alt = $img_miss_alt ?? 0;
+                                $seo_result_data->iframe = $iframe ?? 0;
+                                $seo_result_data->all_img_src = $all_img_src ?? null;
+                                $seo_result_data->canonical = $canonical ?? null;
+                                $seo_result_data->img_without_alt = $img_without_alt;
+                                $seo_result_data->url_seo_friendly = $url_seo_friendly;
+                                $seo_result_data->h1 = json_encode($h1) ?? null;
+                                $seo_result_data->h1_tags = $h1_tags;
+                                $seo_result_data->h2 = json_encode($h2) ?? null;
+                                $seo_result_data->h2_tags = $h2_tags;
+                                $seo_result_data->h3 = json_encode($h3) ?? null;
+                                $seo_result_data->h3_tags = $h3_tags;
+                                $seo_result_data->word_count = json_encode($word_count) ?? null;
+                                $seo_result_data->numWords = $numWords ?? 0;
+                                $seo_result_data->external_links = json_encode($external_link) ?? null;
+                                $seo_result_data->page_words = $page_words ?? '';
+                                $seo_result_data->page_size = $page_size ?? '';
+                                $seo_result_data->page_text_ratio = $page_text_ratio ?? '';
+                                $seo_result_data->page_words_size = $page_words_size ?? '';
+                                $seo_result_data->http = json_encode($http) ?? null;
+                                $seo_result_data->cache = $cache ?? 0;
+                                $seo_result_data->page_https = $page_https ?? '';
+                                $seo_result_data->status404 = $status404 ?? null;
+                                $seo_result_data->internal_link = $internal_link;
+                                $seo_result_data->a_https = $a_https ?? 0;
+                                $seo_result_data->link_https = $link_https ?? '';
+                                $seo_result_data->script_https = $script_https ?? '';
+                                $seo_result_data->social_media_link = $social_media_link ?? null;
+                                $seo_result_data->robot = $robot;
+                                $seo_result_data->sitemap = $sitemap ?? 0;
+                                $seo_result_data->schema_data = json_encode($schema_org) ?? null;
+                                $seo_result_data->social_schema = $social_schema;
+                                $seo_result_data->passed_score = $passed_score ?? 0;
+                                $seo_result_data->warning_score = $warning_score ?? null;
+                                $seo_result_data->error_score = $error_score ?? 0;
+                                $seo_result_data->img_data = json_encode($img_data) ?? null;
+                                $seo_result_data->favicon = $favicon ?? '';
+                                $seo_result_data->mobile_friendly = $mobile_friendly ?? '';
+                                $seo_result_data->ssl_certificate = $ssl_certificate;
+                                $seo_result_data->notice_score = $notice_score;
+                                $seo_result_data->image = $screenshot ?? '';
+                                $seo_result_data->score_description = $score_description ?? '';
+                                $seo_result_data->word = $word ?? '';
+                                $seo_result_data->domains_num = $domains_num ?? '';
+                                $seo_result_data->urls_num = $urls_num ?? '';
+                                $seo_result_data->keyword_list = $keyword_list;
+                                $seo_result_data->schema_types = $schema_types;
+                                $seo_result_data->semrush_links = json_encode($semrush_links) ?? null;
+                                $seo_result_data->performance_score = $performance_score ?? '';
+                                $seo_result_data->loadtime = $loadtime ?? '';
+                                $seo_result_data->fcp = $fcp ?? null;
+                                $seo_result_data->lcp = $lcp ?? null;
+                                $seo_result_data->cls = $cls ?? null;
+                                $seo_result_data->responsive_images = $responsive_images ?? null;
+                                $seo_result_data->css_min = $css_min ?? null;
+                                $seo_result_data->css_min_bytes = $css_min_bytes ??  null;
+                                $seo_result_data->js_min = $js_min ?? null;
+                                $seo_result_data->js_min_score = $js_min_score ?? null;
+                                $seo_result_data->js_min_bytes = $js_min_bytes ?? null;
+                                $seo_result_data->gzip_compression = $gzip_compression ?? null;
+                                //print_r($seo_result_data);
+                              $seo_result_data->save();
 
+                                     $create_analysis = new Analysis;
+                                  $create_analysis->user_id = auth()->user()->id;
+                                     $create_analysis->site_url = $url;
+                               $create_analysis->payment_id = $Payment->id ?? Null;
+                                   $create_analysis->save();
+
+                                $data = json_encode(array(
+                                    'id' => $seo_result_data->id,
+                                    'url' => $url,
+                                    'passed_score' => $passed_score,
+                                    'error_score' => $error_score,
+                                    'updated_at' => date('F j, Y, g:i a', time())
+                                ));
+
+                                return $data;
+
+        }catch(Exception $e){
+           // Log::error($e);
+        }
     }
+
+    public function download_seo_report($id){
+             
+                // replace default 'chrome' with 'chromium-browser'
+                   // $browserFactory = new BrowserFactory('C:\Programs\\Google\\Chrome\\Application\\chrome.exe');
+                 //   $browser = $browserFactory->createBrowser();
+
+        $seo_audit_details = SeoResult::all()->where('id', $id)->toArray();
+        $seo_audit_details = current($seo_audit_details);
+         $white_label=WhiteLabel::where('user_id',auth()->user()->id)->first();
+        if(!empty($white_label)) {
+            $white_label = $white_label->image_path;
+        } else{
+            $white_label = 0;
+        }
+       // $html = \View::make('dashboard/seo_result', compact('seo_audit_details'))->render();
+        $html = view('dashboard/seo_result', compact('seo_audit_details', 'white_label'))->render();
+        
+        Browsershot::html($html)->setNodeBinary('C:\wamp64\bin\nodejs\node.exe')->setNodeModulePath("C:\wamp64\bin\nodejs\node_modules")->setChromePath("C:\Programs\\Google\\Chrome\\Application\\chrome.exe")->setIncludePath('C:\wamp64\bin')->noSandbox()->pdf();
+
+         return 'done';
+
+
+           }
+
+    public function seo_analysis_details($id){
+        $seo_audit_details = SeoResult::all()->where('id', $id)->toArray();
+        $seo_audit_details = current($seo_audit_details);
+        $user = User::where('id',auth()->user()->id)->first()->toArray();
+        $white_label=WhiteLabel::where('user_id',auth()->user()->id)->first();
+        if($white_label) {
+            $white_label = $white_label->image_path;
+        } else{
+            $white_label = 0;
+        }
+
+        if($seo_audit_details['user_id'] == $user['id']){
+                return view('dashboard/seo_result',compact('seo_audit_details','white_label'));
+        } else{
+                return redirect::to('/');
+        }
+        
+           }
+
+
+    public function email_seo_report(Request $request){
+  
+        $send_to = $request->input('send_to');
+             $url = $request->input('url');
+             $id = $request->input('id');
+
+                // send seo report email
+        $seo_audit_details = SeoResult::select('url','title','meta','h1','h1_tags','h2','h2_tags','h3','h3_tags','word_count','http','cache','page_https','passed_score','warning_score','error_score','notice_score','image','mobile_friendly','ssl_certificate','score_description','domains_num','urls_num','loadtime','schema_types','fcp','lcp','cls','css_min','js_min','gzip_compression','created_at')->where('id', $id)->get()->toArray();
+            $seo_audit_details = current($seo_audit_details);
+            
+          // print_r($seo_audit_details);
+           
+                Mail::send('emails/seo_report', compact('seo_audit_details', 'send_to', 'message'), function ($message) use ($send_to, $seo_audit_details, $url)
+                        {
+                            $message->from('admin@ninjareports.com', 'Ninja Reports');
+                            $message->to($send_to);
+                            $message->subject('SEO Analysis of '.$url);
+                });
+                      // check for failures
+               if (Mail::failures()) {
+                 // return response showing failed emails
+                  return 0;
+                     } else {
+                      return 1;
+                     }
+           }
+
+
+ public function delete_seo_report($id){
+     try {
+        $site_url = SeoResult::select('url')->where('id',$id)->where('user_id',auth()->user()->id)->pluck('url');
+        SeoResult::where('id', $id)->delete();
+        //delete all backlinks with matching site url
+        Analysis::where('site_url', $site_url)->delete();
+
+        return $id;
+
+        } catch(Exception $e) {
+           // return $e;
+        }
+       // return $id;
+           }
+
 
     public function stripUrlPath($url){
         $urlParts = parse_url($url);

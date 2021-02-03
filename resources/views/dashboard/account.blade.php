@@ -81,8 +81,23 @@
         </div>
     </div>
 </div>
-
-     
+@if($has_white_label == 1)
+<div class="row">
+<div class="col-md-5">
+    <h4>White Label Logo Upload</h4>
+    <p>To add your custom white label logo to the reports, upload your logo below.</p>
+    <p class="analysis-more-detail">Reccomended Demensions: 150px x 75px</p>
+    @if($white_label)
+    <img src='{{ $white_label}}' style="margin:10px 0;"/>
+    @endif
+<form action="/image-upload" method="POST" enctype="multipart/form-data" style="margin-top:15px;">
+    @csrf
+    <input type="file" name="image">
+    <button type="submit" class="btn btn-warning">Upload</button>
+</form>
+</div>
+</div>
+@endif
 
       
       </div> 

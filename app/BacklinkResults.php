@@ -12,6 +12,7 @@ class BacklinkResults extends Model
         'site_url',
         'domains_num',
         'backlinks_num',
+        'historical',
         'updated_at',
         'created_at'
     ];

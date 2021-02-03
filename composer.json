@@ -9,6 +9,9 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
+        "aws/aws-sdk-php": "^3.172",
+        "barryvdh/laravel-dompdf": "^0.9.0",
+        "chrome-php/chrome": "^0.9.0",
         "fabpot/goutte": "^4.0",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^7.2",
@@ -17,7 +20,8 @@
         "laravel/tinker": "^2.0",
         "nesk/puphpeteer": "^1.6",
         "spatie/browsershot": "^3.40",
-        "stripe/stripe-php": "^7.62"
+        "stripe/stripe-php": "^7.62",
+        "verumconsilium/laravel-browsershot": "^1.3"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

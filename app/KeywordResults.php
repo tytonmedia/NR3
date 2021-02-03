@@ -10,6 +10,7 @@ class KeywordResults extends Model
         'user_id', 
         'payment_id',
         'site_url',
+        'keywords',
         'updated_at',
         'created_at'
     ];

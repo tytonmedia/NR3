@@ -2,75 +2,103 @@
 @section('title', 'Backlink Checker Tool - Ninja Reports')
 @section('content')
 <div class="col-md-10 overview backlinks-container">
+    <div class="inner">
        <div id="tool-desc" class="row">
 
         <div class="col-md-12">
-        <h3>Backlinks</h3>
-        <p>Enter your domain into the toolbar including https:// or http:// and Ninja Reports will find all backlinks pointing to your website.</p>
+        <h3>Backlink Reports</h3>
+        <p>Enter your domain into the toolbar including https:// or http://, www or non-www and Ninja Reports will scan your website to see your backlink profile, toxicity score, referring TLDs and more.</p>
     </div>
 
 </div>
-    <div class="row Analyze ">
-        <div class="col-md-10">
-            <input type="text" id="backlink_audit" class="form-control" value="{{$_GET['url'] ?? ''}}" placeholder="Enter URL">
-        </div>
-        <div class="col-md-2">
-            <button class="btn" id="analyse">ANALYZE</button>
-        </div>
-    </div>
-        <div id="waiting" style="display:none;">
-        <div class="loading-box">
-            <img src="{{asset('images/806.gif')}}" alt="loading"/>
-            <h4>Finding Backlinks...</h4>
-            <p>Please wait while we find the backlinks. This process can take a few minutes.</p>
-        </div>
-    </div>
-     <div id="error-box" style="display:none"><h4>Whoops!</h4><p>There was an error trying to run your backlink audit. Please check your URL and try again!</p></div>
-    <div id="text-container" ></div>
-     <!------------------------------------------Animation Script ProgressBarStart----------------------------------------------------->
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
 
+        <div class="col-md-6" style="padding-left:0">
+                <form id='analyse_form'>
+        <div class="row Analyze">
+            <div class="col-md-8" style="padding-left:0">
+                <input type="text" id='backlink_audit' class="form-control" value="{{$_GET['url'] ?? ''}}"  placeholder="Enter URL">
+            </div>
+            <div class="col-md-4">
+                <button class="btn" id='analyse'>CRAWL</button><img src="{{asset('images/762.gif')}}" alt="loading" id="loading" style="display:none;"/>
+            </div>
+        </div>
+    </form>
+        </div>
+    </div>
+
+</div>
+</div>
+
+   <div class="row">
+    <div class="col-md-12">
+    <table class="table table-striped seo-report-table" style="margin-top:25px;">
+        <thead class="light">
+            <tr>
+                <th>#</th>
+                <th>URL</th>
+                <th>Status</th>
+                <th>Backlinks</th>
+                <th>Referring Domains</th>
+                <th>Crawl Date</th>
+                <th></th>
+            </tr> 
+        </thead>
+            @if(!empty($backlink_results))
+            @foreach($backlink_results as $key => $value)
+            <tr class="report-{{$value['id']}}" data-id="<?php echo $value['id'];?>">
+                <td>{{$key + 1}}</td>
+                <td>{{$value['site_url']}}</td>
+                <td id="status">Crawled</td>
+                <td>{{number_format($value['domains_num'])}}</td>
+                <td>{{number_format($value['backlinks_num'])}}</td>
+                 <td>{{date("F j, Y, g:i a", strtotime($value['updated_at'])) }}</td>
+                 <td>
+                        <a class="btn btn-primary btn-sm" href="{{ url('backlinks', $value['id'])}}">View</a>
+                        <a class="btn btn-success btn-sm" target="_blank" href="{{ url('download_backlink_report', $value['id'])}}">PDF</a>
+                        <a class="btn btn-info btn-sm" href=""><i class="fa fa-refresh" aria-hidden="true"></i></a>
+                        <a class="btn btn-warning btn-sm delete-report" data-id="<?php echo $value['id'];?>" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                </td> 
+            </tr>
+            @endforeach
+            @else
+            <tr class="empty"><td colspan="7">No data in table. Add a URL above to run a Backlink Report.</td></tr>
+            @endif
+    </table>
+
+</div>
+</div>
+
+     <!------------------------------------------Animation Script ProgressBarStart----------------------------------------------------->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+    
     <!-- <script src="scripts/index.js"></script> -->
-    <Script>
+    <script>
 
-        /**
-            * index.js
-            * - All our useful JS goes here, awesome!
-            Maruf-Al Bashir Reza
-            */
-        function insertParam(key, value) {
-                key = encodeURIComponent(key);
-                value = encodeURIComponent(value);
-
-                // kvp looks like ['key1=value1', 'key2=value2', ...]
-                var kvp = document.location.search.substr(1).split('&');
-                let i=0;
-
-                for(; i<kvp.length; i++){
-                    if (kvp[i].startsWith(key + '=')) {
-                        let pair = kvp[i].split('=');
-                        pair[1] = value;
-                        kvp[i] = pair.join('=');
-                        break;
-                    }
-                }
-
-                if(i >= kvp.length){
-                    kvp[kvp.length] = [key,value].join('=');
-                }
-
-                // can return this or...
-                let params = kvp.join('&');
-
-                // reload page with new params
-                document.location.search = params;
-            }
 
         $(document).ready(function($) {
+            <?php
+if(!empty($backlink_results)) {
+    ?>
+ $('.table').DataTable({
+            "autoWidth": true,
+            "lengthChange": false,
+            "pageLength": 10
+        });
+<?php } ?>
+              $(document).bind('keypress', function(e) {
+            if(e.keyCode==13){
+                 $('#analyse').trigger('click');
+             }
+        });
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -80,34 +108,65 @@
             var loggedIn = {{ auth()->check() ? 'true' : 'false' }};
             var analyze_url =  $("#backlink_audit").val();
 
-            analyze_url = ((analyze_url.indexOf('://') === -1)) ? 'https://' + analyze_url : analyze_url;
-
-                if(analyze_url && loggedIn){
-                        if(isUrl(analyze_url) != false){
-                         //   $(".progress-bar1").css("animation-play-state", "running");
-                            get_backlinks();
-                        }else{
-                            //alert("The link doesn't have http or https");
-                        }
-                    }
+                // if(analyze_url && loggedIn){
+                //         if(isUrl(analyze_url) != false){
+                //          //   $(".progress-bar1").css("animation-play-state", "running");
+                //             get_backlinks();
+                //         }else{
+                //             //alert("The link doesn't have http or https");
+                //         }
+                //     }
            // enter keyd
-        $(document).bind('keypress', function(e) {
-            if(e.keyCode==13){
-                 $('#analyse').trigger('click');
-             }
-        });
 
-            $(".btn").click(function(e){
+            $(".delete-report").click(function(e){
                     e.preventDefault();
+                    var id = $(this).attr("data-id");
+                    $.ajax({
+                        type:'POST',
+                        url:'/delete_backlink_report/' + id,
+                        data: id,
+                        dataType: 'json',
+                        success: function (data) {
+                            //   $("tr[data-id=]").hide();
+                            if(data === 'success'){
+                             $('tr[data-id=' + data + ']').hide();
+                             Swal.fire({
+                              title: 'Success!',
+                              text: 'Backlink report removed.',
+                              icon: 'success',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            })
+                            }
+
+                        },
+                        error: function (data) {
+                           
+                            Swal.fire({
+                              title: 'Error!',
+                              text: JSON.stringify(data),
+                              icon: 'error',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            })
+                        }
+                    });
+                
+                });
+
+         //   $("#analyse").click(function(e){
+                 $("#analyse").click(function(e){
+                    e.preventDefault();
+
                     var url =  $("#backlink_audit").val();
-                    url = ((url.indexOf('://') === -1)) ? 'https://' + url : url;
 
                     if(isUrl(url)) {
                     if(loggedIn){
-                        !!url && insertParam('url', url);
+
                         get_backlinks();
                     }else{
                         var j$ = jQuery.noConflict();
+                       
                         j$("#loginModal").modal("show");
                         $("#login_btn").click(function(e){
                             var analyze_url = $("#backlink_audit").val();
@@ -120,13 +179,19 @@
                     }
 
                 } else {
-                    alert('URL not valid');
+                 //   alert('The URL you entered is not valid. Make sure to add http:// or https:// and www or non-www in your URL. EX: https://www.ninjareports.com.');
+                    Swal.fire({
+                              title: 'Error!',
+                              text: 'The URL you entered is not valid. Make sure to add http:// or https:// and www or non-www in your URL. EX: https://www.ninjareports.com.',
+                              icon: 'error',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            });
                 }
                 });
                 function get_backlinks(){
                     var url =  $("#backlink_audit").val();
-                    url = ((url.indexOf('://') === -1)) ? 'https://' + url : url;
-                    
+
                         if(url.length != 0){
                             if(isUrl(url) !== false){
 
@@ -144,8 +209,8 @@
                                                 var percent = Math.round((e.loaded / e.total) * 100)-60;
                                                 //console.log(percent);
                                                 $('#error-box').hide();
-                                                $('#waiting').show();
-                                                $('#tool-desc').slideUp();
+                                               $('#analyse').text('CRAWLING');
+                                             $('.table').append("<tr class='temp'><td colspan='7' class='text-center'>Loading...</td></tr>");
                                                 $('#analyse').attr('disabled','disabled');
                                             }
                                         });
@@ -156,13 +221,50 @@
                                     data:{url:url},
                                     
                                     success:function(data){
-                                        if(data == 'notsuccessful' || data == 'Expired' || data == 'exceeded' ){
-                                            $('#waiting').hide();
+                                        if(data == 'notsuccessful' || data == 'Expired' || data == 'exceeded' || data == 'payme'){
+                                           // $('#waiting').hide();
                                             $('#backlinksUpgrade').show();
-                                        }else{
-                                            $('div#text-container').append(data);
-                                            $('#waiting').hide();
                                             $('#analyse').removeAttr('disabled');
+                                             $('#analyse').text('CRAWL');
+                                        }else if(data == 'duplicate'){
+                                           // alert("That URL is already scanned. Check the table below.")
+                                            Swal.fire({
+                                                  title: 'Error!',
+                                                  text: 'That URL is already scanned. Check the table below.',
+                                                  icon: 'error',
+                                                  showConfirmButton: 'false',
+                                                  showCloseButton: 'true',
+                                                })
+                                    
+                                             $('#analyse').removeAttr('disabled');
+                                             $('#analyse').text('CRAWL');
+                                             $("#backlink_audit").val('');
+                                              $('#loading').hide();
+                                                $('.table tr.temp').remove();
+                                        }else{
+                                           // $('div#text-container').append(data);
+                                            $('#loading').hide();
+                                         $('.table tr.temp').remove();
+                                        // var sdata = JSON.stringify(data);
+                                        // jquery Example
+                                       // alert(data);
+                                        $(JSON.parse(data)).each(function() {
+                                        id = JSON.stringify(this.id);
+                                        url = JSON.stringify(this.url).replace(/['"]+/g, '');
+                                        backlinks = JSON.stringify(this.backlinks);
+                                        referring_domains = JSON.stringify(this.referring_domains);
+                                        updated_at = JSON.stringify(this.updated_at).replace(/['"]+/g, '');
+                                         
+                                        });
+
+                                         $('.table').append("<tr><td>" + id + "</td><td>" + url + "</td><td>Crawled</td><td>"+ backlinks.replace(/['"]+/g, '') +"</td><td>"+ referring_domains.replace(/['"]+/g, '') + "</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' href='analysis/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank' href=''>PDF</a><a class='btn btn-info btn-sm' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
+                                          
+                                      //  $('.analysis_section').show();
+                                       // runPagespeed();
+                                        $('#analyse').removeAttr('disabled');
+                                        $('#analyse').text('CRAWL');
+
+                                             
                                           
                                         }
                                     }
@@ -174,17 +276,26 @@
                                 }
                                 });
                         }else{
-                            alert("The link doesn't have http:// or https://");
+                         //   alert("The link doesn't have http:// or https://");
+                            Swal.fire({
+                              title: 'Error!',
+                              text: 'The link doesnt have http:// or https://',
+                              icon: 'error',
+                            });
                         }
                     }else{
-                        alert('add url');
+                         Swal.fire({
+                              title: 'Error!',
+                              text: 'Add a URL to the input and click crawl to run a report.',
+                              icon: 'error',
+                            });
                     }
                 }
 
             var j$ = jQuery.noConflict();
             //console.log(loggedIn);
             if (!loggedIn){
-                $(".btn").click(function(){
+                $("#analyse").click(function(){
                     j$('#loginModal').modal('show');
                     $("#login_btn").click(function(e){
                         var analyze_url = $("#backlink_audit").val();
@@ -198,35 +309,6 @@
                     });
                 });
             }
-
-            function animateElements() {
-                $('.Progress').each(function() {
-                    var elementPos = $(this).offset().top;
-                    var topOfWindow = $(window).scrollTop();
-                    var percent = $(this).find('.circle').attr('data-percent');
-                    //console.log(percent);
-                    var percentage = parseInt(percent, 10) / parseInt(100, 10);
-                    var animate = $(this).data('animate');
-                    if (elementPos < topOfWindow + $(window).height() - 30 && !animate) {
-                        $(this).data('animate', true);
-                        $(this).find('.circle').circleProgress({
-                            startAngle: -Math.PI / 2,
-                            value: percent / 100,
-                            thickness: 13,
-                            size: 190,
-                            lineCap: "round",
-                            emptyFill: "#f2f2f2",
-                            fill: {
-                            color: '#1B58B8'
-                            }
-                        }).on('circle-animation-progress', function(event, progress, stepValue) {
-                            $(this).find('div').text((stepValue * 100).toFixed(0) + "%");
-                        }).stop();
-                    }
-                });
-            }
-
-            // Show animated elements
             
            // $(window).scroll(animateElements);
            function isUrl(s) {
@@ -243,5 +325,6 @@
 
     </Script>
     <!------------------------------------------Animation Script ProgressBar End----------------------------------------------------->
+</div>
 </div>
 @endsection

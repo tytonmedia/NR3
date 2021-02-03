@@ -63,6 +63,7 @@
     background-color: #3f3f3f;
     color: white;
     padding: 12px;
+    border-bottom: 1px solid #4f4f4f;
 }
 
 .progress-bar-danger {
@@ -115,7 +116,7 @@
 }
 
 .side-bar a {
-    color: #3f3f3f;
+    color: #ccc;
     font-size: 18px;
     font-weight: 400;
 }
@@ -125,10 +126,12 @@
     padding-left:35px;
 }
 .side-bar a.dropdown-item:hover {background:#fff;color:#000;}
+
 .overview .Analyze .btn {
-     width: 98%;
-    margin-left: 5%;
+   width: 110px;
+    margin-left: 1%;
     text-transform: uppercase;
+    margin-right: 10px;
     color: #fff;
     background: #f50;
     border-bottom: 2px solid #ce5119;
@@ -138,9 +141,7 @@
     background:#e25d03;
 }
 .overview .Analyze {
-    padding: 20px;
-    background-color: #0e6eea;
-        border-radius: 3px;
+    padding: 0px;
 }
 
 .overview .progressbar {
@@ -207,10 +208,11 @@
 }
 
 .three-cols .col-md-4 h5 {
-      margin-top: 25px;
+ 
     font-size:2rem;
     margin-bottom: 5px;
 }
+.three-cols .col-md-4 strike {font-size:24px;}
 
 .three-cols .col-md-4 h3 {
     font-size: 30px;
@@ -224,8 +226,10 @@
 }
 
 .heading-section, .Technical-section,.links-section,.keyword-section {
-    border: 1px solid #eee;
+    border: 1px solid #ddd;
 }
+.heading-section .col-md-3, .Technical-section .col-md-3,.links-section .col-md-3,.keyword-section .col-md-3 {border-right:1px solid #ddd;}
+
 .heading-section .col-md-3, .Technical-section .col-md-3,.links-section .col-md-3,.keyword-section .col-md-3,
 .heading-section .col-md-9, .Technical-section .col-md-9,.links-section .col-md-9,.keyword-section .col-md-9 {
     padding: 15px;
@@ -235,6 +239,7 @@
 .Technical-section img,
 .nav img {
     height: 12px;
+    3
     margin-right: 10px;
 }
 

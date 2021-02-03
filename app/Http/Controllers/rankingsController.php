@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Payment;
 use App\Keyword;
+use App\WhiteLabel;
 use App\KeywordResults;
 use App\SerpFeatures;
 use App\Competitor;
@@ -36,11 +37,12 @@ class rankingsController extends Controller
 		        try{
             
             $Payment = Payment::withCount('ranking_results')->where('user_id',auth()->user()->id)->where('status',1)->first();
+            $already_ran = KeywordResults::where('site_url',$url)->where('user_id',auth()->user()->id)->first();
             
         }catch(Exception $e){}
 
         if(empty($Payment)){
-               return view("partials/upgrade_rankings", compact('time','url'));
+               return 'payme';
         }else if($Payment->status == 0){
             return 'notsuccessful';
         }else if ($Payment->plan_id == 1 && $Payment->no_allowed_rankings <= $Payment->ranking_results_count){
@@ -49,7 +51,9 @@ class rankingsController extends Controller
             return 'exceeded';
         } else if ($Payment->plan_id == 3 && $Payment->no_allowed_rankings <= $Payment->ranking_results_count){
             return 'exceeded';
-        } 
+        } else if(!empty($already_ran)) {
+                return 'duplicate';
+        }
         else
         {
            return  $this->get_rankings($url,$Payment,$time);
@@ -61,14 +65,14 @@ class rankingsController extends Controller
 
         $parse = parse_url($url);
         $domain_name = $parse['host']; // prints 'google.com'
-
+        $environment = App::environment();
          $has_competitor_data = Competitor::where('site_url',$url)->first();
             if(empty($has_competitor_data)){
             //get competitor list
          try{
-              if(env('APP_ENV', 'production')){
+               if($environment == 'production'){
                 $display_limit=5;
-            } else{
+            }else {
                 $display_limit=1;
             }
 
@@ -367,56 +371,54 @@ class rankingsController extends Controller
                     $create_keyword_results = new KeywordResults;
                     $create_keyword_results->user_id = auth()->user()->id;
                     $create_keyword_results->site_url = $url;
+                    $create_keyword_results->keywords = $num_keywords;
                     $create_keyword_results->payment_id = $Payment->id ?? 0;
                     $create_keyword_results->save();
 
-                    Session::put('time', $time);
-                    Session::put('url', $url);
-                    Session::put('keyword_array', $keyword_array);
-                    Session::put('num_keywords', $num_keywords);
-                    Session::put('avg_position', $avg_position);
-                    Session::put('traffic_value', $traffic_value);
-                    Session::put('top_keyword', $top_keyword);
-                    Session::put('volume_total', $volume_total);
-                    Session::put('position_array', $position_array);
-                    Session::put('t_array', $t_array);
-                    Session::put('competitor_array', $competitor_array);
-                    Session::put('traffic_share', $traffic_share);
-                    Session::put('features_array', $features_array);
-                    Session::put('serp_array', $serp_array);
 
+        	// return view("dashboard/ranking_result", compact('time','url','keyword_array','num_keywords','avg_position','traffic_value','top_keyword','volume_total','position_array','t_array','competitor_array','traffic_share','features_array', 'serp_array','trend_array'));
 
-        	 return view("dashboard/ranking_result", compact('time','url','keyword_array','num_keywords','avg_position','traffic_value','top_keyword','volume_total','position_array','t_array','competitor_array','traffic_share','features_array', 'serp_array','trend_array'));
+             $data = json_encode(array(
+                                    'id' => $create_keyword_results->id,
+                                    'url' => $url,
+                                    'keywords' => $num_keywords,
+                                    'updated_at' => date('F j, Y, g:i a', time())
+                                ));
+
+                        return $data;
 
 		}
 
 
-    public function pdf_create_rankings()
-    {
-        $time = Session::get('time');
-        $url = Session::get('url');
-        $keyword_array = Session::get('keyword_array');
-        $num_keywords = Session::get('num_keywords');
-        $avg_position = Session::get('avg_position');
-        $traffic_value = Session::get('traffic_value');
-        $top_keyword = Session::get('top_keyword');
-        $volume_total = Session::get('volume_total');
-        $position_array = Session::get('position_array');
-        $t_array = Session::get('t_array');
-        $competitor_array = Session::get('competitor_array');
-        $traffic_share = Session::get('traffic_share');
-        $features_array = Session::get('features_array');
-        $serp_array = Session::get('serp_array');
+ public function ranking_details($id){
+    $site_url = KeywordResults::select('site_url')->where('id', $id)->pluck('site_url')->first();
+        $ranking_details = KeywordResults::all()->where('id', $id)->toArray();
+        $keyword_array = Keyword::select('keyword','position','kd','volume','cpc','competition','traffic_per','traffic_cost','results','features','trend')->where('site_url', $site_url)->get()->toArray();
+        $competitor_array = Competitor::select('site_url','domain','common_keywords','organic_keywords','organic_traffic','cost','adwords_keywords')->where('site_url', $site_url)->get()->toArray();
+          $white_label=WhiteLabel::where('user_id',auth()->user()->id)->first();
+        if($white_label) {
+            $white_label = $white_label->image_path;
+        } else{
+            $white_label = 0;
+        }
+     //   print_r($backlink_details);
+        return view('dashboard/ranking_result',compact('ranking_details','keyword_array','competitor_array','white_label'));
+           }
 
-        $content = view("dashboard/ranking_result", compact('time','url','keyword_array','num_keywords','avg_position','traffic_value','top_keyword','volume_total','position_array','t_array','competitor_array','traffic_share','features_array', 'serp_array'));
-  
-         return Browsershot::html($content)
-        ->margins(18, 18, 24, 18)
-        ->format('A4')
-        ->setNodeBinary("C:\Programs\\nodejs\\node.exe")
-        ->showBackground()
-        ->pdf();
-    }
+ public function delete_ranking_report($id){
+        KeywordResults::where('id', $id)->delete();
+
+           try {
+        $site_url = KeywordResults::select('site_url')->where('id',$id)->where('user_id',auth()->user()->id)->pluck('site_url');
+        KeywordResults::where('id', $id)->delete();
+        //delete all backlinks with matching site url
+        Keyword::where('site_url', $site_url)->delete();
+        return 'success';
+        } catch(Exception $e) {
+            return 'error';
+        }
+
+           }
 		
 
         public static function get_serp_feature($id)

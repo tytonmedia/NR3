@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Spatie\Browsershot\Browsershot;
 use App\BacklinkResults;
 use App\Backlink;
+use App\WhiteLabel;
 use App\User;
 use App\Payment;
 use App;
@@ -37,13 +38,16 @@ class backlinkController extends Controller
 		        try{
             
         $Payment = Payment::withCount('backlink_results')->where('user_id',auth()->user()->id)->where('status',1)->first();
+
+        $already_ran = BacklinkResults::where('site_url',$url)->where('user_id',auth()->user()->id)->first();
+
            // dd($Payment);
         }catch(Exception $e){
            // dd($e);
         }
 
         if(empty($Payment)){
-               return view("partials/upgrade_backlinks", compact('url'));
+               return 'payme';
         }else if($Payment->status == 0){
             return 'notsuccessful';
         }else if ($Payment->plan_id == 1 && $Payment->no_allowed_backlinks <= $Payment->backlink_results_count){
@@ -52,35 +56,36 @@ class backlinkController extends Controller
             return 'exceeded';
         }else if ($Payment->plan_id == 3 && $Payment->no_allowed_backlinks <= $Payment->backlink_results_count){
             return 'exceeded';
-        }
-        else
-        {
+        }else if(!empty($already_ran)) {
+                return 'duplicate';
+        } else {
            return  $this->get_backlinks($url,$Payment,$time);
         }
 
     }
 
       public function get_backlinks($url,$Payment,$time){
- 
+        
         $parse = parse_url($url);
+
         $domain_name = $parse['host']; // prints 'google.com'
 
+        $environment = App::environment();
+           
         //if URL is already in backlinks_results table, show data instead of using API.
         $has_backlink_data = Backlink::where('target_url',$url)->where('created_at', '>=', Carbon::now()->subDays(30)->toDateTimeString())->first();
 
         if(empty($has_backlink_data)) {
         	// get SEMRush data and save to database
-
-        	//if prod get all backlinks, else get 20 to save API credits
-        	if(env('APP_ENV', 'production')){
-                $display_limit=999;
-        	} else{
-        		$display_limit=5;
-        	}
         	 try{
       
-      
-            $semrush = "https://api.semrush.com/analytics/v1/?key=247c8d4143eff74adb96fb2f0b3f3d8a&type=backlinks&target=".$url."&target_type=url&export_columns=source_url,target_url,anchor,page_ascore,external_num,internal_num,last_seen,first_seen,nofollow&display_limit=".$display_limit;
+                        //if prod get all backlinks, else get 20 to save API credits
+            if($environment == 'production'){
+                $display_limit=999;
+            }else {
+                $display_limit=3;
+            }
+            $semrush = "https://api.semrush.com/analytics/v1/?key=247c8d4143eff74adb96fb2f0b3f3d8a&type=backlinks&target=".$url."&target_type=url&display_limit=".$display_limit."&export_columns=source_url,target_url,anchor,page_ascore,external_num,internal_num,last_seen,first_seen,nofollow";
 
             $curl = curl_init($semrush);
             curl_setopt($curl, CURLOPT_URL, $semrush);
@@ -126,7 +131,7 @@ class backlinkController extends Controller
                     	//print_r($backlink_array);
                     foreach ($backlink_array as $key => $value) {
                     		//loop through all links and save to db
-                    	$check_url = Backlink::where('source_url', $value[0])->first();
+                    	$check_url = Backlink::where('target_url', $value[0])->first();
                     	if($key > 0 && empty($check_url)){
                     	    	$backlink = new Backlink;
    								$backlink->user_id = auth()->user()->id;
@@ -213,7 +218,7 @@ class backlinkController extends Controller
     			$domains_num = $backlink_count_array[0]['domains_num'];
                $urls_num = $backlink_count_array[0]['backlinks_num'];
     }
-    	if(env('APP_ENV', 'production')){
+    	if($environment == 'production'){
         		$display_limit=6;
         	} else{
                 $display_limit=1;
@@ -376,10 +381,11 @@ class backlinkController extends Controller
         			$tld_count = array_sum($tld_array);
         			foreach ($tld_array as $key => $value) {
         						if($tld_count > 0){
-      						$tld_array[$key] = ($value/$tld_count)*100;
+      						$tld_array[$key] = number_format(($value/$tld_count)*100,2);
       					}
         			}
         			$tld_array = array_slice($tld_array, 0, 5, true);
+                    arsort($tld_array);
 
         			$anchor_array = array_count_values($anchor_array);
         			//build toxicity score
@@ -397,32 +403,61 @@ class backlinkController extends Controller
         			$create_backlink_results->payment_id = $Payment->id ?? 0;
         			$create_backlink_results->domains_num = (float)$domains_num;
         			$create_backlink_results->backlinks_num = (float)$urls_num;
+                    $create_backlink_results->historical = json_encode($historical_array);
 					$create_backlink_results->save();
 
+                        $data = json_encode(array(
+                                    'id' => $create_backlink_results->id,
+                                    'url' => $url,
+                                    'backlinks' => $urls_num,
+                                    'referring_domains' => $domains_num,
+                                    'updated_at' => date('F j, Y, g:i a', time())
+                                ));
 
-        	 return view("dashboard/backlink_result", compact('data',
-        	 													'url',
-        	 													'time',
-        	 													'domains_num',
-        	 													'urls_num',
-        	 													'backlink_array',
-        	 													'linkpower',
-        	 													'historical_array',
-        	 													'linktoxicity',
-        	 													'anchor_array',
-        	 													'tld_array',
-        	 													'linkpower_array',
-        	 													'nofollow_array'));
+                        return $data;
+        	// return view("dashboard/backlink_result", compact('data',
+        	 //													'url',
+        	 	//												'time',
+        	 													// 'domains_num',
+        	 													// 'urls_num',
+        	 													// 'backlink_array',
+        	 													// 'linkpower',
+        	 													// 'historical_array',
+        	 													// 'linktoxicity',
+        	 													// 'anchor_array',
+        	 													// 'tld_array',
+        	 													// 'linkpower_array',
+        	 													// 'nofollow_array'));
 
 		}
 
-public function getTimeAgo($carbonObject) {
-    return str_ireplace(
-        [' seconds', ' second', ' minutes', ' minute', ' hours', ' hour', ' days', ' day', ' weeks', ' week'], 
-        ['s', 's', 'm', 'm', 'h', 'h', 'd', 'd', 'w', 'w'], 
-        $carbonObject->diffForHumans()
-    );
-}
+
+
+ public function backlink_details($id){
+    $site_url = BacklinkResults::select('site_url')->where('id', $id)->pluck('site_url')->first();
+        $backlink_details = BacklinkResults::all()->where('id', $id)->toArray();
+        $backlink_array = Backlink::select('source_url','target_url','anchor','page_ascore','external_num','internal_num','last_seen','first_seen','nofollow')->where('target_url', $site_url)->get()->toArray();
+            $white_label=WhiteLabel::where('user_id',auth()->user()->id)->first();
+        if($white_label) {
+            $white_label = $white_label->image_path;
+        } else{
+            $white_label = 0;
+        }
+     //   print_r($backlink_details);
+        return view('dashboard/backlink_result',compact('backlink_details','backlink_array','white_label'));
+           }
+
+ public function delete_backlink_report($id){
+    try {
+        $site_url = BacklinkResults::select('site_url')->where('id',$id)->where('user_id',auth()->user()->id)->pluck('site_url');
+        BacklinkResults::where('id', $id)->delete();
+        //delete all backlinks with matching site url
+        Backlink::where('target_url', $site_url)->delete();
+        return 'success';
+        } catch(Exception $e) {
+            //return $e;
+        }
+           }
 
 
   public static function get_linkpower_color($linkpower)

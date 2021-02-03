@@ -1,21 +1,198 @@
+@extends('layouts.master')
+@section('title', 'Backlink Report')
+@section('content')
 
-<?php   use \App\Http\Controllers\backlinkController; ?>
+<?php   
+use \App\Http\Controllers\backlinkController; 
+
+$backlink_details = current($backlink_details);
+$historical_array = json_decode($backlink_details['historical']);
+$linktoxicity = 0;
+            $anchor_array = array();
+            $tld_array = array();
+            $tlds = array();
+          
+            foreach ($backlink_array as $key => $value) {
+              foreach ($value as $key2 => $val) {
+                # code...
+                if($key2 == 'external_num') {
+                  if($val > 250){
+                      $linktoxicity += 1; 
+                    }
+                }
+                if($key2 == 'anchor') {
+
+                      $anchor_array[] = $val; 
+                }
+                if($key2 == 'source_url') {
+
+                      $tld_array[] = $val; 
+                }
+
+                }
+
+              }
+                
+
+                foreach ($tld_array as $key => $value) {
+                  # code...
+                  $splits = explode(".", parse_url($value, PHP_URL_HOST));
+                  $tlds[] = end($splits);
+                }
+
+
+              $tld_array = array_count_values($tlds);
+ 
+              $tld_count = array_sum($tld_array);
+              foreach ($tld_array as $key => $value) {
+                    if($tld_count > 0){
+                      $tldcalc = number_format(($value/$tld_count)*100,2);
+                  $tld_array[$key] = ceil($tldcalc);
+                }
+              }
+              $tld_array = array_slice($tld_array, 0, 5, true);
+                    arsort($tld_array);
+
+              $anchor_array = array_count_values($anchor_array);
+              //build toxicity score
+              if(!empty($backlink_array) && $linktoxicity > 0){
+                  $linktoxicity = number_format(count($backlink_array)/$linktoxicity);
+              } else{
+                  $linktoxicity = 0;
+              }
+
+  if($backlink_details['domains_num'] != 'empty' && $backlink_details['backlinks_num'] != 'empty'){
+        //if not empty
+            if($backlink_details['domains_num'] == 0){
+            $linkpower = '0';
+        }elseif($backlink_details['domains_num'] > 0 && $backlink_details['domains_num'] < 10) {
+            $linkpower = '10';
+        }elseif ($backlink_details['domains_num'] > 10 && $backlink_details['domains_num'] < 25) {
+            $linkpower = '20';
+        }elseif ($backlink_details['domains_num'] > 25 && $backlink_details['domains_num'] < 50) {
+            $linkpower = '30';
+        }elseif ($backlink_details['domains_num'] > 50 && $backlink_details['domains_num'] < 100) {
+            $linkpower = '40';
+        }elseif ($backlink_details['domains_num'] > 100 && $backlink_details['domains_num'] < 150) {
+            $linkpower = '50';
+        }elseif ($backlink_details['domains_num'] > 150 && $backlink_details['domains_num'] < 200) {
+            $linkpower = '60';
+        }elseif ($backlink_details['domains_num'] > 200 && $backlink_details['domains_num'] < 250) {
+            $linkpower = '80';
+        }elseif ($backlink_details['domains_num'] > 250 && $backlink_details['domains_num'] < 300) {
+            $linkpower = '70';
+        }elseif ($backlink_details['domains_num'] > 300 && $backlink_details['domains_num'] < 350) {
+            $linkpower = '80';
+        }elseif ($backlink_details['domains_num'] > 350 && $backlink_details['domains_num'] < 500) {
+            $linkpower = '90';
+        }elseif ($backlink_details['domains_num'] > 500) {
+            $linkpower = '100';
+        }else{
+            $linkpower = 'N/A';
+        }     
+          } 
+$nofollow_array = array();
+          foreach ($backlink_array as $key => $value) {
+                foreach ($value as $key2 => $val) {
+                  if($key2 == 'nofollow'){
+                    $nofollow_array[] = $val;
+                  }
+                }
+          }
+  $nofollow_array = array_count_values($nofollow_array);
+  
+          foreach ($historical_array as $key => $value) {
+            //build historical linkpower array
+            foreach ($value as $key2 => $val) {
+              # code...
+              if($key2 == 4){
+                //domains
+             if($val == 0){
+            $linkpower_array[] = '0';
+        }elseif($val > 0 && $val < 10) {
+            $linkpower_array[] = '10';
+        }elseif ($val > 10 && $val < 25) {
+            $linkpower_array[] = '20';
+        }elseif ($val > 25 && $val < 50) {
+            $linkpower_array[] = '30';
+        }elseif ($val > 50 && $val < 100) {
+            $linkpower_array[] = '40';
+        }elseif ($val > 100 && $val < 150) {
+            $linkpower_array[] = '50';
+        }elseif ($val > 150 && $val < 200) {
+            $linkpower_array[] = '60';
+        }elseif ($val > 200 && $val < 250) {
+            $linkpower_array[] = '80';
+        }elseif ($val > 250 && $val < 300) {
+            $linkpower_array[] = '70';
+        }elseif ($val > 300 && $val < 350) {
+            $linkpower_array[] = '80';
+        }elseif ($val > 350 && $val < 500) {
+            $linkpower_array[] = '90';
+        }elseif ($val > 500) {
+            $linkpower_array[] = '100';
+        }else{
+            $linkpower_array[] = '0';
+        } 
+            }
+            }
+
+          }
+?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+          <script src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+ <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css"/>
+    
+
 <script>
+     $(document).ready(function($) {
  $('.table').DataTable({
-            "autoWidth": false,
+          dom: 'Bfrtip',
+            buttons: [{ extend: 'copyHtml5', className: 'btn btn-copy' },
+            { extend: 'excelHtml5', className: 'btn btn-excel' },
+            { extend: 'csvHtml5', className: 'btn btn-csv' }],
+            "autoWidth": true,
             "lengthChange": false,
             "pageLength": 15
         });
+  });
     </script>
+    <div class="col-md-10 overview analysis-container">
+    <div class="inner">
+          <div class="row report-header">
+        <div class="col-md-4">
+        <span class="logo">
+          @if($white_label != '0')
+            <img style="" src="/{{ $white_label }}" alt="logo">
+            @else
+                <img style="" src="{{asset('images/ninja reports gray.png')}}" alt="logo">
+            @endif
+          </span>
+        </div>
+        <div class="col-md-8 text-right">
+          <a class="btn btn-sm btn-success" href="{{ url('download_backlink_report', $backlink_details['id'])}}"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD PDF</a>
+          <a class="btn btn-sm btn-disabled" href="#" disabled="disabled"><i class="fa fa-refresh" aria-hidden="true"></i> RE-CRAWL</a>
+          <a class="btn btn-sm btn-warning" href="#" id="emailreportlink" data-id="{{$backlink_details['id']}}"><i class="fa fa-envelope-open-o" aria-hidden="true"></i> EMAIL</a>
+      </div>
+    </div>
  <div class="row audit-text pt-3 pb-3">
         <div class="col-md-7 text-left" style="padding:0">
-            <h5 id="url"><STRONG>Backlink Report:</STRONG> {{$url}}</h5>
+            <h5 id="url"><STRONG>Backlink Report:</STRONG> {{$backlink_details['site_url']}}</h5>
         </div>
         <div class="col-md-1">
 
         </div>
         <div class="col-md-4 text-right" style="padding:0">
-            <h5>{{ $time }}</h5>
+            <h5 class="updated_at">Last Updated: {{ date('F j, Y, g:i a', time($backlink_details['updated_at'])) }}</h5>
         </div>
     </div>
     
@@ -23,11 +200,11 @@
        <div class="row four-cols" style="margin-bottom:15px;">
             <div class="col-md-3">
                 Total Backlinks <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Total backlinks is the total number of domains that point to your URL."><i class="fa fa-info-circle" ></i></a>
-                    <h2>{{ number_format($urls_num) }}</h2>
+                    <h2>{{ number_format($backlink_details['backlinks_num']) }}</h2>
             </div>
             <div class="col-md-3">
                     Referring Domains <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Referring domains is the total number of domains that point to your URL."><i class="fa fa-info-circle" ></i></a>
-                    <h2>{{ number_format($domains_num) }}</h2>
+                    <h2>{{ number_format($backlink_details['domains_num']) }}</h2>
             </div>
             <div class="col-md-3">
               <div class="row">
@@ -81,47 +258,17 @@
                   </div>
                 </div>
               </div>
-                   <script>
-                    var opp = <?php echo 100 - $linkpower;?>;
-                          new Chart(document.getElementById("linkpower-doughnut-chart"), {
-                      type: 'doughnut',
-                      data: {
-                        labels: ["Link Power"],
-                        datasets: [
-                          {
-                            label: "Population (millions)",
-                            backgroundColor: ["<?php echo backlinkController::get_linkpower_color($linkpower)?>", "#eee"],
-                            data: [<?php echo $linkpower;?>,opp]
-                          }
-                        ]
-                      },
-                      options: {
-                        tooltips: {
-                             enabled: false
-                        },
-                         legend: {
-                              display: false
-                           },
-                        responsive: false,
-                        title: {
-                          display: false,
-                          text: 'Link Power'
-                        }
-                      }
-                  });
-                  </script>
-
-
+                   
        </div>
 
 <div class="row">
 <div class="col-md-3">
     <h5>Referring Backlinks History</h5>
-    <canvas id="backlinksChart" style=" width:100%;height:200px;"></canvas>
+    <canvas id="backlinksChart" style=" width:100%;height:175px;"></canvas>
 </div>
 <div class="col-md-3">
     <h5>Referring Domains History</h5>
-    <canvas id="domainsChart" style=" width:100%;height:200px;"></canvas>
+    <canvas id="domainsChart" style=" width:100%;height:175px;"></canvas>
 </div>
 <div class="col-md-3">
     <h5>Link Profile</h5>
@@ -134,7 +281,7 @@
                 <div class="d-flex bd-highlight">
                 <div class="p-2 flex-shrink-1 bd-highlight" style="font-size:13px;width:40px">{{$key}}</div>
                 <div class="p-2 w-100 bd-highlight"> <div class="progress">
-                        <div class="progress-bar" role="progressbar" style="width: <?php echo $value;?>%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><?php echo number_format($value,0);?>%</div>
+                        <div class="progress-bar" role="progressbar" style="min-width:15%;width: <?php echo $value;?>%" aria-valuenow="0" aria-valuemin="25" aria-valuemax="100"><?php echo number_format($value,0);?>%</div>
                         </div></div>
                 </div>
 
@@ -144,15 +291,15 @@
     </div>
 </div>
     
-
-
-     
-</div>
 <script>
-     <?php     
-
+     <?php 
+     $months_array = array();
+     $backlinks_num_array= array();
+     $domains_num_array= array();
+        if(!empty($historical_array)){
             foreach($historical_array as $key => $val){
                     //only display data, not header
+              // date,backlinks_num,backlinks_new_num,backlinks_lost_num,domains_num,domains_new_num,domains_lost_num
                 if($key != 6) {
                     foreach($val as $key => $bod) {
                         if($key == 0) {
@@ -168,6 +315,7 @@
 
                 }
              }
+           }
 
 ?>
     var months = <?php echo '["' . implode('", "', $months_array) . '"]' ?>; 
@@ -273,7 +421,7 @@ var myChart = new Chart(ctx, {
         });
 
 </script>
-       </div>
+
        <br/>
        <div class="row">
             <div class="col-md-12">
@@ -282,7 +430,7 @@ var myChart = new Chart(ctx, {
                                 <thead class="thead-light">
                                 <tr>
                                  <th>Source URL</th>
-                                 <th>Target URL</th>
+                            
                                  <th>Anchor</th>
                                  <th>AScore</th>
                                 <th>Ext. Links</th>
@@ -293,12 +441,23 @@ var myChart = new Chart(ctx, {
                                     </tr>
                             </thead>
                         @if(!empty($backlink_array))
+                        <tbody>
                              @foreach($backlink_array as $key => $value)
                                 <tr>
                                     @foreach($value as $key2 => $val)
-                                    @if($key2 == 0)
+                                    @if($key2 == 'source_url')
                                         <td><a href="{{ $val }}" target="_blank">{{$val}} <i class="fa fa-external-link"></i></a></td>
-                                    @elseif($key2 == 6 || $key2 == 7)
+                                    @elseif($key2 == 'target_url')
+
+                                    @elseif($key2 == 'anchor')
+                                        <td>
+                                                @if($val == '')
+                                                    <span style="color:#ccc">no anchor</span>
+                                                @else
+                                                {{$val}}
+                                                @endif
+                                        </td>
+                                        @elseif($key2 =='last_seen' || $key2 == 'first_seen')
                                         <td>{{ date('M j \'y',strtotime($val)) }}</td>
                                     @else
                                         <td>{{$val ?? 'N/A'}}</td>
@@ -310,7 +469,79 @@ var myChart = new Chart(ctx, {
          
                             @endforeach
                       @endif
+                      </tbody>
                             </table>
             </div>
        </div>
     </section>
+</div>
+</div>
+<script>
+                    var opp = <?php echo 100 - $linkpower;?>;
+                          new Chart(document.getElementById("linkpower-doughnut-chart"), {
+                      type: 'doughnut',
+                      data: {
+                        labels: ["Link Power"],
+                        datasets: [
+                          {
+                            label: "Population (millions)",
+                            backgroundColor: ["<?php echo backlinkController::get_linkpower_color($linkpower)?>", "#eee"],
+                            data: [<?php echo $linkpower;?>,opp]
+                          }
+                        ]
+                      },
+                      options: {
+                        tooltips: {
+                             enabled: false
+                        },
+                         legend: {
+                              display: false
+                           },
+                        responsive: false,
+                        title: {
+                          display: false,
+                          text: 'Link Power'
+                        }
+                      }
+                  });
+                  </script>
+
+                    <div class="modal" id="emailReport" tabindex="-1" role="dialog" aria-labelledby="emailReport" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+           <form id='seo_email_form'>
+            <input type="hidden" id="report_url" name="report_url" value="{{ $seo_audit_details['url'] }}">
+            <input type="hidden" id="report_id" name="report_id" value="{{ $seo_audit_details['id'] }}">
+          <!-- Modal Header -->
+          <div class="modal-header">
+               <h4>Send SEO Report</h4>
+            <button type="button" class="close" data-dismiss="modal" id="close">&times;</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body" style="padding:20px;">
+         
+            <p>Send this SEO report to an email.</p>
+
+                    
+                         <div class="row" style="margin-bottom:15px;">
+    <div class="col">
+      <input type="text" class="form-control" placeholder="Email Address" id="send_to">
+    </div>
+    <div class="col">
+      <input type="text" class="form-control" placeholder="Message" id="message">
+    </div>
+  </div>
+
+                    
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer" style="margin:auto;">
+          <a class="btn-warning btn-md" href="{{route('email_backlink_report')}}" id='send_email_report' style='padding:7px;text-decoration:none;'>SEND REPORT</a>
+          </div>
+ </form>
+        </div>
+      </div>
+    </div>
+@endsection

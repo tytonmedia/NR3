@@ -13,7 +13,8 @@
             <div class="row three-cols pricing-boxes" style="margin-top:10%;">
                 <div class="col-md-4 text-center Webmaster-col">
                     <h3>Webmaster</h3>
-                    <p>Affordable Package for webmasters or small businesses wanting to enhance their SEO.</p>               
+                    <p>Affordable Package for webmasters or small businesses wanting to enhance their SEO.</p>
+                    <strike style="color:#ff0000">$29</strike>               
                     <h5><strong>$19</strong></h5>
                     <h6>per month</h6>
                          @if($status == 1 && $product->id == 'prod_IQ583lkkZ3Ctwr')
@@ -22,7 +23,7 @@
                         <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-lg">UPGRADE</a></h4>
                          @endif
                         @if($status == 0)
-                       <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-lg">FREE 7-DAY TRIAL</a></h4>
+                       <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-lg">GET ACCESS</a></h4>
                          @endif
                     <a href="#detailed">Learn More</a>
                 </div>
@@ -30,6 +31,7 @@
                     <h6 style="color: white;background-color: #ff6600;position: relative;top:-27px;padding:3px;">MOST POPULAR</h6>
                     <h3>Business</h3>
                     <p>Our most popular package, perfect for businesses with multiple sites or clients looking to grow their traffic.</p>
+                    <strike style="color:#ff0000">$49</strike>
                     <h5><strong>$29</strong></h5>
                     <h6>per month</h6>
                         @if($status == 1 && $product->id == 'prod_IQ59BGbdGnCcmw')
@@ -38,7 +40,7 @@
                         <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-lg">UPGRADE</a></h4>
                          @endif
                         @if($status == 0)
-                       <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-lg">FREE 7-DAY TRIAL</a></h4>
+                       <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-lg">GET ACCESS</a></h4>
                          @endif
 
                     <a href="#detailed">Learn More</a>
@@ -47,6 +49,7 @@
                     <h3>Agency</h3>
                     <p>For agencies looking to grow their client’s traffic and keep on-page SEO health 100%.
 </p>
+<strike style="color:#ff0000">$99</strike>
                     <h5><strong>$59</strong></h5>
                     <h6>per month</h6>
                     @if($status == 1 && $product->id == 'prod_IQ5AeQ7uec9djJ')
@@ -55,7 +58,7 @@
                         <h4><a href="{{route('payment',['id' => 3])}}" class="btn btn-primary btn-lg">UPGRADE</a></h4>
                          @endif
                         @if($status == 0)
-                       <h4><a href="{{route('payment',['id' => 3])}}" class="btn btn-primary btn-lg">FREE 7-DAY TRIAL</a></h4>
+                       <h4><a href="{{route('payment',['id' => 3])}}" class="btn btn-primary btn-lg">GET ACCESS</a></h4>
                          @endif
                     <a href="#detailed">Learn More</a>
                 </div>
@@ -69,40 +72,56 @@
 <tbody>
 <tr>
 <th></th>
+<th>Free</th>
 <th>Webmaster</th>
 <th>Business</th>
 <th>Agency</th>
 </tr>
 <tr>
 <td>URL Analysis Reports</td>
+<td>1/day</td>
 <td>100/mo</td>
 <td>UNLIMITED</td>
 <td>UNLIMITED</td>
 </tr>
 <tr>
 <td>Site Audit Reports</td>
+<td>0</td>
 <td>25/mo</td>
 <td>100/mo</td>
 <td>250/mo</td>
 </tr>
+<tr>
 <td>Backlink Reports</td>
+<td>0</td>
 <td>5/mo</td>
 <td>15/mo</td>
 <td>100/mo</td>
 </tr>
+<tr>
 <td>Ranking/Keyword Reports</td>
+<td>0</td>
 <td>10/mo</td>
 <td>25/mo</td>
 <td>100/mo</td>
 </tr>
 <tr>
-    <tr style="color:green;font-weight:bold;">
-<td>Price</td>
-<td>$19/mo</td>
-<td>$29/mo</td>
-<td>$59/mo</td>
+<td>White Label Reports</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
 </tr>
 <tr>
+    <tr style="color:green;font-weight:bold;">
+<td>Price</td>
+<td>Free</td>
+<td><strike style="color:#ff0000">$29</strike> $19/mo</td>
+<td><strike style="color:#ff0000">$49</strike> $29/mo</td>
+<td><strike style="color:#ff0000">$99</strike> $59/mo</td>
+</tr>
+<tr>
+<td></td>
 <td></td>
 <td>
  @if($status == 1 && $product->id == 'prod_IQ583lkkZ3Ctwr')
@@ -111,7 +130,7 @@
                         <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-sm">UPGRADE</a></h4>
                          @endif
                         @if($status == 0)
-                       <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-sm">FREE 7-DAY TRIAL</a></h4>
+                       <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-sm">GET ACCESS</a></h4>
                          @endif
                          </td>
 <td>     @if($status == 1 && $product->id == 'prod_IQ59BGbdGnCcmw')
@@ -120,7 +139,7 @@
                         <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-sm">UPGRADE</a></h4>
                          @endif
                         @if($status == 0)
-                       <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-sm">FREE 7-DAY TRIAL</a></h4>
+                       <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-sm">GET ACCESS</a></h4>
                          @endif</td>
 <td> @if($status == 1 && $product->id == 'prod_IQ5AeQ7uec9djJ')
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-sm" style="pointer-events: none;">CURRENT PLAN</a></h4>
@@ -128,7 +147,7 @@
                         <h4><a href="{{route('payment',['id' => 3])}}" class="btn btn-primary btn-sm">UPGRADE</a></h4>
                          @endif
                         @if($status == 0)
-                       <h4><a href="{{route('payment',['id' => 3])}}" class="btn btn-primary btn-sm">FREE 7-DAY TRIAL</a></h4>
+                       <h4><a href="{{route('payment',['id' => 3])}}" class="btn btn-primary btn-sm">GET ACCESS</a></h4>
                          @endif</td>
 </tr>
 </tbody>

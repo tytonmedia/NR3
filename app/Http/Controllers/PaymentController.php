@@ -19,16 +19,10 @@ class PaymentController extends Controller
         $date = strtotime("+7 day");
         $trial_end = date('M d, Y', $date);
         $next_billing = strtotime("+30 day");
-
+        $next_billing = date('M d', $next_billing);
         $Payment=Payment::where('user_id',auth()->user()->id)->where('status',1)->first();
-        if(!empty($Payment) && $Payment->status == 1) {
-            $next_billing = date('M d', $next_billing);
-            $status = 1;
-        } else {
-            $next_billing = '';
-            $status = 0;
-        } 
-        return view('dashboard/payment',compact('id','trial_end','status','next_billing'));
+     
+        return view('dashboard/payment',compact('id','status','next_billing'));
     }
   
     public function stripePost(Request $request,$id)
@@ -78,8 +72,6 @@ class PaymentController extends Controller
                             'amount'            => $charge->plan->amount,
                             'interval'          => $charge->plan->interval,
                             'product_id'        => $charge->plan->product,
-                            'trial_start'       => $charge->trial_start,
-                            'trial_end'         => $charge->trial_end,
                             'current_period_start'  => $charge->current_period_start,
                             'current_period_end'    => $charge->current_period_end,
                             'status'  => 1
@@ -123,8 +115,6 @@ class PaymentController extends Controller
                             'amount'            => $charge->plan->amount,
                             'interval'          => $charge->plan->interval,
                             'product_id'        => $charge->plan->product,
-                            'trial_start'       => $charge->trial_start,
-                            'trial_end'         => $charge->trial_end,
                             'current_period_start'  => $charge->current_period_start,
                             'current_period_end'    => $charge->current_period_end,
                             'status'  => 1
@@ -169,8 +159,6 @@ class PaymentController extends Controller
                             'amount'            => $charge->plan->amount,
                             'interval'          => $charge->plan->interval,
                             'product_id'        => $charge->plan->product,
-                            'trial_start'       => $charge->trial_start,
-                            'trial_end'         => $charge->trial_end,
                             'current_period_start'  => $charge->current_period_start,
                             'current_period_end'    => $charge->current_period_end,
                             'status'  => 1
@@ -191,7 +179,6 @@ class PaymentController extends Controller
 
                 $charge = $stripe->subscriptions->create([
                         "customer" => $customer->id,
-                        "trial_period_days" => 7,
                         'items' => [
                             ['price' => env('WEBMASTER_PRICE')],
                         ],
@@ -211,7 +198,6 @@ class PaymentController extends Controller
 
                 $charge = $stripe->subscriptions->create([
                         "customer" => $customer->id,
-                        "trial_period_days" => 7,
                         'items' => [
                             ['price' => env('BUSINESS_PRICE')],
                         ],
@@ -231,7 +217,6 @@ class PaymentController extends Controller
 
                 $charge = $stripe->subscriptions->create([
                         "customer" => $customer->id,
-                        "trial_period_days" => 7,
                         'items' => [
                             ['price' => env('AGENCY_PRICE')],
                         ],
@@ -255,8 +240,6 @@ class PaymentController extends Controller
             $create_user->amount = $charge->plan->amount;
             $create_user->interval = $charge->plan->interval;
             $create_user->product_id = $charge->plan->product;
-            $create_user->trial_start = $charge->trial_start;
-            $create_user->trial_end = $charge->trial_end;
             $create_user->current_period_start = $charge->current_period_start;
             $create_user->current_period_end = $charge->current_period_end;
             $create_user->status = '1';
