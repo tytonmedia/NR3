@@ -24,7 +24,7 @@ class CreateSeoResultsTable extends Migration
             $table->string('meta_length')->nullable();
             $table->string('img_alt')->nullable();
             $table->string('img_miss_alt')->nullable();
-            $table->string('iframe')->nullable();
+            $table->unsignedInteger('iframe');->nullable();
             $table->string('all_img_src')->nullable();
             $table->string('canonical')->nullable();
             $table->json('img_without_alt')->nullable();

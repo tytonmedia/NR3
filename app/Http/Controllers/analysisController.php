@@ -1652,9 +1652,11 @@ try {
                 $val6_pass = 0;
             }
             if (!empty($iframe)) {
+                $iframe = 0;
                 $val7_pass = 0;
             } else {
                 $val7_pass = 1;
+                $iframe = 1;
             }
             if ($h1_tags > 0) {
                 $val8_pass = 1;
@@ -1855,10 +1857,10 @@ try {
             }
             if ($title_length < 50 || $title_length > 60) {$val7_error = 1;} else {$val7_error = 0;}
             if ($meta_length < 120 || $meta_length > 160) {$val8_error = 1;} else {$val8_error = 0;}
-            if (empty($iframe)) {$val9_error = 0;} else {$val9_error = 1;}
+
             if($mobile_friendly === 'MOBILE_FRIENDLY'){$val10_error = 0;}elseif($mobile_friendly === 'NOT_MOBILE_FRIENDLY'){$val10_error = 1;}
 
-            (int)$total_error_score = $val1_error + $val2_error + $val3_error + $val4_error + $val5_error + $val6_error + $val7_error + $val8_error + $val9_error + $val10_error;
+            (int)$total_error_score = $val1_error + $val2_error + $val3_error + $val4_error + $val5_error + $val6_error + $val7_error + $val8_error + $iframe + $val10_error;
 
             $error_score = round(($total_error_score/10)*100);
 
@@ -1980,7 +1982,7 @@ try {
                                 $seo_result_data->meta_length = $meta_length;
                                 $seo_result_data->img_alt = $img_alt ?? 0;
                                 $seo_result_data->img_miss_alt = $img_miss_alt ?? 0;
-                                $seo_result_data->iframe = $iframe ?? 0;
+                                $seo_result_data->iframe = $iframe;
                                 $seo_result_data->all_img_src = $all_img_src ?? null;
                                 $seo_result_data->canonical = $canonical ?? null;
                                 $seo_result_data->img_without_alt = $img_without_alt;
