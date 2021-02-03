@@ -45,7 +45,6 @@ class CreateSeoResultsTable extends Migration
             $table->string('http')->nullable();
             $table->json('cache')->nullable();
             $table->string('page_https')->nullable();
-            $table->string('iframe')->nullable();
             $table->string('status404')->nullable();
             $table->json('internal_link')->nullable();
             $table->string('a_https')->nullable();
