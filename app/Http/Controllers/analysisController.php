@@ -821,7 +821,7 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
                 $duplicate_meta_description_count+$page_miss_meta_count+
                 $links_empty_h1_count+$short_title_count+$long_title_count+$short_meta_description_count+$long_meta_description_count;
 
-
+try {
                              $seo_audit_data = new Audit;
                                 $seo_audit_data->user_id = auth()->user()->id;
                                 $seo_audit_data->payment_id = $Payment->id ?? 0;
@@ -872,6 +872,11 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
                                 $create_audit->save();
 
 
+                }catch(Exception $e){
+                    Log::error($e);
+                        }
+
+
                        $data = json_encode(array(
                                     'id' => $seo_audit_data->id,
                                     'url' => $url,
@@ -880,7 +885,7 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
                    
                                 ));
 
-                        return $data;
+            return $data;
 
         }
     }
@@ -947,12 +952,14 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
              $id = $request->input('id');
 
                 // send seo report email
-        $audit_details = AuditResults::select('site_url','notices','warnings','errors','passed_pages','health_score','pages','audit_description','created_at')->where('id', $id)->get()->toArray();
-            $audit_details = current($audit_details);
+        $audit_details = AuditResults::select('site_url','audit_id')->where('id', $id)->get()->toArray();
+         $audit_details = current($audit_details);
+                        Audit::select('site_url','notices','warning','errors','passed_pages','health_score','pages','audit_description','created_at')->where('id', $audit_details['audit_id'])->get()->toArray();
+           
             
           // print_r($seo_audit_details);
            
-                Mail::send('emails/audit_report', compact('audit_details', 'send_to', 'message'), function ($message) use ($send_to, $seo_audit_details, $url)
+                Mail::send('emails/audit_report', compact('audit_details', 'send_to', 'message'), function ($message) use ($send_to, $audit_details, $url)
                         {
                             $message->from('admin@ninjareports.com', 'Ninja Reports');
                             $message->to($send_to);
@@ -1292,26 +1299,21 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
             //extract Domain
             $internal_link = array();
             $external_link = array();
-            $link_url = parse_url( $url );
-            $home_url = parse_url( $_SERVER['HTTP_HOST'] );     
 
-                   
-                    //dd($domain_url);
+
+                    $domain = parse_url($url, PHP_URL_HOST);
+
+                    $domain_url = str_replace('www.', '', $domain);
+                    
                     foreach ($a_links as $lnk) {
-
-                            if( empty($link_url['host']) ) {
-                                    // Is an internal link
-         
-                                $internal_link[] = $lnk;
-                             } elseif( $link_url['host'] == $home_url['host'] ) {
-                                            // Is an internal link
-          
-                                $internal_link[] = $lnk;
-                             } else {
-                                         // Is an external link
-                                $external_link[] = $lnk;
+                 
+                        if (strpos($lnk, $domain_url) !== false) {
+                            $internal_link[] = $lnk;
+                        } else {
+                            $external_link[] = $lnk;
+                            
                         }
-                            }
+                    }
 
                         $external_link = array_unique(array_filter($external_link));
                         $internal_link = array_unique(array_filter($internal_link));
@@ -1713,6 +1715,7 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
                 $val20_pass = 1;
             } else {
                 $val20_pass = 0;
+                $sitemap = 0;
             }
             if ($h1_tags > 0) {
                 $val21_pass = 1;
@@ -1759,8 +1762,7 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
          
             $http_rquest = 1;
 
-            $total_passed_score = $val1_pass + $val2_pass + $val3_pass + $val4_pass + $val5_pass + $val6_pass + $val7_pass + $val8_pass + $val9_pass
-                + $val10_pass + $val11_pass + $val12_pass + $val13_pass + $val14_pass + $val15_pass + $val16_pass + $val17_pass
+            (int)$total_passed_score = $val1_pass + $val2_pass + $val3_pass + $val4_pass + $val5_pass + $val6_pass + $val7_pass + $val8_pass + $val9_pass  + $val10_pass + $val11_pass + $val12_pass + $val13_pass + $val14_pass + $val15_pass + $val16_pass + $val17_pass
                 + $val18_pass + $val20_pass + $val21_pass + $val22_pass + $val23_pass + $val24_pass +  $http_rquest + $val25_pass + $val26_pass + $val27_pass + $val28_pass;
              $passed_score = round(((float)$total_passed_score/30)*100, 0);
             if($passed_score > 80 ){
@@ -1792,6 +1794,13 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
             } else {
                 $val18_warning = 1;
             }
+            $cls_count = str_replace(' s', '', $cls);
+            $fcp_count = str_replace(' s', '', $cls);
+            $lcp_count = str_replace(' s', '', $lcp);
+            if ($cls < 0.01) {$val21_warning = 0;} else {$val21_warning = 1;}
+            if ($fcp < 2) {$val22_warning = 0;} else {$val22_warning = 1;}
+            if ($lcp < 2.5) {$val23_warning = 0;} else {$val23_warning = 1;}
+
             if ($sitemap == 1) {$val19_warning = 0;} else {$val19_warning = 1;}
 
             if (!empty($favicon)) {$val20_pass = 0;} else {$val20_pass = 1;}
@@ -1801,11 +1810,15 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
 
             if($page_text_ratio > 10){$val14_pass = 0;}else{$val14_pass = 1;}
 
-            $total_warning_score = $val3_warning + $val5_warning + $val6_warning
-                + $val8_warning + $val9_warning + $val10_warning + $val18_warning + $val19_warning+$val20_pass+$val13_pass+$val14_pass;
-             //   dd($total_warning_score);
-            $warning_score = round(($total_warning_score/11)*100);
-        } catch (Exception $e) {}
+            (int)$total_warning_score = $val3_warning + $val5_warning + $val6_warning + $val8_warning + $val9_warning + $val10_warning + $val18_warning + $val19_warning + $val20_pass + $val13_pass + $val14_pass + $val21_warning + $val22_warning + $val23_warning;
+             
+            $warning_score = round(($total_warning_score/14)*100, 0);
+
+               //dd($warning_score);
+
+        } catch (Exception $e) {
+            Log::error($e);
+        }
 
         //Page Score Error
         try {
@@ -1845,10 +1858,13 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
             if (empty($iframe)) {$val9_error = 0;} else {$val9_error = 1;}
             if($mobile_friendly === 'MOBILE_FRIENDLY'){$val10_error = 0;}elseif($mobile_friendly === 'NOT_MOBILE_FRIENDLY'){$val10_error = 1;}
 
-            $total_error_score = $val1_error + $val2_error + $val3_error + $val4_error + $val5_error
-                            + $val6_error + $val7_error +$val8_error +$val9_error +$val10_error;
+            (int)$total_error_score = $val1_error + $val2_error + $val3_error + $val4_error + $val5_error + $val6_error + $val7_error + $val8_error + $val9_error + $val10_error;
+
             $error_score = round(($total_error_score/10)*100);
-        } catch (Exception $e) {}
+
+        } catch (Exception $e) {
+            Log::error($e);
+        }
        
         //page Notices
         try{
@@ -1894,7 +1910,6 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
         } else{
             $schema_types = json_encode($schema_types);
         }
-         try {
             if(empty($ssl_certificate)){
             $ssl_certificate = 0;
             } else {
@@ -1941,11 +1956,19 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
             } else{
                 $schema_org = json_encode($schema_org);
             }
+
                if(empty($warning_score)){
                 $warning_score = 0;
             } else{
                 $warning_score = $warning_score;
             }
+             if(empty($error_score)){
+                $error_score = 0;
+            } else{
+                $error_score = $error_score;
+            }
+
+            try{
 
                                 $seo_result_data = new SeoResult;
                                 $seo_result_data->user_id = auth()->user()->id;
@@ -1985,8 +2008,8 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
                                 $seo_result_data->script_https = $script_https ?? '';
                                 $seo_result_data->social_media_link = $social_media_link ?? null;
                                 $seo_result_data->robot = $robot;
-                                $seo_result_data->sitemap = $sitemap ?? 0;
-                                $seo_result_data->schema_data = json_encode($schema_org) ?? null;
+                                $seo_result_data->sitemap = $sitemap;
+                                $seo_result_data->schema_data = $schema_org;
                                 $seo_result_data->social_schema = $social_schema;
                                 $seo_result_data->passed_score = $passed_score ?? 0;
                                 $seo_result_data->warning_score = $warning_score ?? null;
@@ -2017,13 +2040,13 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
                                 $seo_result_data->js_min_bytes = $js_min_bytes ?? null;
                                 $seo_result_data->gzip_compression = $gzip_compression ?? null;
                                 //print_r($seo_result_data);
-                              $seo_result_data->save();
+                                $seo_result_data->save();
 
-                                     $create_analysis = new Analysis;
-                                  $create_analysis->user_id = auth()->user()->id;
-                                     $create_analysis->site_url = $url;
-                               $create_analysis->payment_id = $Payment->id ?? Null;
-                                   $create_analysis->save();
+                                $create_analysis = new Analysis;
+                                $create_analysis->user_id = auth()->user()->id;
+                                $create_analysis->site_url = $url;
+                                $create_analysis->payment_id = $Payment->id ?? Null;
+                                $create_analysis->save();
 
                                 $data = json_encode(array(
                                     'id' => $seo_result_data->id,
@@ -2035,9 +2058,9 @@ $errors = $link_404_count+$link_500_count+$duplicate_title_count+
 
                                 return $data;
 
-        }catch(Exception $e){
-           // Log::error($e);
-        }
+                        }catch(Exception $e){
+                        return $e;
+                        }
     }
 
     public function download_seo_report($id){

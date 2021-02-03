@@ -153,7 +153,7 @@
                 </h6>
                 <div class="progress" >
                         <div id="warning" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50"
-                        aria-valuemin="0" aria-valuemax="100" style="width:{{$seo_audit_details['warning_score']  ?? ''}}%;background-color: #ff6600;"></div>
+                        aria-valuemin="0" aria-valuemax="100" style="width:{{$seo_audit_details['warning_score']}}%;background-color: #ff6600;"></div>
                 </div>
                 <div class="clear"></div>
                 <h6 class="pta">
@@ -166,13 +166,13 @@
                 <div class="clear"></div>
                 <div class="row breakdown-data">
                         <div class="col-md-4">
-                           <label>Backlinks</label><span>{{$seo_audit_details['urls_num']}}</span>
+                           <label>Backlinks</label><span>{{number_format($seo_audit_details['urls_num'])}}</span>
                         </div>
                           <div class="col-md-4">
                            <label>Load Time</label><span>{{$seo_audit_details['loadtime']}}</span>
                         </div>
                         <div class="col-md-4">
-                           <label>Word Count</label><span>{{$seo_audit_details['page_words']}}</span>
+                           <label>Word Count</label><span>{{number_format($seo_audit_details['page_words'])}}</span>
                         </div>
 
                 </div>
@@ -191,9 +191,9 @@
             <div class="row">
                 <div class="col-md-3">
                     <h6>
-                        @if($seo_audit_details['title_length'] > 30 && $seo_audit_details['title_length'] <= 60)
+                        @if($seo_audit_details['title_length'] > 50 && $seo_audit_details['title_length'] <= 60)
                             <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
-                             @elseif($seo_audit_details['title_length'] <= 30 || $seo_audit_details['title_length'] > 60)
+                             @elseif($seo_audit_details['title_length'] <= 50 || $seo_audit_details['title_length'] > 60)
                                  <span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                         @endif
                         Title Tag <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="The title tag is the text that Google often uses to display your website link in SERPs (search engine results pages)."><i class="fa fa-info-circle" ></i></a></h6>
@@ -300,19 +300,19 @@
 
   <div class="row">
                 <div class="col-md-3">
+                    @php
+                            $fcp = str_replace(' s', '', $seo_audit_details['fcp']) ;
+                   @endphp
                     <h6>
-                        @if(!empty($seo_audit_details['fcp']))
+                        @if($fcp < 2)
                         <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                       <span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>
+                       <span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
                     @endif
                     First Contentful Paint <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="FCP measures how long it takes the browser to render the first piece of DOM content after a user navigates to your page. "><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                    <p style="float:left;margin-right:15px">{{$seo_audit_details['fcp']}}</p>
-                   @php
-                            $fcp = str_replace(' s', '', $seo_audit_details['fcp']) ;
-                   @endphp
                    @if($fcp <= 2)
                              <div class="progress" style="width: 200px;float: left;height:20px;">
                         <div id="warning" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:25%;background-color: green;">{{$seo_audit_details['fcp']}}</div></div>
@@ -333,19 +333,21 @@
                 <hr>
                   <div class="row">
                 <div class="col-md-3">
+
+                    @php
+                            $lcp = str_replace(' s', '', $seo_audit_details['lcp']) ;
+                   @endphp
                     <h6>
-                        @if(!empty($seo_audit_details['lcp']))
+                        @if($lcp < 2.5)
                         <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                       <span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>
+                       <span style="margin-right: 9px;color:#ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
                     @endif
                     Last Contentful Paint <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="The Largest Contentful Paint (LCP) metric reports the render time of the largest image or text block visible within the viewport."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                          <p style="float:left;margin-right:15px">{{$seo_audit_details['lcp']}}</p>
-                   @php
-                            $lcp = str_replace(' s', '', $seo_audit_details['lcp']) ;
-                   @endphp
+                   
                    @if($lcp <= 2.5)
                              <div class="progress" style="width: 200px;float: left;height:20px;">
                         <div id="warning" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{$lcp}}" aria-valuemin="0" aria-valuemax="100" style="width:25%;background-color: green;">{{$seo_audit_details['lcp']}}</div></div>
@@ -363,18 +365,19 @@
                   <div class="row">
                 <div class="col-md-3">
                     <h6>
-                        @if(!empty($seo_audit_details['cls']))
+                          @php
+                            $cls = str_replace(' s', '', $seo_audit_details['cls']) ;
+                   @endphp
+                        @if($cls < .01)
                         <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
-                       <span style="margin-right: 9px;color:#0E6EEA;"><i class="fa fa-flag" aria-hidden="true"></i></span>
+                       <span style="margin-right: 9px;color:#ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
                     @endif
                     Cumulative Layout Shift <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="CLS measures the sum total of all individual layout shift scores for every unexpected layout shift that occurs during the entire lifespan of the page."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
                              <p style="float:left;margin-right:15px">{{$seo_audit_details['cls']}}</p>
-                   @php
-                            $cls = str_replace(' s', '', $seo_audit_details['cls']) ;
-                   @endphp
+                 
                    @if($cls <= 0.1)
                              <div class="progress" style="width: 200px;float: left;height:20px;">
                         <div id="warning" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{$cls}}" aria-valuemin="0" aria-valuemax="100" style="width:25%;background-color: green;">{{$seo_audit_details['cls']}}</div></div>

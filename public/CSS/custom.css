@@ -492,7 +492,9 @@ input#seo_audit {
 
 }
 .five-cols div.col-md-2, .five-cols div.col-md-4 {border-left:1px solid #ddd;padding:10px;}
-
+.dataTables_filter {
+display: none;
+}
 .five-cols div:last-child {border-right:1px solid #ddd;}
 .rankings-page .five-cols {border-bottom:1px solid #ddd;    margin-bottom: 15px;}
 .rankings-table td:last-child {width:90px;}
@@ -508,6 +510,8 @@ input#seo_audit {
     border-radius: 3px;max-width:1200px;}
     .rankings-container .dataTables_wrapper {margin-top:30px;}
 hr {margin:0 !important;}
+
+.audit-container {}
 /* mobile CDSS */
 
 /* Smartphones (portrait and landscape) ----------- */

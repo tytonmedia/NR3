@@ -460,6 +460,33 @@ class backlinkController extends Controller
            }
 
 
+    public function email_backlink_report(Request $request){
+  
+        $send_to = $request->input('send_to');
+             $url = $request->input('url');
+             $id = $request->input('id');
+
+                // send seo report email
+        $backlink_details = BacklinkResults::select('site_url','domains_num','backlinks_num','created_at')->where('id', $id)->get()->toArray();
+        $backlink_details = current($backlink_details);
+            
+          // print_r($seo_audit_details);
+           
+                Mail::send('emails/backlink_report', compact('backlink_details', 'send_to', 'message'), function ($message) use ($send_to, $backlink_details, $url)
+                        {
+                            $message->from('admin@ninjareports.com', 'Ninja Reports');
+                            $message->to($send_to);
+                            $message->subject('Backlink Report of '.urldecode($url));
+                });
+                      // check for failures
+               if (Mail::failures()) {
+                 // return response showing failed emails
+                  return 0;
+                     } else {
+                      return 1;
+                     }
+           }
+
   public static function get_linkpower_color($linkpower)
     {
             if($linkpower == 0 || $linkpower < 25){

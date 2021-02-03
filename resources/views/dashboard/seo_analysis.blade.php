@@ -93,6 +93,7 @@
 if(!empty($seo_results)) {
     ?>
    var table = $('.table').DataTable({
+            "order": [[ 5, "desc" ]],
             "autoWidth": true,
             "lengthChange": false,
             "pageLength": 10
@@ -132,7 +133,7 @@ if(!empty($seo_results)) {
                              $('tr[data-id=' + data + ']').hide();
                              Swal.fire({
                               title: 'Success!',
-                              text: 'Backlink report removed.',
+                              text: 'SEO report removed.',
                               icon: 'success',
                               showConfirmButton: 'false',
                               showCloseButton: 'true',
@@ -245,22 +246,21 @@ if(!empty($seo_results)) {
                                              $("#backlink_audit").val('');
                                               $('#loading').hide();
                                                 $('.table tr.temp').remove();
-                                        }else{
+                                        } else {
                                         $('#waiting').hide();
                                         $('#loading').hide();
-                                         $('.table tr.temp').hide();
-                                         $('.no-data-row').hide();
+                                        $('.table tr.temp').hide();
+                                        $('.no-data-row').hide();
                                         // var sdata = JSON.stringify(data);
                                         // jquery Example
-                                       // alert(data);
-                                        $(JSON.parse(data)).each(function() {
-                                        id = JSON.stringify(this.id);
-                                        url = JSON.stringify(this.url).replace(/['"]+/g, '');
-                                        passed_score = JSON.stringify(this.passed_score);
-                                        error_score = JSON.stringify(this.error_score);
-                                        updated_at = JSON.stringify(this.updated_at).replace(/['"]+/g, '');
+                                        //alert(JSON.stringify(data));
+                                        data = JSON.parse(data);
+                                        id = data.id;
+                                        url = data.url;
+                                        passed_score = data.passed_score;
+                                        error_score = data.error_score;
+                                        updated_at = data.updated_at;
                                          
-                                        });
                                         var rowCount = table.rows().count();
                                          $('.table').append("<tr><td>" + rowCount + 1 + "</td><td>" + url + "</td><td>Crawled</td><td>"+ passed_score +"%</td><td>"+ error_score + "</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' href='analysis/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank' href=''>PDF</a><a class='btn btn-info btn-sm' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
                                           
