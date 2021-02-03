@@ -48,6 +48,7 @@ class CreateSeoResultsTable extends Migration
             $table->string('status404')->nullable();
             $table->json('internal_link')->nullable();
             $table->string('a_https')->nullable();
+            $table->string('link_https')->nullable();
             $table->string('script_https')->nullable();
             $table->string('social_media_link')->nullable();
             $table->string('robot')->nullable();
