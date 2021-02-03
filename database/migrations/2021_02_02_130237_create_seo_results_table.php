@@ -43,7 +43,7 @@ class CreateSeoResultsTable extends Migration
             $table->string('page_text_ratio')->nullable();
             $table->string('page_words_size')->nullable();
             $table->string('http')->nullable();
-            $table->json('cache')->nullable();
+            $table->unsignedInteger('cache')->nullable();
             $table->string('page_https')->nullable();
             $table->string('status404')->nullable();
             $table->json('internal_link')->nullable();
