@@ -32,7 +32,7 @@ class CreateSeoResultsTable extends Migration
             $table->json('h1')->nullable();
             $table->string('h1_tags')->nullable();
             $table->json('h2')->nullable();
-            $table->string('h2_Tags')->nullable();
+            $table->string('h2_tags')->nullable();
             $table->json('h3')->nullable();
             $table->string('h3_tags')->nullable();
             $table->json('word_count')->nullable();
