@@ -2082,7 +2082,7 @@ try {
        // $html = \View::make('dashboard/seo_result', compact('seo_audit_details'))->render();
         $html = view('dashboard/seo_result', compact('seo_audit_details', 'white_label'))->render();
         
-        Browsershot::html($html)->noSandbox()->pdf();
+        Browsershot::html($html)->setNodeModulePath('/home/node_modules/')->setIncludePath('$PATH:/bin')->pdf();
 
          return 'done';
 
