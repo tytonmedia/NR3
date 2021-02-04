@@ -2082,7 +2082,9 @@ try {
        // $html = \View::make('dashboard/seo_result', compact('seo_audit_details'))->render();
         $html = view('dashboard/seo_result', compact('seo_audit_details', 'white_label'))->render();
         
-        Browsershot::html($html)->setNodeModulePath('/home/node_modules/')->setIncludePath('$PATH:/bin')->pdf();
+        Browsershot::html($html)->setNodeBinary('/usr/share/node')
+    ->setNpmBinary('/usr/lib/node_modules/npm')
+    ->setChromePath('/bin/chromium-browser')->pdf();
 
          return 'done';
 
