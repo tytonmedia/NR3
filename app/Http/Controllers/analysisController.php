@@ -2099,7 +2099,7 @@ try {
        // $html = \View::make('dashboard/seo_result', compact('seo_audit_details'))->render();
         $html = view('dashboard/seo_result', compact('seo_audit_details', 'white_label'))->render();
         
-        Browsershot::html($html)->pdf();
+        Browsershot::html($html)->setNodeBinary('/root/.nvm/versions/node')->setNpmBinary('/root/.npm/npm')->pdf();
 
          return 'done';
 
