@@ -1796,13 +1796,30 @@ try {
             } else {
                 $val18_warning = 1;
             }
-            $cls_count = str_replace(' s', '', $cls);
-            $fcp_count = str_replace(' s', '', $cls);
-            $lcp_count = str_replace(' s', '', $lcp);
-            if ($cls < 0.01) {$val21_warning = 0;} else {$val21_warning = 1;}
-            if ($fcp < 2) {$val22_warning = 0;} else {$val22_warning = 1;}
-            if ($lcp < 2.5) {$val23_warning = 0;} else {$val23_warning = 1;}
+            if(!empty($cls)){
+                $cls_count = str_replace(' s', '', $cls);
+                if ($cls < 0.01) {$val21_warning = 0;} else {$val21_warning = 1;}
+            } else{
+                $val21_warning = 1;
+                $cls = 0;
+            }
+            
+            if(!empty($fcp)){
+                $fcp_count = str_replace(' s', '', $fcp);
+                if ($fcp < 2) {$val22_warning = 0;} else {$val22_warning = 1;}
+            } else{
+                $val22_warning = 1;
+                $fcp = 0;
+            }
 
+            if(!empty($lcp)){
+                $lcp_count = str_replace(' s', '', $lcp);
+                if ($lcp < 2.5) {$val23_warning = 0;} else {$val23_warning = 1;}
+            } else{
+                $val23_warning = 1;
+                $lcp = 0;
+            }
+        
             if ($sitemap == 1) {$val19_warning = 0;} else {$val19_warning = 1;}
 
             if (!empty($favicon)) {$val20_pass = 0;} else {$val20_pass = 1;}
@@ -2082,9 +2099,7 @@ try {
        // $html = \View::make('dashboard/seo_result', compact('seo_audit_details'))->render();
         $html = view('dashboard/seo_result', compact('seo_audit_details', 'white_label'))->render();
         
-        Browsershot::html($html)->setNodeBinary('/usr/share/node')
-    ->setNpmBinary('/usr/lib/node_modules/npm')
-    ->setChromePath('/bin/chromium-browser')->pdf();
+        Browsershot::html($html)->pdf();
 
          return 'done';
 

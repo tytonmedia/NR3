@@ -2,15 +2,64 @@
 @extends('layouts.master')
 @section('title', $seo_audit_details['url'].' SEO Report | Ninja Reports')
 @section('content')
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
             <script>
-             // $(document).ready(function($) {
-                   $('.analysis_section').show(); 
-                //      });
+              $(document).ready(function($) {
 
+            $('.analysis_section').show(); 
+                      
+               $("#emailreportlink").click(function(e){
+                    e.preventDefault();
+                    $("#emailReport").modal("show");
+                    });
+
+                 $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                    $("#send_email_report").click(function(e){
+                    e.preventDefault();
+                    var id = $('#report_id').val();
+                    var url = encodeURIComponent($('#report_url').val());
+                    var send_to = $('#send_to').val();
+                    var data = {id:id,url:url,send_to:send_to};
+                  $.ajax({
+                              beforeSend: function(){
+                                  $(this).text('Sending');
+                                },
+                                type:'POST',
+                                url:'/email_seo_report',
+                                data: data,
+                                success:function(data){
+                                $("#emailReport").modal("hide");
+                                 Swal.fire({
+                              title: 'Sent!',
+                              text: 'Your email report was sent!',
+                              icon: 'success',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            });
+                                },
+                                error: function (request, status, error) {
+                                      Swal.fire({
+                              title: 'Error!',
+                              text: error,
+                              icon: 'error',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            });
+                                }
+                            });
+
+                    });
+
+            });
             </script>
 <div class="col-md-10 overview analysis-container">
     <div class="inner">
@@ -25,7 +74,7 @@
         </span>
         </div>
         <div class="col-md-8 text-right" style="padding-right:0">
-          <a class="btn btn-sm btn-success" target="_blank" href="{{ url('download_seo_report', $seo_audit_details['id'])}}"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD PDF</a>
+          <a class="btn btn-sm btn-success" target="_blank" href="{{ url('download_seo_report', $seo_audit_details['id'])}}"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD</a>
           <a class="btn btn-sm btn-disabled" href="#" disabled="disabled"><i class="fa fa-refresh" aria-hidden="true"></i> RE-CRAWL</a>
           <a class="btn btn-sm btn-warning" href="#" id="emailreportlink" data-id="{{$seo_audit_details['id']}}"><i class="fa fa-envelope-open-o" aria-hidden="true"></i> EMAIL</a>
       </div>
@@ -327,7 +376,7 @@
                         aria-valuemin="0" aria-valuemax="100" style="width:100%;background-color: #ff6600;">{{$seo_audit_details['fcp']}}
                         </div></div>
                    @endif
-                       <p style="color:#999;clear:both;font-size:13px;margin:0">Recommended Score: > 2 seconds.</p>
+                       <p style="color:#999;clear:both;font-size:13px;margin:0">Recommended Score: Less than 2 seconds.</p>
                   </div>
                 </div>
                 <hr>
@@ -358,7 +407,7 @@
                         <div class="progress" style="width: 200px;float: left;height:20px;">
                         <div id="warning" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{$lcp}}" aria-valuemin="0" aria-valuemax="100" style="width:100%;background-color: #ff0000;">{{$seo_audit_details['lcp']}}</div></div>
                    @endif
-                   <p style="color:#999;clear:both;font-size:13px;margin:0">Recommended Score: > 2.5 seconds.</p>
+                   <p style="color:#999;clear:both;font-size:13px;margin:0">Recommended Score: Less than 2.5 seconds.</p>
                 </div>
             </div>
                 <hr>
@@ -368,7 +417,7 @@
                           @php
                             $cls = str_replace(' s', '', $seo_audit_details['cls']) ;
                    @endphp
-                        @if($cls < .01)
+                        @if($cls < .1)
                         <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
                     @else
                        <span style="margin-right: 9px;color:#ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
@@ -388,7 +437,7 @@
                         <div class="progress" style="width: 200px;float: left;height:20px;">
                         <div id="warning" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{$cls}}" aria-valuemin="0" aria-valuemax="100" style="width:100%;background-color: #ff0000;">{{$seo_audit_details['cls']}}</div></div>
                    @endif
-                   <p style="color:#999;clear:both;font-size:13px;margin:0">Recommended Score: > .01.</p>
+                   <p style="color:#999;clear:both;font-size:13px;margin:0">Recommended Score: Less than 0.1.</p>
                 </div>
             </div>
                 <hr>
