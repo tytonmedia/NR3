@@ -2038,8 +2038,8 @@ try {
                                 $seo_result_data->image = $screenshot ?? '';
                                 $seo_result_data->score_description = $score_description ?? '';
                                 $seo_result_data->word = $word ?? '';
-                                $seo_result_data->domains_num = $domains_num ?? '';
-                                $seo_result_data->urls_num = $urls_num ?? '';
+                                $seo_result_data->domains_num = $domains_num;
+                                $seo_result_data->urls_num = $urls_num ;
                                 $seo_result_data->keyword_list = $keyword_list;
                                 $seo_result_data->schema_types = $schema_types;
                                 $seo_result_data->semrush_links = json_encode($semrush_links) ?? null;
@@ -2099,8 +2099,7 @@ try {
            }
 
     public function seo_analysis_details($id){
-        $seo_audit_details = SeoResult::all()->where('id', $id)->toArray();
-        $seo_audit_details = current($seo_audit_details);
+        
         $user = User::where('id',auth()->user()->id)->first()->toArray();
         $white_label=WhiteLabel::where('user_id',auth()->user()->id)->first();
         if($white_label) {
@@ -2108,6 +2107,8 @@ try {
         } else{
             $white_label = 0;
         }
+        $seo_audit_details = SeoResult::all()->where('id', $id)->toArray();
+        $seo_audit_details = current($seo_audit_details);
 
         if($seo_audit_details['user_id'] == $user['id']){
                 return view('dashboard/seo_result',compact('seo_audit_details','white_label'));

@@ -215,7 +215,7 @@
                 <div class="clear"></div>
                 <div class="row breakdown-data">
                         <div class="col-md-4">
-                          @if($seo_audit_details['urls_num'] = 'payme')
+                          @if($seo_audit_details['urls_num'] == 'payme')
                           <label>Backlinks</label><span>N/A</span>
                           @else
                           <label>Backlinks</label><span>{{$seo_audit_details['urls_num']}}</span>
@@ -676,10 +676,7 @@
                     <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Total Backlinks <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="The total number of backlinks linking to your URL."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
-                  @php
-                    print_r($seo_audit_details['urls_num']);
-                  @endphp
-                     @if($seo_audit_details['urls_num'] == 'payme')
+                     @if($seo_audit_details['urls_num'] === 'payme')
                         <p>Upgrade to view backlink data. <a class="btn btn-sm btn-warning" href="/subscription">UPGRADE TO VIEW</a></p>
                     @else
                         @if($seo_audit_details['urls_num'] != 'empty')
