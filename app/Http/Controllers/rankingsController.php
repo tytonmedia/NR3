@@ -12,7 +12,6 @@ use App\KeywordResults;
 use App\SerpFeatures;
 use App\Competitor;
 use Log;
-use Spatie\Browsershot\Browsershot;
 use Session;
 use GuzzleHttp\Client as guzzler;
 
@@ -65,12 +64,11 @@ class rankingsController extends Controller
 
         $parse = parse_url($url);
         $domain_name = $parse['host']; // prints 'google.com'
-        $environment = App::environment();
          $has_competitor_data = Competitor::where('site_url',$url)->first();
             if(empty($has_competitor_data)){
             //get competitor list
          try{
-               if($environment == 'production'){
+               if(env('APP_ENV', 'production')){
                 $display_limit=5;
             }else {
                 $display_limit=1;
