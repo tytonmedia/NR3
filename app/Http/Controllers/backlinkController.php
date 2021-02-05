@@ -463,7 +463,7 @@ class backlinkController extends Controller
         BacklinkResults::where('id', $id)->delete();
         //delete all backlinks with matching site url
         Backlink::where('target_url', $site_url)->delete();
-        return 'success';
+        return $id;
         } catch(Exception $e) {
             //return $e;
         }

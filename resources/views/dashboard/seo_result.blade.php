@@ -215,7 +215,12 @@
                 <div class="clear"></div>
                 <div class="row breakdown-data">
                         <div class="col-md-4">
-                           <label>Backlinks</label><span>{{number_format($seo_audit_details['urls_num'])}}</span>
+                          @if($seo_audit_details['urls_num'] = 'payme')
+                          <label>Backlinks</label><span>N/A</span>
+                          @else
+                          <label>Backlinks</label><span>{{$seo_audit_details['urls_num']}}</span>
+                          @endif
+                           
                         </div>
                           <div class="col-md-4">
                            <label>Load Time</label><span>{{$seo_audit_details['loadtime']}}</span>
@@ -558,7 +563,7 @@
                     @endphp
 
                 @if(trim($seo_audit_details['keyword_list'],'"') == 'payme')
-                 <div class="upgrade-tease"><a class="btn upgrade-btn btn-warning" href="/subscription">FREE TRIAL</a><img src="{{ asset('../images/keywords.png')}}" style="width:100%" class="responsive" alt="keywords"/></div>
+                 <div class="upgrade-tease"><a class="btn upgrade-btn btn-warning" href="/subscription">UPGRADE</a><img src="{{ asset('../images/keywords.png')}}" style="width:100%" class="responsive" alt="keywords"/></div>
                 @else
 
                     @if($seo_audit_details['keyword_list']  === NULL || empty($seo_audit_details['keyword_list']))
@@ -654,7 +659,7 @@
                 </div>
                 <div class="col-md-9">
                     @if($seo_audit_details['domains_num'] == 'payme')
-                        <p>Upgrade to view backlink data. <a class="btn btn-sm btn-warning" href="/subscription">FREE TRIAL</a></p>
+                        <p>Upgrade to view backlink data. <a class="btn btn-sm btn-warning" href="/subscription">UPGRADE</a></p>
                     @else
                         @if($seo_audit_details['domains_num'] != 'empty')
                         <p>{{ number_format($seo_audit_details['domains_num']) }} domains are pointing to your page.</p>
@@ -671,6 +676,9 @@
                     <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Total Backlinks <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="The total number of backlinks linking to your URL."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
+                  @php
+                    print_r($seo_audit_details['urls_num']);
+                  @endphp
                      @if($seo_audit_details['urls_num'] == 'payme')
                         <p>Upgrade to view backlink data. <a class="btn btn-sm btn-warning" href="/subscription">UPGRADE TO VIEW</a></p>
                     @else

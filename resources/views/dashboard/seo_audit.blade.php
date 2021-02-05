@@ -118,22 +118,25 @@ if(!empty($audit_results)) {
                         type:'POST',
                         url:'/delete_audit_report/' + id,
                         data: id,
-                        dataType: 'json',
                         success: function (data) {
-                            //   $("tr[data-id=]").hide();
-                             if(data === 'success'){
+
                              $('tr[data-id=' + data + ']').hide();
                              Swal.fire({
                               title: 'Success!',
-                              text: 'Backlink report removed.',
+                              text: 'SEO Audit removed.',
                               icon: 'success',
                               showConfirmButton: 'false',
                               showCloseButton: 'true',
                             });
-                         }
                         },
                         error: function (data) {
-                            console.log(data);
+                             Swal.fire({
+                              title: 'Error!',
+                              text: JSON.stringify(data),
+                              icon: 'error',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            });
                         }
                     });
                 
@@ -209,6 +212,10 @@ if(!empty($audit_results)) {
                                         if(data == 'notsuccessful' || data == 'Expired' || data == 'exceeded' ){
                                             $('#waiting').hide();
                                             $('#myModal').show();
+                                            $('.temp').hide();
+                                            $('#loading').hide();
+                                            $('#analyse').removeAttr('disabled');
+                                          $('#analyse').text('CRAWL');
                                         }else if(data == 'duplicate'){
                                            // alert("That URL is already scanned. Check the table below.")
                                             Swal.fire({

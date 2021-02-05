@@ -98,6 +98,7 @@ if(!empty($seo_results)) {
             "lengthChange": false,
             "pageLength": 10
         });
+   rowcount = table.rows().count();
 <?php } ?>
 
 
@@ -213,6 +214,11 @@ if(!empty($seo_results)) {
                                            $('#waiting').show();
                                              $('#analyse').attr('disabled','disabled');
                                              $('#analyse').text('CRAWLING');
+                                             if(rowcount == 0){
+                                              $('#empty').fadeOut(1000);
+                                             }else {
+
+                                             }
                                              $('.table').append("<tr class='temp'><td colspan='7' class='text-center'>Loading...</td></tr>");
                                         }
                                     });
@@ -231,6 +237,7 @@ if(!empty($seo_results)) {
                                         $('.table tr.temp').remove();
                                         $('#analyse').removeAttr('disabled');
                                         $('#analyse').text('CRAWL');
+                                        $('#loading').hide();
                                     }else if(data == 'duplicate'){
                                            // alert("That URL is already scanned. Check the table below.")
                                             Swal.fire({

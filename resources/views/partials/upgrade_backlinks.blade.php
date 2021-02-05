@@ -14,7 +14,7 @@
     <div class="row">
       <div class="col-md-12" style="padding:0">
         <div class="alert alert-warning" role="alert">
- Please upgrade in order to use the backlinks analysis tool. Get access to your backlink data, historical backlinks, link toxicity and more. Try our <a href="/subscription">free trial</a> today and start ranking better in search engines.</div>
+ Please upgrade in order to use the backlinks analysis tool. Get access to your backlink data, historical backlinks, link toxicity and more. <a href="/subscription">Upgrade</a> today and start ranking better in search engines.</div>
 </div>
 </div>
 
@@ -41,22 +41,22 @@
 <div class="row">
 <div class="col-md-3">
     <h5>Referring Backlinks History</h5>
-    <a href="/subscription" class="btn btn-warning btn-lg">FREE TRIAL</a>
+    <a href="/subscription" class="btn btn-warning btn-lg">UPGRADE</a>
     <canvas id="backlinksChart" style=" width:100%;height:200px;"></canvas>
 </div>
 <div class="col-md-3">
     <h5>Referring Domains History</h5>
-    <a href="/subscription" class="btn btn-warning btn-lg">FREE TRIAL</a>
+    <a href="/subscription" class="btn btn-warning btn-lg">UPGRADE</a>
     <canvas id="domainsChart" style=" width:100%;height:200px;"></canvas>
 </div>
 <div class="col-md-3">
     <h5>Link Profile</h5>
-    <a href="/subscription" class="btn btn-warning btn-lg">FREE TRIAL</a>
+    <a href="/subscription" class="btn btn-warning btn-lg">UPGRADE</a>
      <canvas id="nofollowChart" style=" width:100%;height:200px;"></canvas>
     </div>
     <div class="col-md-3">
         <h5>Referring TLDs</h5>
-        <a href="/subscription" class="btn btn-warning btn-lg">FREE TRIAL</a>
+        <a href="/subscription" class="btn btn-warning btn-lg">UPGRADE</a>
         <div class="referring-tlds">
 
                 <div class="d-flex bd-highlight">
@@ -191,7 +191,7 @@ var myChart = new Chart(ctx, {
        <div class="row" style="margin-top:25px;">
             <div class="col-md-12">
                 <h3>Backlinks</h3>
-                <a href="/subscription" class="btn btn-warning btn-lg">FREE TRIAL</a>
+                <a href="/subscription" class="btn btn-warning btn-lg">UPGRADE</a>
                             <table class="table backlinks-table">
                                 <thead class="thead-light">
                                 <tr>

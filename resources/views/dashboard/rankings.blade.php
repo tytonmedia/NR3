@@ -90,11 +90,13 @@
 <?php
 if(!empty($ranking_results)) {
     ?>
- $('.table').DataTable({
+ var table = $('.table').DataTable({
             "autoWidth": true,
             "lengthChange": false,
             "pageLength": 10
         });
+
+  rowCount = table.data().count();
 <?php } ?>
             $.ajaxSetup({
                 headers: {
@@ -127,13 +129,25 @@ if(!empty($ranking_results)) {
                         type:'POST',
                         url:'/delete_ranking_report/' + id,
                         data: id,
-                        dataType: 'json',
                         success: function (data) {
                             //   $("tr[data-id=]").hide();
-                             $('tr[data-id=' + data + ']').hide();
+                            $('tr[data-id=' + data + ']').hide();
+                             Swal.fire({
+                              title: 'Success!',
+                              text: 'Ranking report removed.',
+                              icon: 'success',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            });
                         },
                         error: function (data) {
-                            console.log(data);
+                             Swal.fire({
+                              title: 'Error!',
+                              text: JSON.stringify(data),
+                              icon: 'error',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            });
                         }
                     });
                 
@@ -186,11 +200,10 @@ if(!empty($ranking_results)) {
                                         var xhr = new window.XMLHttpRequest();
                                         xhr.upload.addEventListener('progress', function(e) {
                                             if (e.lengthComputable) {
-                                                //console.log(percent);
-                                               // $('#error-box').hide();
-                                                //$('#waiting').show();
-                                               // $('#tool-desc').slideUp();
+                                                $('#analyse').text('CRAWLING');
+                                             $('.table').append("<tr class='temp'><td colspan='7' class='text-center'>Loading...</td></tr>");
                                                 $('#analyse').attr('disabled','disabled');
+                                                $('#loading').show();
                                             }
                                         });
                                         return xhr;
@@ -198,14 +211,13 @@ if(!empty($ranking_results)) {
                                     type:'POST',
                                     url:'/seo_rankings',
                                     data:{url:url},
-                                    
                                     success:function(data){
                                         if(data == 'notsuccessful' || data == 'Expired' || data == 'exceeded' || data == 'payme'){
                                             $('#waiting').hide();
                                             $('#rankingsUpgrade').show();
                                               }else if(data == 'duplicate'){
                                            // alert("That URL is already scanned. Check the table below.")
-                                                        Swal.fire({
+                                                Swal.fire({
                                           title: 'Error!',
                                           text: 'That URL is already scanned. Check the table below.',
                                           icon: 'error',
@@ -219,32 +231,40 @@ if(!empty($ranking_results)) {
                                               $('#loading').hide();
                                                 $('.table tr.temp').remove();
 
+                                        }else if(data == 'error') {
+                                          $('#analyse').removeAttr('disabled');
+                                             $('#analyse').text('CRAWL');
+                                             $("#backlink_audit").val('');
+                                              $('#loading').hide();
+                                                $('.table tr.temp').remove();
+                                           Swal.fire({
+                              title: 'Error!',
+                              text: 'Sorry, there was an error. Please try again.',
+                              icon: 'error',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            });
                                         }else{
                                              // $('div#text-container').append(data);
-                                            $('#loading').hide();
+                                        $('#loading').hide();
                                          $('.table tr.temp').remove();
-                                        // var sdata = JSON.stringify(data);
-                                        // jquery Example
-                                       // alert(data);
-                                        $(JSON.parse(data)).each(function() {
-                                        id = JSON.stringify(this.id);
-                                        url = JSON.stringify(this.url).replace(/['"]+/g, '');
-                                        backlinks = JSON.stringify(this.backlinks);
-                                        referring_domains = JSON.stringify(this.referring_domains);
-                                        updated_at = JSON.stringify(this.updated_at).replace(/['"]+/g, '');
-                                         
-                                        });
-
-                                         $('.table').append("<tr><td>" + id + "</td><td>" + url + "</td><td>Crawled</td><td>"+ backlinks.replace(/['"]+/g, '') +"</td><td>"+ referring_domains.replace(/['"]+/g, '') + "</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' href='analysis/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank' style='display:none;' href=''>PDF</a><a style='display:none;' class='btn btn-info btn-sm' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
-                                          
-                                      //  $('.analysis_section').show();
-                                       // runPagespeed();
                                         $('#analyse').removeAttr('disabled');
                                         $('#analyse').text('CRAWL');
-                                          
+
+                                        data = JSON.parse(data);
+                                        id = data.id;
+                                        url = data.url;
+                                        keywords = data.keywords;
+                                        updated_at = data.updated_at;
+                                        if(rowCount > 0){
+                                          rowCount = rowCount;
+                                        }else{
+                                          rowCount = 0;
                                         }
-                                    }
-                                    ,
+                                         $('.table').append("<tr><td>" + (rowCount + 1) + "</td><td>" + url + "</td><td>Crawled</td><td>"+ keywords +"</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' href='rankings/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank' style='display:none;' href=''>PDF</a><a style='display:none;' class='btn btn-info btn-sm' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
+ 
+                                        }
+                                    },
                                 error: function (request, status, error) {
                                 $('#waiting').hide();
                                 $('#analyse').removeAttr('disabled');

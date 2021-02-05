@@ -90,16 +90,8 @@ class rankingsController extends Controller
             curl_close($curl);
 
             if (strpos($resp,'ERROR ')===0) {
-                    //error
-               // dd('error: '.$resp);
-              if (strpos($resp,'ERROR 50')===0) {
-                $response = 'Sorry, there are no results for that URL. Make sure your URL is the final URL after any redirects.';
-                return view("dashboard/no_results", compact('response'));
-                } else {
-                $response = $resp;
-                return view("dashboard/no_results", compact('response'));
 
-                }
+                return 'error';
   
                 } else {
                 // no error
@@ -167,18 +159,7 @@ class rankingsController extends Controller
 
 
             if (strpos($resp,'ERROR ')===0) {
-                    //error
-              if (strpos($resp,'ERROR 50')===0) {
-                $response = 'Sorry, there are no results for that URL. Please try another URL';
-                return view("dashboard/no_results", compact('response'));
-                } else {
-                $response = $resp;
-                return view("dashboard/no_results", compact('response'));
-
-                }
-
-
-                
+               return 'error';
                 } else {
                 // no error
                  $keyword_array = explode("\n", $resp);
@@ -413,16 +394,18 @@ class rankingsController extends Controller
            }
 
  public function delete_ranking_report($id){
+   try {
+     $site_url = KeywordResults::select('site_url')->where('id',$id)->where('user_id',auth()->user()->id)->pluck('site_url');
         KeywordResults::where('id', $id)->delete();
 
-           try {
-        $site_url = KeywordResults::select('site_url')->where('id',$id)->where('user_id',auth()->user()->id)->pluck('site_url');
         KeywordResults::where('id', $id)->delete();
         //delete all backlinks with matching site url
         Keyword::where('site_url', $site_url)->delete();
-        return 'success';
+
+        return $id;
+
         } catch(Exception $e) {
-            return 'error';
+          return $e;
         }
 
            }

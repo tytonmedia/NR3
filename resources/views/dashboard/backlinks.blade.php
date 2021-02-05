@@ -125,10 +125,7 @@ if(!empty($backlink_results)) {
                         type:'POST',
                         url:'/delete_backlink_report/' + id,
                         data: id,
-                        dataType: 'json',
                         success: function (data) {
-                            //   $("tr[data-id=]").hide();
-                            if(data === 'success'){
                              $('tr[data-id=' + data + ']').hide();
                              Swal.fire({
                               title: 'Success!',
@@ -136,9 +133,7 @@ if(!empty($backlink_results)) {
                               icon: 'success',
                               showConfirmButton: 'false',
                               showCloseButton: 'true',
-                            })
-                            }
-
+                            });
                         },
                         error: function (data) {
                            
@@ -148,7 +143,7 @@ if(!empty($backlink_results)) {
                               icon: 'error',
                               showConfirmButton: 'false',
                               showCloseButton: 'true',
-                            })
+                            });
                         }
                     });
                 
@@ -226,6 +221,7 @@ if(!empty($backlink_results)) {
                                             $('#backlinksUpgrade').show();
                                             $('#analyse').removeAttr('disabled');
                                              $('#analyse').text('CRAWL');
+                                             $('.temp').hide();
                                         }else if(data == 'duplicate'){
                                            // alert("That URL is already scanned. Check the table below.")
                                             Swal.fire({
