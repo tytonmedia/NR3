@@ -73,7 +73,7 @@
             @endif
         </span>
         </div>
-        <div class="col-md-8 text-right" style="padding-right:0">
+        <div class="col-md-8 text-right" style="padding-right:0;display:none;">
           <a class="btn btn-sm btn-success" target="_blank" href="{{ url('download_seo_report', $seo_audit_details['id'])}}"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD</a>
           <a class="btn btn-sm btn-disabled" href="#" disabled="disabled"><i class="fa fa-refresh" aria-hidden="true"></i> RE-CRAWL</a>
           <a class="btn btn-sm btn-warning" href="#" id="emailreportlink" data-id="{{$seo_audit_details['id']}}"><i class="fa fa-envelope-open-o" aria-hidden="true"></i> EMAIL</a>
