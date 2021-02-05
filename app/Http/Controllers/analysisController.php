@@ -12,10 +12,8 @@ use App\Payment;
 use App\Audit;
 use App\AuditResults;
 use App\SeoResult;
-use HeadlessChromium\BrowserFactory;
 use App\WhiteLabel;
 use Mail;
-use PDF;
 use GuzzleHttp\Client as guzzler;
 
 ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
