@@ -5,7 +5,6 @@
 <?php   
 use \App\Http\Controllers\backlinkController; 
 
-$backlink_details = current($backlink_details);
 $historical_array = json_decode($backlink_details['historical']);
 $linktoxicity = 0;
             $anchor_array = array();
@@ -178,7 +177,7 @@ $nofollow_array = array();
             @endif
           </span>
         </div>
-        <div class="col-md-8 text-right" style="padding-right:0">
+        <div class="col-md-8 text-right" style="padding-right:0;display:none;">
           <a class="btn btn-sm btn-success" href="{{ url('download_backlink_report', $backlink_details['id'])}}"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD</a>
           <a class="btn btn-sm btn-disabled" href="#" disabled="disabled"><i class="fa fa-refresh" aria-hidden="true"></i> RE-CRAWL</a>
           <a class="btn btn-sm btn-warning" href="#" id="emailreportlink" data-id="{{$backlink_details['id']}}"><i class="fa fa-envelope-open-o" aria-hidden="true"></i> EMAIL</a>

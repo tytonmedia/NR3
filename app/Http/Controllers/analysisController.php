@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use Exception;
 use Goutte\Client;
 use Illuminate\Http\Request;
-use Spatie\Browsershot\Browsershot;
 use Illuminate\Support\Facades\Log;
 use Redirect;
 use App\Analysis;
@@ -13,10 +12,10 @@ use App\Payment;
 use App\Audit;
 use App\AuditResults;
 use App\SeoResult;
-use VerumConsilium\Browsershot\Facades\PDF;
 use HeadlessChromium\BrowserFactory;
 use App\WhiteLabel;
 use Mail;
+use PDF;
 use GuzzleHttp\Client as guzzler;
 
 ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
@@ -938,7 +937,7 @@ try {
        // $html = \View::make('dashboard/seo_result', compact('seo_audit_details'))->render();
         $html = view('dashboard/audit_result', compact('audit_details', 'white_label'))->render();
         
-        Browsershot::html($html)->setNodeBinary('C:\wamp64\bin\nodejs\node.exe')->setNodeModulePath("C:\wamp64\bin\nodejs\node_modules")->setChromePath("C:\Programs\\Google\\Chrome\\Application\\chrome.exe")->setIncludePath('C:\wamp64\bin')->noSandbox()->pdf();
+       // Browsershot::html($html)->setNodeBinary('C:\wamp64\bin\nodejs\node.exe')->setNodeModulePath("C:\wamp64\bin\nodejs\node_modules")->setChromePath("C:\Programs\\Google\\Chrome\\Application\\chrome.exe")->setIncludePath('C:\wamp64\bin')->noSandbox()->pdf();
 
          return 'done';
 
@@ -2084,9 +2083,6 @@ try {
 
     public function download_seo_report($id){
              
-                // replace default 'chrome' with 'chromium-browser'
-                   // $browserFactory = new BrowserFactory('C:\Programs\\Google\\Chrome\\Application\\chrome.exe');
-                 //   $browser = $browserFactory->createBrowser();
 
         $seo_audit_details = SeoResult::all()->where('id', $id)->toArray();
         $seo_audit_details = current($seo_audit_details);
@@ -2096,12 +2092,10 @@ try {
         } else{
             $white_label = 0;
         }
-       // $html = \View::make('dashboard/seo_result', compact('seo_audit_details'))->render();
-        $html = view('dashboard/seo_result', compact('seo_audit_details', 'white_label'))->render();
         
-        Browsershot::html($html)->setNodeBinary('/root/.nvm/versions/node')->setNpmBinary('/root/.npm/npm')->pdf();
-
-         return 'done';
+       // $pdf = PDF::loadView('pdfs/seo_report', compact('seo_audit_details', 'white_label'));
+        
+       // return $pdf->stream();
 
 
            }

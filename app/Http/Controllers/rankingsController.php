@@ -393,16 +393,25 @@ class rankingsController extends Controller
  public function ranking_details($id){
     $site_url = KeywordResults::select('site_url')->where('id', $id)->pluck('site_url')->first();
         $ranking_details = KeywordResults::all()->where('id', $id)->toArray();
+        $ranking_details = current($ranking_details);
         $keyword_array = Keyword::select('keyword','position','kd','volume','cpc','competition','traffic_per','traffic_cost','results','features','trend')->where('site_url', $site_url)->get()->toArray();
         $competitor_array = Competitor::select('site_url','domain','common_keywords','organic_keywords','organic_traffic','cost','adwords_keywords')->where('site_url', $site_url)->get()->toArray();
+         $user = User::where('id',auth()->user()->id)->first()->toArray();
           $white_label=WhiteLabel::where('user_id',auth()->user()->id)->first();
         if($white_label) {
             $white_label = $white_label->image_path;
         } else{
             $white_label = 0;
         }
+
+        if($ranking_details['user_id'] == $user['id']){
+                 return view('dashboard/ranking_result',compact('ranking_details','keyword_array','competitor_array','white_label'));
+        } else{
+                return redirect::to('/');
+        }
+
      //   print_r($backlink_details);
-        return view('dashboard/ranking_result',compact('ranking_details','keyword_array','competitor_array','white_label'));
+      
            }
 
  public function delete_ranking_report($id){
@@ -420,6 +429,34 @@ class rankingsController extends Controller
 
            }
 		
+ public function email_ranking_report(Request $request){
+  
+            $send_to = $request->input('send_to');
+             $url = $request->input('url');
+             $id = $request->input('id');
+             $id = $request->input('message');
+
+                // send seo report email
+        $ranking_details = KeywordResults::select('site_url','created_at')->where('id', $id)->get()->toArray();
+            $ranking_details = current($ranking_details);
+            
+          // print_r($seo_audit_details);
+           
+                Mail::send('emails/ranking_report', compact('ranking_details', 'send_to', 'message'), function ($message) use ($send_to, $seo_audit_details, $url)
+                        {
+                            $message->from('admin@ninjareports.com', 'Ninja Reports');
+                            $message->to($send_to);
+                            $message->subject('SEO Analysis of '.$url);
+                });
+                      // check for failures
+               if (Mail::failures()) {
+                 // return response showing failed emails
+                  return 0;
+                     } else {
+                      return 1;
+                     }
+           }
+
 
         public static function get_serp_feature($id)
     {

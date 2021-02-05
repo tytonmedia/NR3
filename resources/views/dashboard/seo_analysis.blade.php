@@ -57,8 +57,8 @@
                  <td>{{date("F j, Y, g:i a", strtotime($value['updated_at'])) }}</td>
                  <td>
                         <a class="btn btn-primary btn-sm" href="{{ url('analysis', $value['id'])}}">View</a>
-                        <a class="btn btn-success btn-sm" target="_blank" href="{{ url('download_seo_report', $value['id'])}}">PDF</a>
-                        <a class="btn btn-info btn-sm" href=""><i class="fa fa-refresh" aria-hidden="true"></i></a>
+                        <a class="btn btn-success btn-sm" style="display:none" target="_blank" href="{{ url('download_seo_report', $value['id'])}}">PDF</a>
+                        <a class="btn btn-info btn-sm"  style="display:none" href=""><i class="fa fa-refresh" aria-hidden="true"></i></a>
                         <a class="btn btn-warning btn-sm delete-report" data-id="<?php echo $value['id'];?>" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                 </td> 
             </tr>
@@ -262,7 +262,7 @@ if(!empty($seo_results)) {
                                         updated_at = data.updated_at;
                                          
                                         var rowCount = table.rows().count();
-                                         $('.table').append("<tr><td>" + rowCount + 1 + "</td><td>" + url + "</td><td>Crawled</td><td>"+ passed_score +"%</td><td>"+ error_score + "</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' href='analysis/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank' href=''>PDF</a><a class='btn btn-info btn-sm' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
+                                         $('.table').append("<tr><td>" + rowCount + 1 + "</td><td>" + url + "</td><td>Crawled</td><td>"+ passed_score +"%</td><td>"+ error_score + "</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' href='analysis/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank'  style='display:none' href=''>PDF</a><a class='btn btn-info btn-sm'  style='display:none' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
                                           
                                       //  $('.analysis_section').show();
                                        // runPagespeed();

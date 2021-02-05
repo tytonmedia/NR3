@@ -53,8 +53,8 @@
                  <td>{{date("F j, Y, g:i a", strtotime($value['updated_at'])) }}</td>
                  <td>
                         <a class="btn btn-primary btn-sm" href="{{ url('audit', $value['id'])}}">View</a>
-                        <a class="btn btn-success btn-sm" target="_blank" href="{{ url('download_audit_report', $value['id'])}}">PDF</a>
-                        <a class="btn btn-info btn-sm" href=""><i class="fa fa-refresh" aria-hidden="true"></i></a>
+                        <a class="btn btn-success btn-sm"  style='display:none' target="_blank" href="{{ url('download_audit_report', $value['id'])}}">PDF</a>
+                        <a class="btn btn-info btn-sm"  style='display:none' href=""><i class="fa fa-refresh" aria-hidden="true"></i></a>
                         <a class="btn btn-warning btn-sm delete-report" data-id="<?php echo $value['id'];?>" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                 </td> 
             </tr>
@@ -236,7 +236,7 @@ if(!empty($audit_results)) {
                                         updated_at = JSON.stringify(this.updated_at).replace(/['"]+/g, '');
                                         });
 
-                                         $('.table').append("<tr><td>" + id + "</td><td>" + url + "</td><td>Crawled</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' href='audit/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank' href=''>PDF</a><a class='btn btn-info btn-sm' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
+                                         $('.table').append("<tr><td>" + id + "</td><td>" + url + "</td><td>Crawled</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' href='audit/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank' style='display:none' href=''>PDF</a><a  style='display:none' class='btn btn-info btn-sm' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
                                           $('#analyse').removeAttr('disabled');
                                           $('#analyse').text('CRAWL');
                                           $('#no-data-row').hide();

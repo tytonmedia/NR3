@@ -26,6 +26,7 @@ Route::group([], function () {
     Route::post('/email_seo_report', 'analysisController@email_seo_report')->name('email_seo_report');
     Route::post('/email_audit_report', 'analysisController@email_audit_report')->name('email_audit_report');
     Route::post('/email_backlink_report', 'backlinkController@email_backlink_report')->name('email_backlink_report');
+    Route::post('/email_ranking_report', 'rankingController@email_ranking_report')->name('email_ranking_report');
 });
 
 Route::group(['middleware' => ['auth']],function(){

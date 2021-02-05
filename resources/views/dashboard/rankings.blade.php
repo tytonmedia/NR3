@@ -56,8 +56,8 @@
                  <td>{{date("F j, Y, g:i a", strtotime($value['updated_at'])) }}</td>
                  <td>
                         <a class="btn btn-primary btn-sm" href="{{ url('rankings', $value['id'])}}">View</a>
-                        <a class="btn btn-success btn-sm" target="_blank" href="{{ url('download_ranking_report', $value['id'])}}">PDF</a>
-                        <a class="btn btn-info btn-sm" href=""><i class="fa fa-refresh" aria-hidden="true"></i></a>
+                        <a style="display:none" class="btn btn-success btn-sm" target="_blank" href="{{ url('download_ranking_report', $value['id'])}}">PDF</a>
+                        <a style="display:none" class="btn btn-info btn-sm" href=""><i class="fa fa-refresh" aria-hidden="true"></i></a>
                         <a class="btn btn-warning btn-sm delete-report" data-id="<?php echo $value['id'];?>" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                 </td> 
             </tr>
@@ -220,9 +220,27 @@ if(!empty($ranking_results)) {
                                                 $('.table tr.temp').remove();
 
                                         }else{
-                                           // $('div#text-container').append(data);
-                                           // $('#waiting').hide();
-                                            $('#analyse').removeAttr('disabled');
+                                             // $('div#text-container').append(data);
+                                            $('#loading').hide();
+                                         $('.table tr.temp').remove();
+                                        // var sdata = JSON.stringify(data);
+                                        // jquery Example
+                                       // alert(data);
+                                        $(JSON.parse(data)).each(function() {
+                                        id = JSON.stringify(this.id);
+                                        url = JSON.stringify(this.url).replace(/['"]+/g, '');
+                                        backlinks = JSON.stringify(this.backlinks);
+                                        referring_domains = JSON.stringify(this.referring_domains);
+                                        updated_at = JSON.stringify(this.updated_at).replace(/['"]+/g, '');
+                                         
+                                        });
+
+                                         $('.table').append("<tr><td>" + id + "</td><td>" + url + "</td><td>Crawled</td><td>"+ backlinks.replace(/['"]+/g, '') +"</td><td>"+ referring_domains.replace(/['"]+/g, '') + "</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' href='analysis/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank' style='display:none;' href=''>PDF</a><a style='display:none;' class='btn btn-info btn-sm' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
+                                          
+                                      //  $('.analysis_section').show();
+                                       // runPagespeed();
+                                        $('#analyse').removeAttr('disabled');
+                                        $('#analyse').text('CRAWL');
                                           
                                         }
                                     }

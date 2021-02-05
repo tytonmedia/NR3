@@ -5,7 +5,6 @@
 <?php   
 use \App\Http\Controllers\rankingsController; 
 
-$ranking_details = current($ranking_details);
 //$keyword_array = current($keyword_array);
 $trend_array = array();
 $features_array = array();
@@ -160,7 +159,7 @@ $(this).children(".competitor-details").hide();
             
         </span>
         </div>
-        <div class="col-md-8 text-right" style="padding-right:0">
+        <div class="col-md-8 text-right" style="display:none;padding-right:0">
           <a class="btn btn-sm btn-success" href="#">DOWNLOAD</a>
           <a class="btn btn-sm btn-disabled" href="#" disabled="disabled">RE-CRAWL</a>
           <a class="btn btn-sm btn-warning" href="#">EMAIL</a>
@@ -201,26 +200,26 @@ $(this).children(".competitor-details").hide();
                  <h2>{{ number_format($traffic_share) }}%</h2>
             </div>
                <div class="col-md-2">
-                Traffic Share <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Traffic potential refers to the amount of volume you could potentially get from your ranked keywords."><i class="fa fa-info-circle" ></i></a>
-                 <h2>{{ number_format($traffic_share) }}%</h2>
+                SERP Features <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Traffic potential refers to the amount of volume you could potentially get from your ranked keywords."><i class="fa fa-info-circle" ></i></a>
+                 <h2>{{ number_format(count($serp_array)) }}</h2>
             </div>   
          </div>
          <div class="row five-cols">
             <div class="col-md-2">
                    1-10 Positions <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="This keyword brings in the most amount of organic traffic to your website."><i class="fa fa-info-circle" ></i></a>
-                 <h2>{{ $position_array_numeric[0] }}</h2>
+                 <h2>{{ $position_array_numeric[0] }}<span class="outof">/{{ $num_keywords }}</span></h2>
             </div>
              <div class="col-md-2">
                    11-20 Positions <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="This keyword brings in the most amount of organic traffic to your website."><i class="fa fa-info-circle" ></i></a>
-                 <h2>{{ $position_array_numeric[1] }}</h2>
+                 <h2>{{ $position_array_numeric[1] }}<span class="outof">/{{ $num_keywords }}</span></h2>
             </div>
              <div class="col-md-2">
                    21-50 Positions <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="This keyword brings in the most amount of organic traffic to your website."><i class="fa fa-info-circle" ></i></a>
-                 <h2>{{ $position_array_numeric[3] }}</h2>
+                 <h2>{{ $position_array_numeric[3] }}<span class="outof">/{{ $num_keywords }}</span></h2>
             </div>
         <div class="col-md-2">
                    51-100 Positions <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="This keyword brings in the most amount of organic traffic to your website."><i class="fa fa-info-circle" ></i></a>
-                 <h2>{{ $position_array_numeric[4] }}</h2>
+                 <h2>{{ $position_array_numeric[4] }}<span class="outof">/{{ $num_keywords }}</span></h2>
             </div>
               <div class="col-md-4">
                 Top Keyword <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="This keyword brings in the most amount of organic traffic to your website."><i class="fa fa-info-circle" ></i></a>
@@ -528,8 +527,8 @@ $(this).children(".competitor-details").hide();
       <div class="modal-dialog">
         <div class="modal-content">
            <form id='seo_email_form'>
-            <input type="hidden" id="report_url" name="report_url" value="{{ $seo_audit_details['url'] }}">
-            <input type="hidden" id="report_id" name="report_id" value="{{ $seo_audit_details['id'] }}">
+            <input type="hidden" id="report_url" name="report_url" value="{{ $ranking_details['site_url'] }}">
+            <input type="hidden" id="report_id" name="report_id" value="{{ $ranking_details['id'] }}">
           <!-- Modal Header -->
           <div class="modal-header">
                <h4>Send SEO Report</h4>

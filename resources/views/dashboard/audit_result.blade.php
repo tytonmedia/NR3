@@ -78,7 +78,7 @@
          
         </span>
         </div>
-        <div class="col-md-8 text-right" style="padding-right:0">
+        <div class="col-md-8 text-right" style="padding-right:0;display:none;">
           <a class="btn btn-sm btn-success" href="{{ url('download_audit_report',$audit_details['id'])}}" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD</a>
           <a class="btn btn-sm btn-disabled" href="#" disabled="disabled"><i class="fa fa-refresh" aria-hidden="true"></i> RE-CRAWL</a>
           <a class="btn btn-sm btn-warning" id="emailreportlink" data-id="{{$audit_details['id']}}" href="#"><i class="fa fa-envelope-open-o" aria-hidden="true"></i> EMAIL</a>

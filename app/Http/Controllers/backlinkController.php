@@ -12,6 +12,7 @@ use App\WhiteLabel;
 use App\User;
 use App\Payment;
 use App;
+use Redirect;
 use Carbon\Carbon;
 use GuzzleHttp\Client as guzzler;
 
@@ -436,15 +437,24 @@ class backlinkController extends Controller
  public function backlink_details($id){
     $site_url = BacklinkResults::select('site_url')->where('id', $id)->pluck('site_url')->first();
         $backlink_details = BacklinkResults::all()->where('id', $id)->toArray();
+        $backlink_details = current($backlink_details);
         $backlink_array = Backlink::select('source_url','target_url','anchor','page_ascore','external_num','internal_num','last_seen','first_seen','nofollow')->where('target_url', $site_url)->get()->toArray();
             $white_label=WhiteLabel::where('user_id',auth()->user()->id)->first();
+            $user = User::where('id',auth()->user()->id)->first()->toArray();
         if($white_label) {
             $white_label = $white_label->image_path;
         } else{
             $white_label = 0;
         }
      //   print_r($backlink_details);
-        return view('dashboard/backlink_result',compact('backlink_details','backlink_array','white_label'));
+
+        if($backlink_details['user_id'] == $user['id']){
+                return view('dashboard/backlink_result',compact('backlink_details','backlink_array','white_label'));
+        } else{
+                return redirect::to('/');
+        }
+
+        
            }
 
  public function delete_backlink_report($id){

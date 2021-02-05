@@ -66,8 +66,9 @@ display:none;
     border-color: #0372e9;
     padding: 4px 10px;
     color: #fff !important;}
-    .dataTables_wrapper .dt-buttons {position: relative;
-    top: 37px;}
+    .dataTables_wrapper .dt-buttons {    top: 37px;
+    position: relative;}
+    .dataTables_wrapper {top:-15px;}
     .dataTables_wrapper .btn-copy {background:#999;color:#fff;}
     .dataTables_wrapper .btn-excel {background:#217346;color:#fff;}
     .dataTables_wrapper .btn-csv {background:#333;color:#fff;}
@@ -90,6 +91,9 @@ ul.serp_features {list-style-type: none;
     PADDING: 3PX;
     BORDER-RADIUS: 3PX;
 }
+.outof {font-size: 1.4rem;
+    color: #666;
+    font-weight: normal;}
 .serp-feature {width:150px; font-size: 12px;
     z-index: 999999999999;
     position: absolute;
@@ -207,7 +211,7 @@ clear:both;    margin: 0;}
     color: #3F3F3F;
     padding: 5PX 10PX;
 }
-.seo-report-table td:last-child {width:185px;}
+.seo-report-table td:last-child {width:100px;}
 .pricing-boxes a {display:block;}
 .pricing-boxes a.btn {color:#fff;}
 table.detailed-pricing {margin:30px 0 100px 0;}
@@ -493,7 +497,6 @@ input#seo_audit {
 }
 .five-cols div.col-md-2, .five-cols div.col-md-4 {border-left:1px solid #ddd;padding:10px;}
 .dataTables_filter {
-display: none;
 }
 .five-cols div:last-child {border-right:1px solid #ddd;}
 .rankings-page .five-cols {border-bottom:1px solid #ddd;    margin-bottom: 15px;}
