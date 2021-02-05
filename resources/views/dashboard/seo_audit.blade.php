@@ -8,7 +8,7 @@
 
         <div class="col-md-12">
         <h3>SEO Audit Report</h3>
-        <p>Enter your domain into the toolbar including https:// or http:// and Ninja Reports will scan your entire website and check over 55+ SEO factors and tell you know how to fix them and rank higher.</p>
+        <p>Enter your URL into the toolbar including https:// or http:// and Ninja Reports will scan your entire website and check over 100+ SEO factors and tell you know how to fix them and rank higher.</p>
     </div>
 
 </div>
@@ -60,7 +60,7 @@
             </tr>
             @endforeach
             @else
-            <tr class="empty"><td colspan="7" id="no-data-row">No data in table. Add a URL above to run a Backlink Report.</td></tr>
+            <tr class="empty"><td colspan="7" id="no-data-row">No data in table. Add a URL above to run an SEO Audit Report.</td></tr>
             @endif
     </table>
 
