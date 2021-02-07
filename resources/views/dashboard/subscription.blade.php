@@ -17,7 +17,7 @@
                     <strike style="color:#ff0000">$29</strike>               
                     <h5><strong>$19</strong></h5>
                     <h6>per month</h6>
-                         @if($status == 1 && $product->id == 'prod_IQ583lkkZ3Ctwr')
+                         @if($status == 1 && $product->id == env('WEBMASTER_ID'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-lg" style="pointer-events: none;">CURRENT PLAN</a></h4>
                          @elseif($status == 1)
                         <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-lg">UPGRADE</a></h4>
@@ -34,7 +34,7 @@
                     <strike style="color:#ff0000">$49</strike>
                     <h5><strong>$29</strong></h5>
                     <h6>per month</h6>
-                        @if($status == 1 && $product->id == 'prod_IQ59BGbdGnCcmw')
+                        @if($status == 1 && $product->id == env('BUSINESS_ID'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-lg" style="pointer-events: none;">CURRENT PLAN</a></h4>
                          @elseif($status == 1)
                         <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-lg">UPGRADE</a></h4>
@@ -52,7 +52,7 @@
 <strike style="color:#ff0000">$99</strike>
                     <h5><strong>$59</strong></h5>
                     <h6>per month</h6>
-                    @if($status == 1 && $product->id == 'prod_IQ5AeQ7uec9djJ')
+                    @if($status == 1 && $product->id == env('AGENCY_ID'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-lg" style="pointer-events: none;">CURRENT PLAN</a></h4>
                          @elseif($status == 1)
                         <h4><a href="{{route('payment',['id' => 3])}}" class="btn btn-primary btn-lg">UPGRADE</a></h4>
