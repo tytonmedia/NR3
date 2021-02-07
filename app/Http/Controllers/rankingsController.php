@@ -143,7 +143,7 @@ class rankingsController extends Controller
                 $display_limit=2;
             }
         try{
-            $semrush = "https://api.semrush.com/?type=url_organic&key=247c8d4143eff74adb96fb2f0b3f3d8a&display_limit=2&export_columns=Ph,Kd,Po,Nq,Cp,Co,Tr,Tc,Nr,Fk,Td&url=".$url."&database=us";
+            $semrush = "https://api.semrush.com/?type=url_organic&key=247c8d4143eff74adb96fb2f0b3f3d8a&display_limit=".$display_limit."&export_columns=Ph,Kd,Po,Nq,Cp,Co,Tr,Tc,Nr,Fk,Td&url=".$url."&database=us";
 
             $curl = curl_init($semrush);
             curl_setopt($curl, CURLOPT_URL, $semrush);
