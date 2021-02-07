@@ -6,7 +6,7 @@
         <div id="tool-desc" class="row">
         <div class="col-md-12">
         <h3>Technical SEO Report</h3>
-        <p>Enter your URL into the toolbar including https:// or http:// and Ninja Reports will scan the page for over 55+ SEO factors. Analyze your URL to see how you can get better rankings in search engines.</p>
+        <p>Enter your URL into the toolbar including https:// or http:// and Ninja Reports will scan the page for over 100+ SEO factors. Analyze your URL to see how you can get better rankings in search engines.</p>
         <div id="error-box" class="alert alert-error" style="display:none;">
             Whoops, we could not run an analysis on that URL. Please try again.
         </div>
