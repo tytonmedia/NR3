@@ -1005,7 +1005,7 @@
                         
                     @endif
                     @if(!empty($seo_audit_details['js_min_bytes']))
-                        <p class="analysis-more-detail">Potential Savings: {{$seo_audit_details['js_min_bytes']}} bytes.</p>
+                        <p class="analysis-more-detail">Potential Savings: {{$seo_audit_details['js_min_bytes']}} KiB.</p>
                        @endif
                       
                 </div>
@@ -1028,7 +1028,7 @@
                         <p>Your CSS is not minified. </p>
                     @endif
                     @if(!empty($seo_audit_details['css_min_bytes']))
-                        <p class="analysis-more-detail">Potential Savings: {{$seo_audit_details['css_min_bytes']}} bytes.</p>
+                        <p class="analysis-more-detail">Potential Savings: {{$seo_audit_details['css_min_bytes']}} KiB.</p>
                         @endif
                 </div>
             </div>
