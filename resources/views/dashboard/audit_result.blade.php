@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Backlink Report')
+@section('title', 'SEO Audit Report')
 @section('content')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -179,17 +179,32 @@
                 <h5 class="number-error">{{ $audit_details['errors'] }}</h5>
                 <p class="description">Errors are SEO issues that have the highest impact on your website's SEO performance.</p>
                 <ul class="found-list">
-                @if($audit_details['status_404'] > 0) <li> @endif  {{$audit_details['status_404'] > 0 ? 'Broken link':''}} @if($audit_details['status_404'] > 0) </li> @endif
-                @if(!empty($audit_details['status_500'] )) <li>  @endif  {{!empty($audit_details['status_500']) ? '500 error':''}} @if(!empty($audit_details['status_500'])) </li>  @endif
-                @if(!empty($audit_details['links_empty_h1'] )) <li> @endif    {{!empty($audit_details['links_empty_h1'])    ? 'H1 tag missing':''}}  @if(!empty($audit_details['links_empty_h1'] )) </li> @endif
-                @if(!empty($audit_details['page_miss_meta'] )) <li> @endif     {{!empty($audit_details['page_miss_meta'])    ? 'Missing meta description':''}} @if(!empty($audit_details['page_miss_meta'] )) </li> @endif
-                @if(!empty($audit_details['page_miss_title'] ))  <li>  @endif  {{!empty($audit_details['page_miss_title'])? 'Title tag missing':''}} @if(!empty($audit_details['page_miss_title'] ))  </li>  @endif
-                @if(!empty($audit_details['duplicate_meta_description'] )) <li>  @endif    {{!empty($audit_details['duplicate_meta_description']) ? 'Duplicate meta description' : ''}} @if(!empty($audit_details['duplicate_meta_description'] )) </li>  @endif
-                @if(!empty($audit_details['duplicate_title'] )) <li>   @endif  {{!empty($audit_details['duplicate_title']) ? 'Duplicate title tag' : ''}} @if(!empty($audit_details['duplicate_title'] )) </li>   @endif
-                @if(!empty($audit_details['short_title'] )) <li>   @endif    {{!empty($audit_details['short_title']) ? 'Title tag too short':''}} @if(!empty($short_title)) </li>   @endif
-                @if(!empty($audit_details['long_title']))   <li>  @endif  {{!empty($audit_details['long_title'])  ? 'Title tag too long' :''}} @if(!empty($audit_details['long_title']))  </li>  @endif 
-                @if(!empty($audit_details['long_meta_description'])) <li> @endif    {{!empty($audit_details['long_meta_description']) ? 'Long meta description' : ''}} @if(!empty($audit_details['long_meta_description'])) </li> @endif
-                @if(!empty($audit_details['short_meta_description'])) <li> @endif    {{!empty($audit_details['short_meta_description']) ? 'Short meta description' : ''}} @if(!empty($audit_details['short_meta_description'])) </li> @endif
+                @if($audit_details['status_404'] > 0)
+                <li> {{ count(json_decode($audit_details['status_404']))}}
+                  @endif
+                  {{$audit_details['status_404'] > 0 ? 'Broken links':''}}
+                  @if($audit_details['status_404'] > 0) 
+                </li> 
+                @endif
+
+                @if(!empty($audit_details['status_500'] ))
+                <li>
+                  {{ count(json_decode($audit_details['status_500']))}} 
+                  @endif
+                  {{!empty($audit_details['status_500']) ? '500 error':''}}
+                  @if(!empty($audit_details['status_500']))
+                </li> 
+                @endif
+
+                @if(!empty($audit_details['links_empty_h1'] )) <li> {{ count(json_decode($audit_details['links_empty_h1']))}} @endif    {{!empty($audit_details['links_empty_h1'])    ? 'H1 tags missing':''}}  @if(!empty($audit_details['links_empty_h1'] )) </li> @endif
+                @if(!empty($audit_details['page_miss_meta'] )) <li> {{ count(json_decode($audit_details['page_miss_meta']))}} @endif     {{!empty($audit_details['page_miss_meta'])    ? 'Missing meta descriptions':''}} @if(!empty($audit_details['page_miss_meta'] )) </li> @endif
+                @if(!empty($audit_details['page_miss_title'] ))  <li> {{ count(json_decode($audit_details['page_miss_title']))}}  @endif  {{!empty($audit_details['page_miss_title'])? 'Title tags missing':''}} @if(!empty($audit_details['page_miss_title'] ))  </li>  @endif
+                @if(!empty($audit_details['duplicate_meta_description'] )) <li> {{ count(json_decode($audit_details['duplicate_meta_description']))}}  @endif    {{!empty($audit_details['duplicate_meta_description']) ? 'Duplicate meta description' : ''}} @if(!empty($audit_details['duplicate_meta_description'] )) </li>  @endif
+                @if(!empty($audit_details['duplicate_title'] )) <li> {{ count(json_decode($audit_details['duplicate_title']))}}   @endif  {{!empty($audit_details['duplicate_title']) ? 'Duplicate title tags' : ''}} @if(!empty($audit_details['duplicate_title'] )) </li>   @endif
+                @if(!empty($audit_details['short_title'] )) <li>  {{ count(json_decode($audit_details['short_title']))}} @endif    {{!empty($audit_details['short_title']) ? 'Title tags too short':''}} @if(!empty($short_title)) </li>   @endif
+                @if(!empty($audit_details['long_title']))   <li> {{ count(json_decode($audit_details['long_title']))}} @endif  {{!empty($audit_details['long_title'])  ? 'Title tags too long' :''}} @if(!empty($audit_details['long_title']))  </li>  @endif 
+                @if(!empty($audit_details['long_meta_description'])) <li> {{ count(json_decode($audit_details['long_meta_description']))}} @endif    {{!empty($audit_details['long_meta_description']) ? 'Long meta descriptions' : ''}} @if(!empty($audit_details['long_meta_description'])) </li> @endif
+                @if(!empty($audit_details['short_meta_description'])) <li> {{ count(json_decode($audit_details['short_meta_description']))}} @endif    {{!empty($audit_details['short_meta_description']) ? 'Short meta descriptions' : ''}} @if(!empty($audit_details['short_meta_description'])) </li> @endif
             </ul>
                 @if($audit_details['errors'] == 0)  <div class="clean"><i class="fa fa-check" aria-hidden="true"></i> Nice, no errors!</div> @endif
                 <div class="link-div text-right view-more">

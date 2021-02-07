@@ -46,12 +46,12 @@ class CreateAuditResultsTable extends Migration
             $table->json('link_404')->nullable();
             $table->json('link_500')->nullable();
             $table->json('page_without_canonical')->nullable();
-            $table->unsignedInteger('notices')->nullable();
-            $table->unsignedInteger('warning')->nullable();
-            $table->unsignedInteger('errors')->nullable();
-            $table->unsignedInteger('passed_pages')->nullable();
-            $table->unsignedInteger('health_score')->nullable();
-            $table->unsignedInteger('pages')->nullable();
+            $table->bigInteger('notices')->nullable();
+            $table->bigInteger('warning')->nullable();
+            $table->bigInteger('errors')->nullable();
+            $table->bigInteger('passed_pages')->nullable();
+            $table->bigInteger('health_score')->nullable();
+            $table->bigInteger('pages')->nullable();
             $table->string('audit_description')->nullable(); 
             $table->timestamps();
         });

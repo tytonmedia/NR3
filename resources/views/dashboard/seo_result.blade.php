@@ -217,6 +217,8 @@
                         <div class="col-md-4">
                           @if($seo_audit_details['urls_num'] == 'payme')
                           <label>Backlinks</label><span>N/A</span>
+                          @elseif($seo_audit_details['urls_num'] == 'empty')
+                          <label>Backlinks</label><span>0</span>
                           @else
                           <label>Backlinks</label><span>{{$seo_audit_details['urls_num']}}</span>
                           @endif
@@ -462,7 +464,14 @@
                         <p>Schema tags found on your page:</p>
                         <ul style="list-style-type:none">
                              @foreach(json_decode($seo_audit_details['schema_types']) as $type)
-                             <li><span style="margin-right: 2px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span> {{ $type }}</li>
+                              @if(is_array($type))
+                                @foreach($type as $t)
+<li><span style="margin-right: 2px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span> {{ $t }}</li>
+                                @endforeach
+                              @else
+           <li><span style="margin-right: 2px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span> {{ $type }}</li>
+                              @endif
+                            
                              @endforeach
                         </ul>
                     @else
@@ -697,7 +706,7 @@
              
                    <div class="upgrade-tease"><a class="btn upgrade-btn btn-warning" href="/subscription">UPGRADE TO VIEW</a><img src="{{ asset('../images/backlinks.png')}}" style="width:100%" class="responsive" alt="backlinks"/></div>
                    @else
-                        @if($seo_audit_details['semrush_links'] == 'empty')
+                        @if(trim($seo_audit_details['semrush_links'],'"') == 'empty')
                          <p>You don't have any backlinks.</p>
                         @else
                         <table class="table image-table">
@@ -1015,7 +1024,9 @@
                     @else
                         <p>Your CSS is not minified. </p>
                     @endif
-                        <p class="analysis-more-detail">{{$seo_audit_details['css_min_bytes']}}</p>
+                    @if(!empty($seo_audit_details['css_min_bytes']))
+                        <p class="analysis-more-detail">Potential Savings: {{$seo_audit_details['css_min_bytes']}} bytes.</p>
+                        @endif
                 </div>
             </div>
             <hr>

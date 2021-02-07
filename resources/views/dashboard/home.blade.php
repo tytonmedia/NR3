@@ -2,10 +2,11 @@
 @section('title', 'Home')
 @section('content')
 
-<div class="col-md-10  overview">
+<div class="col-md-10 overview home-container">
+    <div class="inner">
     <div class="row audit-text pt-3 pb-3">
         <div class="col-md-12 text-start">
-            <h3 style="margin-left: 25px;"><STRONG>Welcome!</STRONG></h3>
+            <h3><STRONG>Welcome to Ninja Reports!</STRONG></h3>
         </div>
     </div>
     <div class="row Welcome-two-cols">
@@ -49,6 +50,7 @@
               </ul>
         </div>
     </div>
+</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script>

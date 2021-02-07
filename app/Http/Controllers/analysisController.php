@@ -1872,7 +1872,14 @@ try {
             if ($title_length < 50 || $title_length > 60) {$val7_error = 1;} else {$val7_error = 0;}
             if ($meta_length < 120 || $meta_length > 160) {$val8_error = 1;} else {$val8_error = 0;}
 
-            if($mobile_friendly === 'MOBILE_FRIENDLY'){$val10_error = 0;}elseif($mobile_friendly === 'NOT_MOBILE_FRIENDLY'){$val10_error = 1;}
+            if($mobile_friendly === 'MOBILE_FRIENDLY'){
+                $val10_error = 0;
+            }elseif($mobile_friendly === 'NOT_MOBILE_FRIENDLY')
+            {
+                $val10_error = 1;
+            } else{
+            $val10_error = 1;
+            }
 
             (int)$total_error_score = $val1_error + $val2_error + $val3_error + $val4_error + $val5_error + $val6_error + $val7_error + $val8_error + $iframe + $val10_error;
 

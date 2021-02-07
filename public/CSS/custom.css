@@ -199,12 +199,13 @@ clear:both;    margin: 0;}
 }
 .btn-orange {background:#ff6600;color:#fff;}
 .guide-box {
-   max-width: 45%;
-    margin-left: 3%;
+   max-width: 48%;
+    margin-left: 5px;
     border: 1px solid #d3d3d3;
     background-color: #f4f4f4;
     padding: 0px 0px 40px 0px;
 }
+.guide-box:last-child {margin-left:25px;}
 .guide-box ul {padding-left: 25px;}
     .guide-box h5 {
     background: #DDD;
@@ -506,9 +507,9 @@ input#seo_audit {
 .logo-container, .top-bar .col-md-6 {padding:0;}
 .Analysis-details {margin-top:15px;}
 .Analysis-details div.col-md-4 {border:1px solid #ddd;padding:15px;}
-.analysis-container, .audit-container,.backlinks-container, .rankings-container {margin-top:60px;background: #EAECEE;}
+.home-container ,.analysis-container, .audit-container,.backlinks-container, .rankings-container {margin-top:60px;background: #EAECEE;}
 .backlinks-container .dataTables_wrapper {margin-top:25px;}
-.rankings-container .inner, .analysis-container .inner, .audit-container .inner,.backlinks-container .inner {background: #fff;
+.home-container .inner, .rankings-container .inner, .analysis-container .inner, .audit-container .inner,.backlinks-container .inner {background: #fff;
         padding: 25px 15px 40px 15px;
     border-radius: 3px;max-width:1200px;}
     .rankings-container .dataTables_wrapper {margin-top:30px;}

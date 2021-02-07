@@ -70,11 +70,17 @@
     background-color: red;
 }
 
-
-.Welcome-two-cols .Quick-col,
+.Welcome-two-cols .Quick-col
+ {
+    max-width: 48%;
+    border: 1px solid lightgray;
+    background-color: #f4f4f4;
+    padding: 40px;
+    margin-left:5px;
+}
 .Welcome-two-cols .plan-col {
-    max-width: 45%;
-    margin-left: 3%;
+    max-width: 48%;
+    margin-left: 25px;
     border: 1px solid lightgray;
     background-color: #f4f4f4;
     padding: 40px;
