@@ -6,7 +6,7 @@
         <div id="tool-desc" class="row">
         <div class="col-md-12">
         <h3>Technical SEO Report</h3>
-        <p>Enter your URL into the toolbar including https:// or http:// and Ninja Reports will scan the page for over 100+ SEO factors. Analyze your URL to see how you can get better rankings in search engines.</p>
+        <p>Enter your URL into the toolbar including https:// or http:// and Ninja Reports will scan the page for over 100+ SEO factors. Analyze your URL to see how you can get better rankings in search engines. The analysis can take a few minutes to scan your page for all of the SEO factors.</p>
         <div id="error-box" class="alert alert-error" style="display:none;">
             Whoops, we could not run an analysis on that URL. Please try again.
         </div>
@@ -210,16 +210,21 @@ if(!empty($seo_results)) {
                                             //console.log(percent);
                                             $('#error-box').hide();
                                             $('#loading').show();
-                        
                                            $('#waiting').show();
                                              $('#analyse').attr('disabled','disabled');
                                              $('#analyse').text('CRAWLING');
                                              if(rowcount == 0){
                                               $('#empty').fadeOut(1000);
-                                             }else {
-
                                              }
-                                             $('.table').append("<tr class='temp'><td colspan='7' class='text-center'>Loading...</td></tr>");
+                                             $('.table').append("<tr class='temp'><td colspan='7' class='text-center'><span class='loading-label'>Loading...</span></td></tr>");
+                                             count = 0;
+                                             wordsArray = ["Finding Backlinks...", "Checking Technical SEO...", "Gathering Keywords...", "Checking Mobile Responsiveness","Scanning Core Web Vitals..."];
+                                            setInterval(function () {
+                                              count++;
+                                              $(".loading-label").fadeOut(200, function () {
+                                                $(this).text(wordsArray[count % wordsArray.length]).fadeIn(200);
+                                              });
+                                            }, 9000);
                                         }
                                     });
                                     return xhr;
@@ -269,7 +274,7 @@ if(!empty($seo_results)) {
                                         updated_at = data.updated_at;
                                          
                                         var rowCount = table.rows().count();
-                                         $('.table').append("<tr><td>" + rowCount + 1 + "</td><td>" + url + "</td><td>Crawled</td><td>"+ passed_score +"%</td><td>"+ error_score + "</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' href='analysis/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank'  style='display:none' href=''>PDF</a><a class='btn btn-info btn-sm'  style='display:none' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
+                                         $('.table').append("<tr><td>" + rowCount + 1 + "</td><td>" + url + "</td><td>Crawled</td><td>"+ passed_score +"%</td><td>"+ error_score + "</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' style='margin-right:5px;' href='analysis/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank'  style='display:none' href=''>PDF</a><a class='btn btn-info btn-sm'  style='display:none' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
                                           
                                       //  $('.analysis_section').show();
                                        // runPagespeed();
