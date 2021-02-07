@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Home')
+@section('title', 'Dashboard - Ninja Reports')
 @section('content')
 
 <div class="col-md-10 overview home-container">
@@ -12,7 +12,7 @@
     <div class="row Welcome-two-cols">
         <div class="col-md-6 text-center Quick-col">
             <h3>QUICK ANALYSIS</h3>
-            <p>Enter your URL to start a quick SEO analysis of your page. Ninja Reports scans your website for 50+ SEO factors and tells you how to fix them.</p>
+            <p>Enter your URL to start a quick SEO analysis of your page. Ninja Reports scans your website for 100+ SEO factors and tells you how to fix them.</p>
                 <div class="row">
                     <div class="col-md-9">
                         <input type="text" class="form-control url" placeholder="Enter URL">
@@ -35,19 +35,20 @@
             <h5>How to Guides:</h5>
             <p></p>
               <ul>
-                <li><a target="_blank" href="https://ninjareports.zendesk.com/hc/en-us/articles/360059931273">How to Run an Analysis</a></li>
+                <li><a target="_blank" href="https://ninjareports.zendesk.com/hc/en-us/articles/360059931273">How to Run an Analysis </a></li>
                 <li><a target="_blank" href="https://ninjareports.zendesk.com/hc/en-us/articles/360058188953">How to Run an Audit</a></li>
                 <li><a target="_blank" href="https://www.ninjareports.com/on-page-seo-guide/">How to Fix SEO Issues</a></li>
               </ul>
         </div>
         <div class="col-md-6 guide-box">
-             <h5>Recent SEO Articles:</h5>
+             <h5>New Features:</h5>
             <p></p>
-              <ul>
-                <li><a target="_blank" href="https://www.ninjareports.com/internal-linking-guide/">Internal Linking Guide</a></li>
-                <li><a target="_blank" href="https://www.ninjareports.com/how-to-do-an-seo-audit/">How to do an SEO Audit</a></li>
-                <li><a target="_blank" href="https://www.ninjareports.com/on-page-seo-guide/">Beginners Guide to On-Page SEO</a></li>
-              </ul>
+              <ol>
+                <li>White Label Reports <i class="new-icon">NEW</i></li>
+                <li>Report History <i class="new-icon">NEW</i></li>
+                <li>Backlink Analysis Tool <i class="new-icon">NEW</i></li>
+                <li>Organic Keyword Rankings <i class="new-icon">NEW</i></li>
+              </ol>
         </div>
     </div>
 </div>
