@@ -1004,7 +1004,10 @@
                         <p>Your JS is not minified.</p>
                         
                     @endif
-                        <p class="analysis-more-detail">{{$seo_audit_details['js_min_bytes']}}</p>
+                    @if(!empty($seo_audit_details['js_min_bytes']))
+                        <p class="analysis-more-detail">Potential Savings: {{$seo_audit_details['js_min_bytes']}} bytes.</p>
+                       @endif
+                      
                 </div>
             </div>
             <hr>
