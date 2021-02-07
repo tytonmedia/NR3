@@ -124,7 +124,7 @@
 <td></td>
 <td></td>
 <td>
- @if($status == 1 && $product->id == 'prod_IQ583lkkZ3Ctwr')
+ @if($status == 1 && $product->id == env('WEBMASTER_ID'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-sm" style="pointer-events: none;">CURRENT PLAN</a></h4>
                          @elseif($status == 1)
                         <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-sm">UPGRADE</a></h4>
@@ -133,7 +133,7 @@
                        <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-sm">GET ACCESS</a></h4>
                          @endif
                          </td>
-<td>     @if($status == 1 && $product->id == 'prod_IQ59BGbdGnCcmw')
+<td>     @if($status == 1 && $product->id == env('BUSINESS_ID'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-sm" style="pointer-events: none;">CURRENT PLAN</a></h4>
                          @elseif($status == 1)
                         <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-sm">UPGRADE</a></h4>
@@ -141,7 +141,7 @@
                         @if($status == 0)
                        <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-sm">GET ACCESS</a></h4>
                          @endif</td>
-<td> @if($status == 1 && $product->id == 'prod_IQ5AeQ7uec9djJ')
+<td> @if($status == 1 && $product->id == env('AGENCY_ID'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-sm" style="pointer-events: none;">CURRENT PLAN</a></h4>
                          @elseif($status == 1)
                         <h4><a href="{{route('payment',['id' => 3])}}" class="btn btn-primary btn-sm">UPGRADE</a></h4>
