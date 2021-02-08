@@ -1684,6 +1684,7 @@ try {
                 $val13_pass = 1;
             } else {
                 $val13_pass = 0;
+                $cache = 0;
             }
             if (!empty($status404)) {
                 $val14_pass = 0;
@@ -1746,6 +1747,7 @@ try {
             }elseif($mobile_friendly === 'NOT_MOBILE_FRIENDLY'){
                 $val26_pass = 0;
             }else{
+                $mobile_friendly ='NA';
                 $val26_pass = 0;
             }
             if(!empty($internal_link)){ 
@@ -2022,7 +2024,7 @@ try {
                                 $seo_result_data->page_text_ratio = $page_text_ratio ?? '';
                                 $seo_result_data->page_words_size = $page_words_size ?? '';
                                 $seo_result_data->http = json_encode($http) ?? null;
-                                $seo_result_data->cache = $cache ?? 0;
+                                $seo_result_data->cache = $cache;
                                 $seo_result_data->page_https = $page_https ?? '';
                                 $seo_result_data->status404 = $status404 ?? null;
                                 $seo_result_data->internal_link = $internal_link;

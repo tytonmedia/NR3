@@ -53,6 +53,16 @@ li.competitor-info{padding:5px 0;cursor:pointer;}
 .competitor-info::marker {
 display:none;
 }
+
+.try-it-free{padding:15px 10px 15px 40px;margin-bottom:25px;}
+.try-it-free img {float: left;
+    margin-right: 0px;
+    height: 110px;
+    position: absolute;
+    top: 10px;
+    left: -38px;}
+.try-it-free p {margin:0;}
+.try-it-free div {padding:0;}
 .progress-bar {font-size:11px;}
 .btn-disabled {background:#ddd;color:#999;cursor: not-allowed !important    ;}
 .row .dataTables_wrapper .dataTables_paginate .paginate_button {}

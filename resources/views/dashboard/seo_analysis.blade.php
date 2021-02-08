@@ -7,6 +7,19 @@
         <div class="col-md-12">
         <h3>Technical SEO Report</h3>
         <p>Enter your URL into the toolbar including https:// or http:// and Ninja Reports will scan the page for over 100+ SEO factors. Analyze your URL to see how you can get better rankings in search engines. The analysis can take a few minutes to scan your page for all of the SEO factors.</p>
+        @if( !auth()->check())
+        <div class="try-it-free alert alert-success">
+          <div class="row">
+            <div class="col-md-12">
+              <img src="{{asset('images/arrow down green.png')}}" alt="arrow"/>
+      <h4>GET A FREE SEO ANALYSIS!</h4>
+         <p>Try this tool for <b>FREE</b> with your <a href="/login">Google account</a>! Check your website for the latest SEO errors and see how you can get more traffic from search engines. Enter your URL below to get started.
+</p>
+</div>
+
+        </div>
+      </div>
+      @endif
         <div id="error-box" class="alert alert-error" style="display:none;">
             Whoops, we could not run an analysis on that URL. Please try again.
         </div>
