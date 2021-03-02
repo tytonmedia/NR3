@@ -511,6 +511,7 @@ input#seo_audit {
 .five-cols div.col-md-2, .five-cols div.col-md-4 {border-left:1px solid #ddd;padding:10px;}
 .dataTables_filter {
 }
+.how-to-fix-button {display:none !important ;}
 .traffic-container .col-md-12 h2 {color:#666;opacity:.8;}
 .traffic-container .col-md-12 h2::after {    content: "";
     display: block;
