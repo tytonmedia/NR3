@@ -95,12 +95,10 @@
         <script>
             $(document).ready(function($) {
 
-
-                $(document).bind('keypress', function(e) {
-            if(e.keyCode==13){
-                 $('#analyse').trigger('click');
-             }
-                 });
+ $("#analyse_form").on("submit", function(e) {
+    e.preventDefault();
+      $('#analyse').trigger('click');
+  });
                 
                 <?php
 if(!empty($seo_results)) {
