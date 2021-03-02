@@ -248,7 +248,7 @@ if(!empty($traffic_results)) {
                                          
                                         });
 
-                                         $('.table').append("<tr><td>" + id + "</td><td>" + domain + "</td><td>Crawled</td><td>"+ traffic +"</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' href='analysis/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank' style='display:none;' href=''>PDF</a><a style='display:none;' class='btn btn-info btn-sm' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
+                                         $('.table').append("<tr><td>" + id + "</td><td>" + domain + "</td><td>Crawled</td><td>"+ traffic +"</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' href='traffic/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank' style='display:none;' href=''>PDF</a><a style='display:none;' class='btn btn-info btn-sm' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
                                           
                                       //  $('.analysis_section').show();
                                        // runPagespeed();

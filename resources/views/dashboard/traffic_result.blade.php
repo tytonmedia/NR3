@@ -603,18 +603,20 @@ $tmp = array_filter($country_traffic); @endphp
 <div calss="row">
   <div class="col-md-12">
     <h2>Competitors</h2>
-    </div>
-  </div>
-<div calss="row">
-             <div class="col-md-12">
-            @php 
+       @php 
             if($traffic_details['similar'] !== null){
                 $tmp = array_filter(json_decode($traffic_details['similar']));
               } else{
                  $tmp = '';
             }
-
             @endphp
+      <h5 style="margin-top:15px">Top competitors by Global Rank</h5>
+           <p><strong style="color:#206ee0;font-size:21px">{{ $tmp[0][0] }}</strong> is {{$traffic_details['domain']}}'s biggest competitor.</p>
+    </div>
+  </div>
+<div calss="row">
+             <div class="col-md-12">
+         
                   @if(empty($tmp))
                 <div class="text-center">
                     <h3>No Data</h3>
