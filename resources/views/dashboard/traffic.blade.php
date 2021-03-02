@@ -55,14 +55,12 @@
                  <td>{{date("F j, Y, g:i a", strtotime($value['updated_at'])) }}</td>
                  <td>
                         <a class="btn btn-primary btn-sm" href="{{ url('traffic', $value['id'])}}">View</a>
-                        <a style="display:none;" class="btn btn-success btn-sm" target="_blank" href="{{ url('download_backlink_report', $value['id'])}}">PDF</a>
-                        <a style="display:none;" class="btn btn-info btn-sm" href=""><i class="fa fa-refresh" aria-hidden="true"></i></a>
                         <a class="btn btn-warning btn-sm delete-report" data-id="<?php echo $value['id'];?>" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                 </td> 
             </tr>
             @endforeach
             @else
-            <tr class="empty"><td colspan="7">No data in table. Add a URL above to run a Traffic Report.</td></tr>
+            <tr class="empty"><td colspan="7">No data in table. Add a domain above to run a Traffic Report.</td></tr>
             @endif
     </table>
 
@@ -216,7 +214,7 @@ if(!empty($traffic_results)) {
                                     success:function(data){
                                         if(data == 'notsuccessful' || data == 'Expired' || data == 'exceeded' || data == 'payme'){
                                            // $('#waiting').hide();
-                                            $('#backlinksUpgrade').show();
+                                            $('#trafficUpgrade').show();
                                             $('#analyse').removeAttr('disabled');
                                              $('#analyse').text('CRAWL');
                                              $('.temp').hide();

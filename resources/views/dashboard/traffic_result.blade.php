@@ -90,7 +90,7 @@ use App\Http\Controllers\trafficController;
   <div class="row audit-text pt-3 pb-3">
         <div class="col-md-7 text-left" style="padding-left:0">
           
-            <h5 id="url"><STRONG>Trafic Report:</STRONG> {{$traffic_details['domain']}}</h5>
+            <h5 id="url"><STRONG>Traffic Report:</STRONG> {{$traffic_details['domain']}}</h5>
             <p>{{$traffic_details['description']}}</p>
         </div>
         <div class="col-md-1">
