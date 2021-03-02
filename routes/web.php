@@ -14,6 +14,8 @@ Route::group([], function () {
     Route::get('/audit/{id}', 'analysisController@seo_audit_details')->name('seo_audit_details')->middleware('auth');
     Route::get('/analysis', 'DashboardController@seo_analysis')->name('analysis');
     Route::get('/analysis/{id}', 'analysisController@seo_analysis_details')->name('analysis_details')->middleware('auth');
+    Route::get('/traffic', 'DashboardController@seo_traffic')->name('traffic');
+    Route::get('/traffic/{id}', 'trafficController@traffic_details')->name('traffic_details')->middleware('auth');
     Route::get('/destroy/{id}','DashboardController@destroy');
     Route::get('/subscription','DashboardController@subscription')->name('subscription');
     Route::get('/pdf_create_rankings','rankingsController@pdf_create_rankings')->name('pdf_create_rankings');
@@ -22,6 +24,7 @@ Route::group([], function () {
     Route::post('/delete_backlink_report/{id}', 'backlinkController@delete_backlink_report')->name('delete_backlink_report');
     Route::post('/delete_ranking_report/{id}', 'rankingsController@delete_ranking_report')->name('delete_ranking_report');
     Route::get('/download_audit_report/{id}', 'analysisController@download_audit_report')->name('download_audit_report');
+    Route::post('/delete_traffic_report/{id}', 'trafficController@delete_traffic_report')->name('delete_traffic_report');
     Route::post('/delete_audit_report/{id}', 'analysisController@delete_audit_report')->name('delete_audit_report');
     Route::post('/email_seo_report', 'analysisController@email_seo_report')->name('email_seo_report');
     Route::post('/email_audit_report', 'analysisController@email_audit_report')->name('email_audit_report');
@@ -38,6 +41,7 @@ Route::group(['middleware' => ['auth']],function(){
 });
 
 Route::post('/seo', 'analysisController@get_seo_result')->name('seo');
+Route::post('/seo_traffic', 'trafficController@get_traffic_results')->name('seo_traffic');
 Route::post('/seo_audit', 'analysisController@get_audit_result')->name('seo_audit');
 Route::post('/seo_backlinks', 'backlinkController@get_backlink_results')->name('seo_backlinks');
 Route::post('/seo_rankings', 'rankingsController@get_rankings_results')->name('seo_rankings');

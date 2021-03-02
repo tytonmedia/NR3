@@ -103,6 +103,7 @@ $i = 0;
                      $num_keywords = sizeof($keyword_array);
 
  ?>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-alpha1/html2canvas.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
@@ -112,6 +113,7 @@ $i = 0;
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
               
                  <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css"/>
     
 
@@ -144,6 +146,36 @@ $(this).children(".competitor-details").show();
 $(".competitor-info").mouseleave(function(){
 $(this).children(".competitor-details").hide();
  });
+
+    $("#download_report").click(function(e){
+                    e.preventDefault();
+                    html2canvas($(".analysis-container .inner"), {
+                    onrendered: function(canvas) {        
+                    var imgData = canvas.toDataURL('image/png');
+                        var imgWidth = 210; 
+                    var pageHeight = 295;  
+                   var imgHeight = canvas.height * imgWidth / canvas.width;
+                   var heightLeft = imgHeight;
+                   var doc = new jsPDF('p', 'mm');
+                       var position = 0;
+
+                  doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                 heightLeft -= pageHeight;
+
+                 while (heightLeft >= 0) {
+                   position = heightLeft - imgHeight;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                 }
+                 doc.save( 'ranking_report.pdf'); 
+
+                        }
+
+                      });
+                  });
+
+
   });
     </script>
     <div class="col-md-10 overview analysis-container">
@@ -159,10 +191,9 @@ $(this).children(".competitor-details").hide();
             
         </span>
         </div>
-        <div class="col-md-8 text-right" style="display:none;padding-right:0">
-          <a class="btn btn-sm btn-success" href="#">DOWNLOAD</a>
-          <a class="btn btn-sm btn-disabled" href="#" disabled="disabled">RE-CRAWL</a>
-          <a class="btn btn-sm btn-warning" href="#">EMAIL</a>
+        <div class="col-md-8 text-right" style="padding-right:0">
+             <a class="btn btn-sm btn-info" id="download_report" href="#"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD PDF</a>
+        
       </div>
     </div>
         <div class="row audit-text pt-3 pb-3">

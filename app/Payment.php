@@ -14,6 +14,7 @@ class Payment extends Model
         'no_allowed_audits', 
         'no_allowed_backlinks', 
         'no_allowed_rankings', 
+        'no_allowed_traffic', 
         'currency', 
         'amount',
         'interval',
@@ -42,5 +43,9 @@ class Payment extends Model
      public function ranking_results()
     {
         return $this->hasMany(KeywordResults::class);
+    }
+    public function traffic_results()
+    {
+        return $this->hasMany(TrafficResults::class);
     }
 }

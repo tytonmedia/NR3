@@ -44,6 +44,8 @@
              <h5>New Features:</h5>
             <p></p>
               <ol>
+                <li>Download PDF Reports <i class="new-icon">NEW</i></li>
+                <li>Traffic Estimation Reports <i class="new-icon">NEW</i></li>
                 <li>White Label Reports <i class="new-icon">NEW</i></li>
                 <li>Report History <i class="new-icon">NEW</i></li>
                 <li>Backlink Analysis Tool <i class="new-icon">NEW</i></li>

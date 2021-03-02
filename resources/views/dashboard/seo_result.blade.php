@@ -2,21 +2,80 @@
 @extends('layouts.master')
 @section('title', $seo_audit_details['url'].' SEO Report | Ninja Reports')
 @section('content')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-alpha1/html2canvas.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
             <script>
+              
               $(document).ready(function($) {
+
+                $("#download_report").click(function(e){
+                    e.preventDefault();
+
+                    html2canvas($(".analysis-container .inner"), {
+                    onrendered: function(canvas) {        
+                    var imgData = canvas.toDataURL('image/png');
+                        var imgWidth = 210; 
+                    var pageHeight = 295;  
+                   var imgHeight = canvas.height * imgWidth / canvas.width;
+                   var heightLeft = imgHeight;
+                   var doc = new jsPDF('p', 'mm');
+                       var position = 0;
+
+                  doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                 heightLeft -= pageHeight;
+
+                 while (heightLeft >= 0) {
+                   position = heightLeft - imgHeight;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                 }
+                 doc.save( 'seo_report.pdf'); 
+
+                        }
+
+                      });
+                  });
+
 
             $('.analysis_section').show(); 
                       
                $("#emailreportlink").click(function(e){
                     e.preventDefault();
                     $("#emailReport").modal("show");
-                    });
+                  });
 
+
+               <?php if(empty($payment)) { ?>
+                    var payment = 0;
+               <?php } else { ?>
+                    var payment = 1;
+                  <?php } ?>
+
+                $(".how-to-fix-button").click(function(e){
+                    e.preventDefault();
+                     if(payment == 1) {
+                    $(this).children('i').toggleClass("fa-caret-right fa-caret-down");
+                    $(this).siblings('.how-to-fix').toggle();
+                      } else {
+                           Swal.fire({
+                              title: 'Error!',
+                              html:
+                                'Only paid users can view our SEO advice on how to rank better. To see how to fix this issue, ' +
+                            '<a href="/subscription">upgrade</a> ' +
+                           'now to start ranking better today!',
+                              icon: 'error',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            });
+                      }
+                    });
+                
                  $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -73,10 +132,9 @@
             @endif
         </span>
         </div>
-        <div class="col-md-8 text-right" style="padding-right:0;display:none;">
-          <a class="btn btn-sm btn-success" target="_blank" href="{{ url('download_seo_report', $seo_audit_details['id'])}}"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD</a>
-          <a class="btn btn-sm btn-disabled" href="#" disabled="disabled"><i class="fa fa-refresh" aria-hidden="true"></i> RE-CRAWL</a>
-          <a class="btn btn-sm btn-warning" href="#" id="emailreportlink" data-id="{{$seo_audit_details['id']}}"><i class="fa fa-envelope-open-o" aria-hidden="true"></i> EMAIL</a>
+        <div class="col-md-8 text-right" style="padding-right:0;">
+          <a class="btn btn-sm btn-info" target="_blank" id="download_report" href="#"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD PDF</a>
+         
       </div>
     </div>
   <div class="row audit-text pt-3 pb-3">
@@ -88,7 +146,7 @@
 
         </div>
         <div class="col-md-4 text-right" style="padding-right:0">
-            <h6>Last Crawled: {{ date('F j, Y, g:i a', time($seo_audit_details['created_at'])) }}</h6>
+            <h6>Last Crawl: {{ date('F j, Y, g:i a', strtotime($seo_audit_details['created_at'])) }}</h6>
         </div>
     </div>
     
@@ -253,10 +311,23 @@
                                  <span style="margin-right: 9px;color: #ff0000;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                         @endif
                         Title Tag <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="The title tag is the text that Google often uses to display your website link in SERPs (search engine results pages)."><i class="fa fa-info-circle" ></i></a></h6>
-                </div>
+             
+              </div>
                 <div class="col-md-9">
                     <p>{{$seo_audit_details['title']}}</p>
                    <p class="analysis-more-detail">Length: <strong>{{$seo_audit_details['title_length']}} Characters</strong> (Recommended: 60 characters)</p>
+                    @if($seo_audit_details['title_length'] <= 50 || $seo_audit_details['title_length'] > 60)
+                      <button id="fix_title_tag" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Fixing Title Tags</h3>
+                        <p>Your title tag is not optimized for length. Google allows up to 60 characters in the title tag. Any more characters and the title tag is cut off in the SERPs (search engine results pages).</p>
+                        <p>How you change your title tag will depend on what CMS you are using. If you are using a CMS like WordPres, you can edit your page's title tag on each post/page using a SEO plugin like Yoast SEO.</p>
+                        <p>The title tag of each page is the text in between the &lt;title&gt; &lt;/title&gt; tags.</p>
+                        <p>Your title tag should follow the format below:</p>
+                        <code>Main Keyword - Brand Name</code>
+                        <a href="https://www.ninjareports.com/on-page-seo-guide/#Meta_Title_Tags" target="_blank">READ MORE</a>
+                      </div>
+                      @endif
                 </div>
             </div>
                 <hr>
@@ -278,6 +349,26 @@
                     <p>{{$seo_audit_details['meta']}}</p>
                     @endif
                    <p class="analysis-more-detail">Length: <strong>{{$seo_audit_details['meta_length']}} Characters</strong> (Recommended: 120-160 characters)</p>
+
+                   @if($seo_audit_details['meta_length'] <= 120 || $seo_audit_details['meta_length'] > 160)
+                              <button id="fix_meta_tag" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Fixing Meta Descrptions</h3>
+                       <p> The description attribute provides a concise summary of what each web page is about.</p>
+
+<p>Google doesn’t use meta descriptions as a ranking factor, but CTR is a ranking factor, and having a good meta description can give your web page a higher CTR.</p>
+
+<p>The reason you can get a higher CTR is because Google highlights any text in the meta description matching the search term like below:</p>
+
+<img src="https://www.ninjareports.com/wp-content/uploads/2020/09/ninja-reports-serps.png" />
+<p>When we search for ‘Ninja Reports’, you can see that they highlight that keyword in our meta description on the SERPs.</p>
+
+<p>This makes your listing stand out more, increasing the clicks and CTR to your web page.</p>
+
+<p>Meta descriptions should be between 150-160 characters in length and should be unique to each web page.</p>
+                          <a href="https://www.ninjareports.com/on-page-seo-guide/#Meta_Description_Tags" target="_blank">READ MORE</a>
+                      </div>
+                   @endif
                 </div>
             </div>
                 <hr>
@@ -294,6 +385,27 @@
                 </div>
                 <div class="col-md-9">
                     <p>{{$seo_audit_details['canonical'] ?? 'Your canonical tag is missing. Canonical tags are important because they tell search engines what the correct URL of the page should be.'}}</p>
+                    @if(empty($seo_audit_details['canonical']))
+                     <button id="fix_canonical_tag" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Fixing Canonical Tags</h3>
+                          The canonical URL is a link element that tells search engines the preferred version (or URL) of a certain web page so you can avoid duplicate content issues.
+
+  This meta tag should be added in the &gt;head&lt; section of your website pages.
+
+  Canonical URLs can help search engines decipher the right web page to use for:
+
+  E-commerce sites with product variants
+  Blogs with paging
+  Large websites with possible duplicate content issues
+  Websites with both HTTP and HTTPS versions
+  Websites that use query strings
+  Example:
+
+  <code><link rel="canonical" href="https://www.ninjareports.com/blog/on-page-seo-guide/"></code>
+  <a href="https://www.ninjareports.com/on-page-seo-guide/#Canonical_Tags" target="_blank">READ MORE</a>
+                      </div>
+                    @endif
                 </div>
             </div>
                 <hr>
@@ -320,11 +432,16 @@
                     @endif
                     Favicon <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="These tags tell search engines what the correct URL of the page should be. "><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
-                <div class="col-md-9 favicon">
+                <div class="col-md-9">
                     @if(!empty($seo_audit_details['favicon']))
-                       <img src="{{$seo_audit_details['favicon']}}" alt="" class="fav-icon"> <p class="fav">Your site using favicon.</p>
+                       <img src="{{$seo_audit_details['favicon']}}" alt="" class="fav-icon"> <p class="fav">Your site is using favicon.</p>
                     @else
                         <p>Your site is missing it's favicon. Favicons are important for brand visibility and SEO.</p>
+                         <button id="fix_favicon" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Adding a Favicon for SEO</h3>
+                      
+                      </div>
                     @endif
                 </div>
             </div>
@@ -344,6 +461,20 @@
                         <p>Your website is mobile-friendly.</p>
                     @elseif($seo_audit_details['mobile_friendly'] === 'NOT_MOBILE_FRIENDLY')
                         <p>Your website is not mobile responsive.</p>
+
+                        <button id="fix_mobile_responsive" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Mobile Responsive & SEO</h3>
+                          Google prefers responsive web design out of the handful of techniques and gives priority to websites that are responsive to all devices.
+                          Make sure that all your pages pass the test and fix any errors that Google spits out.
+
+Although it’s important to note that even though you pass this test, your website could still see high bounce rates if your responsive design is not good for the user.
+
+You should test your website design on all devices too see the user experience your visitors are having.
+
+This is the only way to reduce high bounce rates, increasing your rankings in Google.
+                      </div>
+
                     @endif
                 </div>
             </div>
@@ -476,6 +607,22 @@
                         </ul>
                     @else
                         <p>Your page is missing schema tags.</p>
+
+                         <button id="fix_schema" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Schema Tags & SEO</h3>
+                          <p>Schema markup is a code snippet that you add in your HTML web pages to help search engines consume your data and display this data to searchers.</p>
+
+                      <p>Here is an example of the results of including schema on your web page:</p>
+
+                     <img src="https://ninjareports.com/wp-content/uploads/2020/09/structured-data-google.png" style="width: 648px;height: 110px;"/>
+
+                     <p>As you can see from the listing, there are a few included rich snippets and they have included both a rating schema and a price schema that give more detail about the business or service.</p>
+
+                     <p>Having this data included in your listing will increase the CTR (click-through-rate) of your web pages and boost your rankings.</p>
+                      </div>
+
+
                     @endif
                     <!-- <h6>Organisation, Service</h6>
                     <p>No Schema Errors</p> -->
@@ -504,6 +651,14 @@
                             <p>No images are missing alt tags.</p>
                             @else
                             <p>{{$seo_audit_details['img_miss_alt']}} images are missing alt tags.({{$seo_audit_details['img_alt']}} images passed)</p>
+
+                             <button id="fix_images" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Alts Tags and SEO</h3>
+                          
+                     <p></p>
+                      </div>
+
                         @endif
                     
                         @if(!empty($seo_audit_details['img_without_alt']))
@@ -529,6 +684,12 @@
                 </div>
                 <div class="col-md-9">
                     <p>{{$seo_audit_details['url']}}  {{$seo_audit_details['url_seo_friendly']}} URL</p>
+                      @if($seo_audit_details['url_seo_friendly'] == "Unfriendly SEO URLs")
+                     <button id="fix_schema" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Fixing Unfriendly URLS</h3>
+                         </div>
+                     @endif
                 </div>
             </div>
                 <hr>
@@ -545,6 +706,12 @@
                 <div class="col-md-9">
                @if(!empty($seo_audit_details['iframe']))
                     <p>You are using an Iframe on your page.</p>
+
+                       <button id="fix_iframe" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Iframes & SEO</h3>
+                         </div>
+
                 @else
                   <p>No Iframes found on the page.</p>
                 @endif
@@ -637,6 +804,12 @@
                         <p>{{$internal_links_count}} Internal links were found on your page.</p>
                     @else
                         <p>Internal links were not found on your page.</p>
+
+                           <button id="fix_internal_links" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Internal Linking & SEO</h3>
+                         </div>
+
                     @endif
                 </div>
             </div>
@@ -655,6 +828,12 @@
                 <div class="col-md-9">
                     @if(!empty($status404))
                         <p>You have broken links on your page. Those links are sending users to a page that does not exist.</p>
+
+                           <button id="fix_links" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Fixing Broken Links</h3>
+                         </div>
+
                     @else
                         <p>No broken links found.</p>
                     @endif
@@ -674,6 +853,10 @@
                         <p>{{ number_format($seo_audit_details['domains_num']) }} domains are pointing to your page.</p>
                          @else
                         <p>You don't have any backlinks.</p>
+                           <button id="fix_backlinks" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Backlinks & SEO</h3>
+                         </div>
                         @endif
                     @endif
 
@@ -692,6 +875,10 @@
                         <p>{{ number_format($seo_audit_details['urls_num'] ) }} backlinks are pointing to your page.</p>
                          @else
                         <p>You don't have any backlinks.</p>
+                          <button id="fix_backlinks" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Backlinks & SEO</h3>
+                         </div>
                         @endif
                     @endif
                 </div>
@@ -771,6 +958,12 @@
                       <li>{{$val}}</li>
                     @endforeach
                     </ol>
+                    @if($seo_audit_details['h1_tags'] == 0)
+                      <button id="fix_h1" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>H1 Tags & SEO</h3>
+                         </div>
+                    @endif
                 </div>
             </div>
             <hr>
@@ -795,6 +988,12 @@
                     @endforeach
                     </ol>
 
+ @if($seo_audit_details['h2_tags'] == 0)
+                      <button id="fix_h1" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>H2 Tags & SEO</h3>
+                         </div>
+                    @endif
                 </div>
             </div>
             <hr>
@@ -818,6 +1017,13 @@
                       <li>{{$val}}</li>
                     @endforeach
                     </ol>
+
+                     @if($seo_audit_details['h3_tags'] == 0)
+                      <button id="fix_h1" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>H3 Tags & SEO</h3>
+                         </div>
+                    @endif
                 </div>
             </div>
             <hr>
@@ -904,8 +1110,16 @@
                     Thin Content <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Google loves content. The more content that’s on your pages, the more keywords, and traffic."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
-                        Page contains {{ number_format($seo_audit_details['page_words'],0) }} words.
-                    </p>
+                       <p> Page contains {{ number_format($seo_audit_details['page_words'],0) }} words.</p>
+
+                        @if($seo_audit_details['page_words'] < 300)
+                      <button id="fix_word_count" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Word Count & SEO</h3>
+                         </div>
+                    @endif
+
+                  
                 </div>
             </div>
             <hr>
@@ -938,7 +1152,12 @@
                             </tr>
                         </tbody>
                     </table>
-                   
+                           @if($seo_audit_details['page_text_ratio'] < 10)
+                      <button id="fix_https" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Text to HTML & SEO</h3>
+                         </div>
+                           @endif
                 </div>
             </div>
         </div>
@@ -963,15 +1182,20 @@
             <hr>
              <div class="row">
                 <div class="col-md-3">
-                    <h6><span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>Page Load Time <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title=""><i class="fa fa-info-circle" ></i></a></h6>
+                    @php    
+                      $loadtime = str_replace(' s', '', $seo_audit_details['loadtime']);    
+                     @endphp
+                    <h6>
+                        @if($loadtime > 4)
+                         <span style="margin-right: 9px;color: #ff6600;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                @else
+                    <span style="margin-right: 9px;color: green;"><i class="fa fa-check" aria-hidden="true"></i></span>
+                @endif
+Page Load Time <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title=""><i class="fa fa-info-circle" ></i></a></h6>
+              </h6>
                 </div>
                 <div class="col-md-9">
                                 <span style="float:left;margin-right:5px;">{{ $seo_audit_details['loadtime'] }}.</span>
-                                            @php    
-                                                $loadtime = str_replace(' s', '', $seo_audit_details['loadtime']);
-                                  
-                           
-                                            @endphp
 
                                               @if($loadtime <= 3)
                              <div class="progress" style="width: 200px;float: left;height:20px;">
@@ -984,6 +1208,13 @@
                         <div id="warning" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{$loadtime}}" aria-valuemin="0" aria-valuemax="100" style="width:100%;background-color: #ff0000;">{{$loadtime}}</div></div>
                    @endif
                         <p class="analysis-more-detail" style="clear:both;">Recommended: < 4 seconds</p>
+                           @if($loadtime > 4)
+                         <button id="fix_js_min" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Pageload Speed & SEO</h3>
+                         </div>
+                         @endif
+
                 </div>
             </div>
             <hr>
@@ -1002,6 +1233,12 @@
                         <p>Your JS is minified.</p>
                     @else
                         <p>Your JS is not minified.</p>
+
+                         <button id="fix_js_min" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>JS Minification & SEO</h3>
+                         </div>
+
                         
                     @endif
                     @if(!empty($seo_audit_details['js_min_bytes']))
@@ -1026,6 +1263,10 @@
                         <p>Your CSS is minified.</p>
                     @else
                         <p>Your CSS is not minified. </p>
+                         <button id="fix_jcss_min" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>CSS Minification & SEO</h3>
+                         </div>
                     @endif
                     @if(!empty($seo_audit_details['css_min_bytes']))
                         <p class="analysis-more-detail">Potential Savings: {{$seo_audit_details['css_min_bytes']}} KiB.</p>
@@ -1096,6 +1337,11 @@
                                 <p>Your page is being compressed with GZIP.</p>
                    @else
                             <p>Your page is not being compressed with GZIP.</p>
+                             <button id="fix_gzip" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>GZIP & SEO</h3>
+                         </div>
+
                    @endif
                 </div>
             </div>
@@ -1112,9 +1358,13 @@
                 </div>
                 <div class="col-md-9">
                    @if($seo_audit_details['cache'] == 1)
-                        <p>Your page has cached installed.</p>
+                        <p>Your page has cache installed.</p>
                    @else
-                        <p>Cacheing was not found on your page.</p>
+                        <p>Caching was not found on your page.</p>
+                        <button id="fix_cache" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Caching & SEO</h3>
+                         </div>
                    @endif
                 </div>
             </div>
@@ -1136,6 +1386,11 @@
                 <div class="col-md-9">
                    @if(!empty($seo_audit_details['page_https']))
                         <p>Your page is using HTTPS SSL.</p>
+                      @else
+                       <button id="fix_https" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>HTTPS, Security & SEO</h3>
+                         </div>
                     @endif    
                 </div>
             </div>
@@ -1155,6 +1410,10 @@
                         <p>An SSL certificate was found on your domain.</p>
                     @else
                         <p>An SSL certificate was not found on your domain.</p>
+                          <button id="fix_cert" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>HTTPS, Security & SEO</h3>
+                         </div>
                     @endif
                      
                 </div>
@@ -1173,9 +1432,14 @@
                 <div class="col-md-9">
                     @if(!empty($seo_audit_details['a_https']) && !empty($seo_audit_details['link_https'])  && !empty($seo_audit_details['script_https']))
                         <p>Links pointing to non-HTTPS URLs found on your page.</p>
+                          <button id="fix_non_https" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>HTTPS linking & SEO</h3>
+                         </div>
 
                     @else
                         <p>Links pointing to non-HTTPS URLs not found on your page.</p>
+
                     @endif
                 </div>
             </div>
@@ -1196,7 +1460,17 @@
                     Links to Social Media <a href="#" class="seotip" data-toggle="tooltip" data-placement="top" title="Linking to social media and including URLs to schema.org social media profiles can help search engines find your business."><i class="fa fa-info-circle" ></i></a></h6>
                 </div>
                 <div class="col-md-9">
-                    <p>{{$seo_audit_details['social_media_link'] ?? 'Link to social media profiles not found.'}}</p>
+                  @if(!empty($seo_audit_details['social_media_link']))
+                    <p>Link to social media profiles found.</p>
+                    @else
+                      <p>Link to social media profiles not found.</p>
+                      <button id="fix_https" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Social Media & SEO</h3>
+                         </div>
+                    @endif
+                      
+
                 </div>
             </div>
             <hr>
@@ -1240,6 +1514,10 @@
                         <p>A robots.txt file was found.</p>
                     @else
                         <p>We could not find a robots.txt file on your domain.</p>
+                        <button id="fix_robots" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>Robots.txt & SEO</h3>
+                         </div>
                     @endif
 
                 </div>
@@ -1264,6 +1542,11 @@
                         <p>Your website has an XML sitemap.</p>
                     @else
                         <p>We cannot seem to find your website's sitemap.xml file.</p>
+
+                        <button id="fix_sitemap" class="how-to-fix-button btn btn-sm btn-warning text-right">HOW TO FIX &nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                      <div class="how-to-fix" style="display:none;">
+                        <h3>XML Sitemap & SEO</h3>
+                         </div>
                     @endif
                 </div>
             </div>

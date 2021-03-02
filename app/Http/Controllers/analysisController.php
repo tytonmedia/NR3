@@ -14,6 +14,7 @@ use App\AuditResults;
 use App\SeoResult;
 use App\WhiteLabel;
 use Mail;
+use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use GuzzleHttp\Client as guzzler;
 
 ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
@@ -1747,7 +1748,7 @@ try {
             }elseif($mobile_friendly === 'NOT_MOBILE_FRIENDLY'){
                 $val26_pass = 0;
             }else{
-                $mobile_friendly ='NA';
+                $mobile_friendly ='N/A';
                 $val26_pass = 0;
             }
             if(!empty($internal_link)){ 
@@ -1821,6 +1822,8 @@ try {
         
             if ($sitemap == 1) {$val19_warning = 0;} else {$val19_warning = 1;}
 
+           
+
             if (!empty($favicon)) {$val20_pass = 0;} else {$val20_pass = 1;}
             if ($page_words > 300) {$val12_pass = 0;} else {$val12_pass = 1;}
 
@@ -1828,9 +1831,11 @@ try {
 
             if($page_text_ratio > 10){$val14_pass = 0;}else{$val14_pass = 1;}
 
-            (int)$total_warning_score = $val3_warning + $val5_warning + $val6_warning + $val8_warning + $val9_warning + $val10_warning + $val18_warning + $val19_warning + $val20_pass + $val13_pass + $val14_pass + $val21_warning + $val22_warning + $val23_warning;
+             if (str_replace(' s',$loadtime) > 4) {$va24_error = 1;} else {$va24_error = 0;}
+
+            (int)$total_warning_score = $val3_warning + $val5_warning + $val6_warning + $val8_warning + $val9_warning + $val10_warning + $val18_warning + $val19_warning + $val20_pass + $val13_pass + $val14_pass + $val21_warning + $val22_warning + $val23_warning + $va24_error;
              
-            $warning_score = round(($total_warning_score/14)*100, 0);
+            $warning_score = round(($total_warning_score/15)*100, 0);
 
                //dd($warning_score);
 
@@ -1881,7 +1886,9 @@ try {
                 $val10_error = 1;
             } else{
             $val10_error = 1;
+             $mobile_friendly ='N/A';
             }
+
 
             (int)$total_error_score = $val1_error + $val2_error + $val3_error + $val4_error + $val5_error + $val6_error + $val7_error + $val8_error + $iframe + $val10_error;
 
@@ -2041,7 +2048,7 @@ try {
                                 $seo_result_data->error_score = $error_score ?? 0;
                                 $seo_result_data->img_data = json_encode($img_data) ?? null;
                                 $seo_result_data->favicon = $favicon ?? '';
-                                $seo_result_data->mobile_friendly = $mobile_friendly ?? '';
+                                $seo_result_data->mobile_friendly = $mobile_friendly;
                                 $seo_result_data->ssl_certificate = $ssl_certificate;
                                 $seo_result_data->notice_score = $notice_score;
                                 $seo_result_data->image = $screenshot ?? '';
@@ -2088,29 +2095,11 @@ try {
                         }
     }
 
-    public function download_seo_report($id){
-             
-
-        $seo_audit_details = SeoResult::all()->where('id', $id)->toArray();
-        $seo_audit_details = current($seo_audit_details);
-         $white_label=WhiteLabel::where('user_id',auth()->user()->id)->first();
-        if(!empty($white_label)) {
-            $white_label = $white_label->image_path;
-        } else{
-            $white_label = 0;
-        }
-        
-       // $pdf = PDF::loadView('pdfs/seo_report', compact('seo_audit_details', 'white_label'));
-        
-       // return $pdf->stream();
-
-
-           }
-
     public function seo_analysis_details($id){
         
         $user = User::where('id',auth()->user()->id)->first()->toArray();
         $white_label=WhiteLabel::where('user_id',auth()->user()->id)->first();
+        $payment = Payment::withCount('analysis')->where('user_id',auth()->user()->id)->where('status',1)->first();
         if($white_label) {
             $white_label = $white_label->image_path;
         } else{
@@ -2120,7 +2109,7 @@ try {
         $seo_audit_details = current($seo_audit_details);
 
         if($seo_audit_details['user_id'] == $user['id']){
-                return view('dashboard/seo_result',compact('seo_audit_details','white_label'));
+                return view('dashboard/seo_result',compact('seo_audit_details','white_label','payment'));
         } else{
                 return redirect::to('/');
         }

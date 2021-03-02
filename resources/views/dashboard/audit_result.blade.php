@@ -1,8 +1,9 @@
 @extends('layouts.master')
 @section('title', 'SEO Audit Report')
 @section('content')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-alpha1/html2canvas.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
@@ -12,6 +13,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css"/>
 <script>
      $(document).ready(function($) {
@@ -37,29 +39,33 @@
                     }
                 });
 
-                    $("#send_email_report").click(function(e){
+                   $("#download_report").click(function(e){
                     e.preventDefault();
-                    var id = $('#report_id').val();
-                    var url = encodeURIComponent($('#report_url').val());
-                    var send_to = $('#send_to').val();
-                    var data = {id:id,url:url,send_to:send_to};
-                  $.ajax({
-                              beforeSend: function(){
-                                  $(this).text('Sending');
-                                },
-                                type:'POST',
-                                url:'/email_audit_report',
-                                data: data,
-                                success:function(data){
-                                $("#emailReport").modal("hide");
-                                alert('Sent');
-                                },
-                                error: function (request, status, error) {
-                                      alert(error);
-                                }
-                            });
+                    html2canvas($(".audit-container .inner"), {
+                    onrendered: function(canvas) {        
+                    var imgData = canvas.toDataURL('image/png');
+                        var imgWidth = 210; 
+                    var pageHeight = 295;  
+                   var imgHeight = canvas.height * imgWidth / canvas.width;
+                   var heightLeft = imgHeight;
+                   var doc = new jsPDF('p', 'mm');
+                       var position = 0;
 
-                    });
+                  doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                 heightLeft -= pageHeight;
+
+                 while (heightLeft >= 0) {
+                   position = heightLeft - imgHeight;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                 }
+                 doc.save( 'audit_report.pdf'); 
+
+                        }
+
+                      });
+                  });
 
   });
     </script>
@@ -78,10 +84,9 @@
          
         </span>
         </div>
-        <div class="col-md-8 text-right" style="padding-right:0;display:none;">
-          <a class="btn btn-sm btn-success" href="{{ url('download_audit_report',$audit_details['id'])}}" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD</a>
-          <a class="btn btn-sm btn-disabled" href="#" disabled="disabled"><i class="fa fa-refresh" aria-hidden="true"></i> RE-CRAWL</a>
-          <a class="btn btn-sm btn-warning" id="emailreportlink" data-id="{{$audit_details['id']}}" href="#"><i class="fa fa-envelope-open-o" aria-hidden="true"></i> EMAIL</a>
+        <div class="col-md-8 text-right" style="padding-right:0;">
+          <a class="btn btn-sm btn-info" target="_blank" id="download_report" href="#"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD PDF</a>
+          
       </div>
     </div>
 

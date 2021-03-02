@@ -22,6 +22,7 @@ user-select: none; /* Standard */}
 .url-container #https-pref {padding: 7px 5px;
     border: 0;
     background: #eee;}
+    .fav-icon {float:left;}
 .circle-num {background: #0E6EEA;
     border-radius: 50%;
     font-style: normal;
@@ -33,7 +34,8 @@ user-select: none; /* Standard */}
     width: 15px;
     height: 14px;
     font-weight: bold;}
-    .analysis-more-detail {font-size:13px;margin:0;color:#999;}
+   .how-to-fix {margin-top:15px;}
+    .analysis-more-detail {font-size:13px;color:#999;}
 ul.competitor-list {list-style-type: none;padding:0px;margin:0 0 10px 0;position: relative;}
 ul.serp-features-list {margin:0;padding:0;list-style-type: none}
 ul.serp-features-list li {padding:3px 0px;}
@@ -509,22 +511,54 @@ input#seo_audit {
 .five-cols div.col-md-2, .five-cols div.col-md-4 {border-left:1px solid #ddd;padding:10px;}
 .dataTables_filter {
 }
+.traffic-container .col-md-12 h2 {color:#666;opacity:.8;}
+.traffic-container .col-md-12 h2::after {    content: "";
+    display: block;
+    margin-top: 12px;
+    max-width: 124px;
+    height: 2px;
+    background-color: #ddd;}
+    ul.top-socials {list-style-type:none;}
+    ul.top-socials li {padding:6px 0;}
 .five-cols div:last-child {border-right:1px solid #ddd;}
 .rankings-page .five-cols {border-bottom:1px solid #ddd;    margin-bottom: 15px;}
 .rankings-table td:last-child {width:90px;}
 .five-cols{margin:0;}
 .five-cols.top {border-top:1px solid #ddd;margin-bottom:0}
+ul.comps {float:left;margin:15px 0;padding-left:35px;list-style-type: circle;}
+ul.comps li {padding:3px 0;}
+ul.comps li span {color:#999;font-size:14px;}
 .logo-container, .top-bar .col-md-6 {padding:0;}
 .Analysis-details {margin-top:15px;}
 .Analysis-details div.col-md-4 {border:1px solid #ddd;padding:15px;}
-.home-container ,.analysis-container, .audit-container,.backlinks-container, .rankings-container {margin-top:60px;background: #EAECEE;}
+.traffic-container, .services-container, .home-container ,.analysis-container, .audit-container,.backlinks-container, .rankings-container {margin-top:60px;background: #EAECEE;}
 .backlinks-container .dataTables_wrapper {margin-top:25px;}
-.home-container .inner, .rankings-container .inner, .analysis-container .inner, .audit-container .inner,.backlinks-container .inner {background: #fff;
-        padding: 25px 15px 40px 15px;
+.traffic-container .inner,.services-container .inner, .home-container .inner, .rankings-container .inner, .analysis-container .inner, .audit-container .inner,.backlinks-container .inner {background: #fff;
+        padding: 25px 25px 40px 25px;
     border-radius: 3px;max-width:1200px;}
     .rankings-container .dataTables_wrapper {margin-top:30px;}
+    .traffic-container h2 {margin-bottom:0;}
 hr {margin:0 !important;}
+.table-services td{padding:10px 0;}
+.table-services th {border-top:0;}
+.table-services th:nth-child(2), .table-services th:nth-child(3) {font-size:15px;padding:5px;text-align:center;}
+.table-services th:nth-child(3) {background: #007bff;
+    color: #fff;    text-shadow: 1px 1px 0px #333;
+    border-radius: 5px 5px 0px 0px;}
+    .table-services td:nth-child(3) {background: #e1effd;color:#333;font-weight:bold;}
+.table-services td:nth-child(2), .table-services td:nth-child(3) {text-align:center;width:140px;font-size:21px;}
+.table-services td:nth-child(2), .table-services td:nth-child(3), .table-services td:nth-child(4) {}
 
+.table-services td:nth-child(4){padding:10px;}
+
+.content-services {}
+.table-services ul {list-style-type:none;margin:0 0 10px 0;padding-left:15px;}
+.table-services ul li i {color:green;}
+.table-services td span {}
+.show-info{    clear: both;
+    padding-top: 5px;
+    display: block;
+    text-align: center;}
 .audit-container {}
 /* mobile CDSS */
 

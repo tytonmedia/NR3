@@ -14,6 +14,8 @@
         "fabpot/goutte": "^4.0",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^7.2",
+        "h4cc/wkhtmltoimage-i386": "0.12.x",
+        "h4cc/wkhtmltopdf-i386": "0.12.x",
         "laravel/framework": "^6.2",
         "laravel/socialite": "^4.4",
         "laravel/tinker": "^2.0",
@@ -49,7 +51,8 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": []
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

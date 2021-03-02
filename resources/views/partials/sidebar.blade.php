@@ -52,8 +52,11 @@ if (isset($_GET['url'])) {
 
 					<li class="nav-item"><a class="{{(Request::is('rankings') || Request::is('rankings/*')) ? 'active' : ''}} nav-link" href="{{ route('rankings') }}"><i class="fa fa-bar-chart" aria-hidden="true"></i> RANKINGS <i class="new-icon">NEW</i></a></li>
 		
+		<li class="nav-item"><a class="{{(Request::is('traffic') || Request::is('traffic/*')) ? 'active' : ''}} nav-link" href="{{ route('traffic') }}"><i class="fa fa-dashboard" aria-hidden="true"></i> TRAFFIC <i class="new-icon">NEW</i></a></li>
+
 				
-				<li class="nav-item"><a class="{{(Request::is('subscription') || Request::is('subscription/')) ? 'active' : ''}} nav-link" href="/subscription"><i class="fa fa-tachometer" aria-hidden="true"></i> PRICING</a></li>
+				<li class="nav-item"><a class="{{(Request::is('subscription') || Request::is('subscription/')) ? 'active' : ''}} nav-link" href="/subscription"><i class="fa fa-money" aria-hidden="true"></i> PRICING</a></li>
+
 			</ul>
 
 			<div class="footer">

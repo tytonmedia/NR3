@@ -138,22 +138,55 @@ $nofollow_array = array();
 
           }
 ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-alpha1/html2canvas.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-        <script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-          <script src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
- <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+<script src="https://rawgit.com/kottenator/jquery-circle-progress/1.2.1/dist/circle-progress.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css"/>
     
 
 <script>
      $(document).ready(function($) {
+
+
+                $("#download_report").click(function(e){
+                    e.preventDefault();
+                    html2canvas($(".analysis-container .inner"), {
+                    onrendered: function(canvas) {        
+                    var imgData = canvas.toDataURL('image/png');
+                        var imgWidth = 210; 
+                    var pageHeight = 295;  
+                   var imgHeight = canvas.height * imgWidth / canvas.width;
+                   var heightLeft = imgHeight;
+                   var doc = new jsPDF('p', 'mm');
+                       var position = 0;
+
+                  doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                 heightLeft -= pageHeight;
+
+                 while (heightLeft >= 0) {
+                   position = heightLeft - imgHeight;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                 }
+                 doc.save( 'backlink_report.pdf'); 
+
+                        }
+
+                      });
+                  });
+
+
  $('.table').DataTable({
           dom: 'Bfrtip',
             buttons: [{ extend: 'copyHtml5', className: 'btn btn-copy' },
@@ -177,10 +210,9 @@ $nofollow_array = array();
             @endif
           </span>
         </div>
-        <div class="col-md-8 text-right" style="padding-right:0;display:none;">
-          <a class="btn btn-sm btn-success" href="{{ url('download_backlink_report', $backlink_details['id'])}}"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD</a>
-          <a class="btn btn-sm btn-disabled" href="#" disabled="disabled"><i class="fa fa-refresh" aria-hidden="true"></i> RE-CRAWL</a>
-          <a class="btn btn-sm btn-warning" href="#" id="emailreportlink" data-id="{{$backlink_details['id']}}"><i class="fa fa-envelope-open-o" aria-hidden="true"></i> EMAIL</a>
+        <div class="col-md-8 text-right" style="padding-right:0;">
+          <a class="btn btn-sm btn-info" id="download_report" href="#"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD PDF</a>
+    
       </div>
     </div>
  <div class="row audit-text pt-3 pb-3">

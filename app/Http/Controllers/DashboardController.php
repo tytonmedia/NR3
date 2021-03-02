@@ -12,6 +12,7 @@ use DB;
 use App\SeoResult;
 use App\BacklinkResults;
 use App\KeywordResults;
+use App\TrafficResults;
 use App\Audit;
 use App\AuditResults;
 use App\WhiteLabel;
@@ -41,6 +42,22 @@ class DashboardController extends Controller
 }
          return view('dashboard/home',compact('productname','created'));
     }
+
+
+        public function services(){
+            if(!empty(auth()->user()->id)) {
+            $payment=Payment::where('user_id',auth()->user()->id)->where('user_id',auth()->user()->id)->first();
+            if(empty($payment)){
+                    $payment = false;
+                }else {
+                    $payment = true;
+                }
+         return view('dashboard/services',compact('payment'));
+    } else{
+        $payment = false;
+        return view('dashboard/services',compact('payment'));
+    }
+}
 
     public function seo_audit(){
                 if(!empty(auth()->user()->id)) {
@@ -96,6 +113,20 @@ public function seo_backlinks(){
         }
          
         return view('dashboard/seo_analysis',compact('seo_results','payment'));
+    }
+        public function seo_traffic(){
+    
+        if(!empty(auth()->user()->id)) {
+            $payment=Payment::where('user_id',auth()->user()->id)->where('status',1)->first();
+            if(empty($payment)){
+                    $payment = false;
+                }else {
+                    $payment = true;
+                }
+            $traffic_results = TrafficResults::select('id','domain','traffic','updated_at')->where('user_id',auth()->user()->id)->get();
+        }
+         
+        return view('dashboard/traffic',compact('traffic_results','payment'));
     }
     public function account(){
         $Payment=Payment::where('user_id',auth()->user()->id)->where('status',1)->first();

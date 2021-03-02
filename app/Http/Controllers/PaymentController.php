@@ -44,6 +44,7 @@ class PaymentController extends Controller
                     $no_allowed_audits = '25';
                     $no_allowed_backlinks = '5';
                     $no_allowed_rankings = '10';
+                    $no_allowed_traffic = '15';
                     $retrive= $stripe->subscriptions->retrieve(
                         $Payment->subscription_id,
                         []
@@ -68,6 +69,7 @@ class PaymentController extends Controller
                             'no_allowed_audits'   => $no_allowed_audits,
                             'no_allowed_backlinks'   => $no_allowed_backlinks,
                             'no_allowed_rankings'   => $no_allowed_rankings,
+                             'no_allowed_traffic'   => $no_allowed_traffic,
                             'currency'          => $charge->plan->currency,
                             'amount'            => $charge->plan->amount,
                             'interval'          => $charge->plan->interval,
@@ -88,6 +90,7 @@ class PaymentController extends Controller
                     $no_allowed_audits = '100';
                      $no_allowed_backlinks = '15';
                     $no_allowed_rankings = '25';
+                    $no_allowed_traffic = '30';
                     $retrive= $stripe->subscriptions->retrieve(
                         $Payment->subscription_id,
                         []
@@ -111,6 +114,7 @@ class PaymentController extends Controller
                             'no_allowed_audits'   => $no_allowed_audits,
                             'no_allowed_backlinks'   => $no_allowed_backlinks,
                             'no_allowed_rankings'   => $no_allowed_rankings,
+                            'no_allowed_traffic'   => $no_allowed_traffic,
                             'currency'          => $charge->plan->currency,
                             'amount'            => $charge->plan->amount,
                             'interval'          => $charge->plan->interval,
@@ -131,6 +135,7 @@ class PaymentController extends Controller
                     $no_allowed_audits = '250';
                     $no_allowed_backlinks = '25';
                     $no_allowed_rankings = '25';
+                    $no_allowed_traffic = '50';
                     $retrive= $stripe->subscriptions->retrieve(
                         $Payment->subscription_id,
                         []
@@ -155,6 +160,7 @@ class PaymentController extends Controller
                             'no_allowed_audits'     => $no_allowed_audits,
                             'no_allowed_backlinks'   => $no_allowed_backlinks,
                             'no_allowed_rankings'   => $no_allowed_rankings,
+                            'no_allowed_traffic'   => $no_allowed_traffic,
                             'currency'          => $charge->plan->currency,
                             'amount'            => $charge->plan->amount,
                             'interval'          => $charge->plan->interval,
@@ -189,6 +195,7 @@ class PaymentController extends Controller
                 $no_allowed_audits = '25';
                 $no_allowed_backlinks = '5';
                 $no_allowed_rankings = '10';
+                $no_allowed_traffic = '15';
             }else if($id == 2){
                 $customer = $stripe->customers->create([
                     "email"       => auth()->user()->email,
@@ -208,6 +215,7 @@ class PaymentController extends Controller
                 $no_allowed_audits = '100';
                 $no_allowed_backlinks = '15';
                 $no_allowed_rankings = '25';
+                $no_allowed_traffic = '30';
             }else if($id == 3){
                 $customer = $stripe->customers->create([
                     "email"       => auth()->user()->email,
@@ -227,6 +235,7 @@ class PaymentController extends Controller
                 $no_allowed_audits = '250';
                 $no_allowed_backlinks = '100';
                 $no_allowed_rankings = '100';
+                $no_allowed_traffic = '50';
             }
             $create_user = new Payment;
             $create_user->user_id = auth()->user()->id;
@@ -236,6 +245,7 @@ class PaymentController extends Controller
             $create_user->no_allowed_audits = $no_allowed_audits;
             $create_user->no_allowed_backlinks = $no_allowed_backlinks;
             $create_user->no_allowed_rankings = $no_allowed_rankings;
+            $create_user->no_allowed_traffic = $no_allowed_traffic;
             $create_user->currency = $charge->plan->currency;
             $create_user->amount = $charge->plan->amount;
             $create_user->interval = $charge->plan->interval;

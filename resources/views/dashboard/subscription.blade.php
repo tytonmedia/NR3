@@ -106,6 +106,13 @@
 <td>100/mo</td>
 </tr>
 <tr>
+<td>Traffic Reports</td>
+<td>0</td>
+<td>15/mo</td>
+<td>30/mo</td>
+<td>50/mo</td>
+</tr>
+<tr>
 <td>White Label Reports</td>
 <td>No</td>
 <td>No</td>
