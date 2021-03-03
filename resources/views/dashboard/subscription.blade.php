@@ -64,8 +64,13 @@
                 </div>
             </div>
     </div>
+    <div class="row">
+<div class="col-md-12 text-center" style="background:#f2f2f2;margin-top:25px;padding:15px 0">
+<img src="images/featured.png"/>
+</div>
+    </div>
     <div class="container">
-        <div class="row three-cols">
+        <div class="row three-cols" style="margin-top:0">
     <a name="detailed"></a>
     <div class="col-md-11" style="margin-top:25px;"><h4>Pricing Details</h4>
 <table class="table detailed-pricing">
