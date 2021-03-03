@@ -1781,59 +1781,67 @@ try {
 
         //Page Score Warning
         try {
-            if (empty($canonical)) {$val3_warning = 1;} else {$val3_warning = 0;}
-            if (!empty($img_miss_alt)) {$val5_warning = 1;} else {$val5_warning = 0;}
-            if ($url_seo_friendly == "Seo Friendly") {$val6_warning = 0;} else {$val6_warning = 1;}
-            if (empty($word_count)) {$val8_warning = 1;} else {$val8_warning = 0;}
-            if ($page_words) {$val9_warning = 0;} else {$val9_warning = 1;}
-            if (!empty($cache)) {
-                $val10_warning = 0;
-            } else {
-                $val10_warning = 1;
+            (int)$total_warning_score = 0;
+            if (empty($canonical)) {
+                $total_warning_score = 1;
+            } 
+            if (!empty($img_miss_alt)) {
+                $total_warning_score += 1;
+            } 
+            if ($url_seo_friendly != "Seo Friendly") {
+                $total_warning_score += 1;
+            } 
+            if (empty($word_count)) {
+                $total_warning_score += 1;
             }
-            if (!empty($robot)) {
-                $val18_warning = 0;
-            } else {
-                $val18_warning = 1;
+            if (!$page_words) {
+                $total_warning_score += 1;
+            } 
+
+            if (empty($cache)) {
+               $total_warning_score += 1;
+            } 
+            if (empty($robot)) {
+                $total_warning_score += 1;
             }
             if(!empty($cls)){
                 $cls_count = str_replace(' s', '', $cls);
-                if ($cls < 0.01) {$val21_warning = 0;} else {$val21_warning = 1;}
+                if ($cls > 0.01) {
+                    $total_warning_score += 1;
+                } 
             } else{
-                $val21_warning = 1;
+                $total_warning_score += 1;
                 $cls = 0;
             }
             
             if(!empty($fcp)){
                 $fcp_count = str_replace(' s', '', $fcp);
-                if ($fcp < 2) {$val22_warning = 0;} else {$val22_warning = 1;}
+                if ($fcp > 2) {$total_warning_score += 1;}
             } else{
-                $val22_warning = 1;
+                $total_warning_score += 1;
                 $fcp = 0;
             }
 
             if(!empty($lcp)){
                 $lcp_count = str_replace(' s', '', $lcp);
-                if ($lcp < 2.5) {$val23_warning = 0;} else {$val23_warning = 1;}
+                if ($lcp > 2.5) {$total_warning_score += 1;}
             } else{
-                $val23_warning = 1;
+                $total_warning_score += 1;
                 $lcp = 0;
             }
         
-            if ($sitemap == 1) {$val19_warning = 0;} else {$val19_warning = 1;}
+            if ($sitemap == 0) {$total_warning_score += 1;}
 
-           
+            if (empty($favicon)) {$total_warning_score += 1;}
+            if ($page_words < 300) {$total_warning_score += 1;}
 
-            if (!empty($favicon)) {$val20_pass = 0;} else {$val20_pass = 1;}
-            if ($page_words > 300) {$val12_pass = 0;} else {$val12_pass = 1;}
+            if(empty($internal_link)){ $total_warning_score += 1;}
 
-            if(!empty($internal_link)){ $val13_pass = 0;}else{ $val13_pass = 1;}
+            if($page_text_ratio < 10){$total_warning_score += 1;}
 
-            if($page_text_ratio > 10){$val14_pass = 0;}else{$val14_pass = 1;}
+             if (str_replace(' s','',$loadtime) > 4) {$total_warning_score += 1;}
 
-             if (str_replace(' s',$loadtime) > 4) {$va24_error = 1;} else {$va24_error = 0;}
-
-            (int)$total_warning_score = $val3_warning + $val5_warning + $val6_warning + $val8_warning + $val9_warning + $val10_warning + $val18_warning + $val19_warning + $val20_pass + $val13_pass + $val14_pass + $val21_warning + $val22_warning + $val23_warning + $va24_error;
+          
              
             $warning_score = round(($total_warning_score/15)*100, 0);
 
