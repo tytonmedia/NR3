@@ -606,12 +606,17 @@ $tmp = array_filter($country_traffic); @endphp
        @php 
             if($traffic_details['similar'] !== null){
                 $tmp = array_filter(json_decode($traffic_details['similar']));
+                $compet = $tmp[0][0];
+                @endphp
+                  <h5 style="margin-top:15px">Top competitors by Global Rank</h5>
+           <p><strong style="color:#206ee0;font-size:21px">{{ $compet }}</strong> is {{$traffic_details['domain']}}'s biggest competitor.</p>
+           @php
               } else{
                  $tmp = '';
+                 $compet = '';
             }
             @endphp
-      <h5 style="margin-top:15px">Top competitors by Global Rank</h5>
-           <p><strong style="color:#206ee0;font-size:21px">{{ $tmp[0][0] }}</strong> is {{$traffic_details['domain']}}'s biggest competitor.</p>
+    
     </div>
   </div>
 <div calss="row">
