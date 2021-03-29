@@ -123,6 +123,7 @@ class analysisController extends Controller
 
             $external_link = array();
             $internal_link = array();
+            
 
             // get all internal and external links
             foreach ($links as $key => $olink) {
@@ -145,11 +146,15 @@ class analysisController extends Controller
                     $crawler = $client->request('GET', $val['fullUrl']);
                     
                     $pages[] = $val['fullUrl'];
-
+                    if(!empty($val['metaInfo']["h1Count"])) {
                     if ($val['metaInfo']["h1Count"] > 1) {
                         $links_more_h1[] = $val['fullUrl'];
                     }elseif ($val['metaInfo']["h1Count"] == 0) {
                         $links_empty_h1[] = $val['fullUrl'];
+                    }
+                    } else {
+                            $links_more_h1[] = null;
+                             $links_empty_h1 = null;
                     }
 
                     if(count(array_unique($val['metaInfo']['h1Contents'])) < $val['metaInfo']["h1Count"]){
