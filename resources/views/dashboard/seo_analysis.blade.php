@@ -205,8 +205,7 @@ if(!empty($seo_results)) {
                              
                          gtag('event', 'click', {
                                       'event_category': 'audit',
-                                      'event_label': 'click',
-                                      'value': url
+                                      'event_label': url
                                     });
 
                            // $(".progress-bar1").css("animation-play-state", "running");

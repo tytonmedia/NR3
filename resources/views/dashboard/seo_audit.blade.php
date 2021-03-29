@@ -180,8 +180,7 @@ if(!empty($audit_results)) {
 
                                         gtag('event', 'click', {
                                       'event_category': 'audit',
-                                      'event_label': 'click',
-                                      'value': url
+                                      'event_label': url,
                                     });
 
 

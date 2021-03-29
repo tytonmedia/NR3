@@ -174,12 +174,15 @@ class trafficController extends Controller
                 }else{
                   $top_socials = json_encode($top_socials);
                 }
+                if(empty($estimated_values)){
+                        return 'nodata';
+                }else {
                 $traffic = new Traffic;
                 $traffic->user_id = auth()->user()->id;
                 $traffic->payment_id = $Payment->id ?? 0;
 
                 $traffic->domain = $domain;
-                $traffic->description =$response['tasks'][0]['result'][0]['site_description'];
+                $traffic->description = $response['tasks'][0]['result'][0]['site_description'];
                 $traffic->global_rank = $response['tasks'][0]['result'][0]['global_rank']['rank'];
                 $traffic->cat_rank = $response['tasks'][0]['result'][0]['category_rank']['rank'];
                 $traffic->country_rank = $response['tasks'][0]['result'][0]['country_rank']['rank'];
@@ -227,6 +230,7 @@ class trafficController extends Controller
                                 ));
 
                         return $data;
+                      }
 
         } catch(Exception $e){
            Log::error($e);

@@ -515,19 +515,25 @@ use App\Http\Controllers\trafficController;
        </div>
         <div class="row">
       @php
+    
+      @endphp
+                  @if(empty($traffic_details['countries']))
+                  <div class="text-center col-md-12">
+                      <h3>No Data</h3>
+                     <img src="{{asset('images/ninja-icon-gray.png')}}" alt="ninja"/>
+                  </div>
+                  @else
+      @php
+     
+   
          $country_names = array();
               $country_traffic = array();
                   foreach(json_decode($traffic_details['countries']) as $key => $value) {
               $country_names[] =  $value[0];
               $country_traffic[] = $value[1];
             }
-$tmp = array_filter($country_traffic); @endphp
-                  @if(empty($tmp))
-                  <div class="text-center col-md-12">
-                      <h3>No Data</h3>
-                     <img src="{{asset('images/ninja-icon-gray.png')}}" alt="ninja"/>
-                  </div>
-                  @else
+               @endphp
+
                   <div class="row">
                     @php
 

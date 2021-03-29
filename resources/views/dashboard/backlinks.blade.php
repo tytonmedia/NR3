@@ -192,8 +192,7 @@ if(!empty($backlink_results)) {
 
                                         gtag('event', 'click', {
                                       'event_category': 'backlinks',
-                                      'event_label': 'click',
-                                      'value': url
+                                      'event_label': url
                                     });
 
                                 $.ajax({

@@ -188,8 +188,7 @@ if(!empty($traffic_results)) {
 
                                         gtag('event', 'click', {
                                       'event_category': 'traffic',
-                                      'event_label': 'click',
-                                      'value': domain
+                                      'event_label': domain
                                     });
 
                                 $.ajax({
@@ -233,7 +232,20 @@ if(!empty($traffic_results)) {
                                              $("#backlink_audit").val('');
                                               $('#loading').hide();
                                                 $('.table tr.temp').remove();
-                                        }else{
+                                        }else if(data == 'nodata'){
+                                                 Swal.fire({
+                                                  title: 'Sorry!',
+                                                  text: 'There is not enough data for this domain. Please try another domain.',
+                                                  icon: 'error',
+                                                  showConfirmButton: 'false',
+                                                  showCloseButton: 'true',
+                                                })
+                                              $('#analyse').removeAttr('disabled');
+                                              $('#analyse').text('CRAWL');
+                                              $("#backlink_audit").val('');
+                                              $('#loading').hide();
+                                              $('.temp').hide();
+                                        } else{
                                            // $('div#text-container').append(data);
                                             $('#loading').hide();
                                          $('.table tr.temp').remove();

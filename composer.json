@@ -20,7 +20,8 @@
         "laravel/socialite": "^4.4",
         "laravel/tinker": "^2.0",
         "nesk/puphpeteer": "^1.6",
-        "stripe/stripe-php": "^7.62"
+        "stripe/stripe-php": "^7.62",
+        "zrashwani/arachnid": "dev-master"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

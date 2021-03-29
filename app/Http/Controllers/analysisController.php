@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Goutte\Client;
+use Symfony\Component\HttpClient\HttpClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Redirect;
@@ -17,7 +18,7 @@ use Mail;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use GuzzleHttp\Client as guzzler;
 
-ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
+ini_set('max_execution_time', '600'); //300 seconds = 5 minutes
 
 class analysisController extends Controller
 {
@@ -31,6 +32,8 @@ class analysisController extends Controller
         curl_setopt($ch, CURLOPT_HEADER, TRUE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         $a = curl_exec($ch);
         if(preg_match('#Location: (.*)#', $a, $r)) {
         $url = trim($r[1]);
@@ -77,6 +80,7 @@ class analysisController extends Controller
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, TRUE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         $a = curl_exec($ch);
@@ -107,155 +111,50 @@ class analysisController extends Controller
         }
         else
         {
-            $client = new Client();
-            $crawler = $client->request('GET', $url);
+      
+            // get domain name
+            $domain = parse_url($url, PHP_URL_HOST);
+            $domain_url = str_replace('www.', '', $domain);
 
-            //get internal links
+            $crawler = new \Arachnid\Crawler($url, 2);
+
+            // get all links
+            $links = $crawler->traverse()->getLinksArray();
+
             $external_link = array();
             $internal_link = array();
-            try{
-                    foreach ($crawler->filter('a') as $a) {
-                        $a_links[] = $a->getAttribute('href');
-                    }
-                       //  dd($a_links);
-                    //extract Domain
-                    $domain = parse_url($url, PHP_URL_HOST);
 
-                    $domain_url = str_replace('www.', '', $domain);
-                    
-                    foreach ($a_links as $lnk) {
-                 
-                        if (strpos($lnk, $domain_url) !== false) {
-                            $internal_link[] = $lnk;
-                        } else {
-                            $external_link[] = $lnk;
-                            
-                        }
-                    }
-                       //filter out hashtag links ?query parameters and maito, tel links
-                        foreach ($internal_link as $key => $value) {
-                            # code...
-                            if(strpos($value, '#') === false || strpos($value, 'mailto') === false || strpos($value, '?') === false){
-                                    $internal_link_filter[] = $value;
-                            }
-                        }
-                           // dd($internal_link_filter);
-                    $pages_link = array_unique(array_filter($internal_link_filter));
-                
-
-                    foreach ($pages_link as $val) {
-                        if (parse_url($val, PHP_URL_SCHEME) === 'https' || parse_url($val, PHP_URL_SCHEME) === 'http') {
-                            $internal_pages[] = $val;
-                        }
-                    }
-                    if(empty($internal_pages)){
-                        $links = $this->get_a_href($url);
-                        $internal_pages = array_unique($links['InternalLinks']);
-                    }
-            }catch(Exception $e){
-               $internal_pages[] = $url;
-              // dd($e);
+            // get all internal and external links
+            foreach ($links as $key => $olink) {
+                 if($olink['isExternal'] != 'false') {
+                        if (substr( $olink['fullUrl'], 0, 4 ) === "http") {
+                             $internal_pages[] = $olink;
+                         }
+                         } else {
+                             $external_link[] = $olink;
+                         }
             }
-
-                try{
-                    $a = '/';
-                    $pages = array();
-                    foreach ($internal_pages as $val){
-                        
-                        if(strpos($val,"facebook") == false && strpos($val,"twitter") == false && strpos($val,"linkedin") == false && strpos($val,"instagram") == false && strpos($val, '#') == false && strpos(parse_url($val)['host'],$domain_url) !== false){
-                            if(empty(parse_url($val)['path'])){
-                            array_push($pages, $val .= $a);
-                                }else{
-                                array_push($pages,$val);
-                                }
-                        }
-                    }
-                }catch(Exception $e){
-                    Log::error($e);
-                }
-                $internal_page = array_unique($pages);
-               
-                
+            $int_pages = array_unique($internal_pages, SORT_REGULAR);
             try {
-                    // $short_meta_description = array();
-                    // $long_meta_description = array();
-                    // $page_link_description = array();
-                    // $page_null_description = array();
-                    // $status301 = array();
-                    // $status302 = array();
-                    // $status404 = array();
-                    // $status500 = array();
-                    // $link_301 = array();
-                    // $link_302 = array();
-                    // $link_404 = array();
-                    // $link_500 = array();
-                    // $total_meta = array();
-                    // $links_more_h1 = array();
-                    // $duplicate_h1 = array();
-                    // $links_empty_h1 = array();
-                    // $long_title = array();
-                    // $url_length = array();
-                    // $less_page_words = array();
-                    // $graph_data = array();
-                    // $less_code_ratio = array();
-                    // $page_miss_meta = array();
-                    // $page_incomplete_card = array();
-                    // $page_incomplete_graph = array();
-                    // $page_miss_title = array();
-                    // $duplicate_title = array();
-                    // $twitter = array();
-                    // $passed_pages = array();
-                    // $page_without_canonical = array();
-                //$duplicate_meta_description = array();
-                foreach ($internal_page as $val) {
+                // scan each page
+                $pages = array();
+                foreach ($int_pages as $val) {
+
+                    $client = new Client(HttpClient::create(['verify_peer' => false, 'verify_host' => false]));
+
+                    $crawler = $client->request('GET', $val['fullUrl']);
                     
-                    $crawler = $client->request('GET', $val);
-                    
-                    $h1 = $crawler->filter('h1')->each(function ($node) {
-                        return $node->text();
-                    });
-           
-                    if (count($h1) > 1) {
-                        $links_more_h1[] = $val;
-                    }elseif (count($h1) < 1 && strpos($val,"twitter") == false && strpos($val,"facebook") == false && strpos($val,"linkedin") == false && strpos($val,"instagram") == false ) {
-                        $links_empty_h1[] = $val;
-                    }
-                    if(count(array_unique($h1)) < count($h1)){
-                        $duplicate_h1[] = $val;
-                    }
-                    
-                    $card = $crawler->filter('meta[name="twitter:card"]')->each(function ($node) {
-                        return $node->attr('content');
-                    });
+                    $pages[] = $val['fullUrl'];
 
-                    $site = $crawler->filter('meta[name="twitter:site"]')->each(function ($node) {
-                        return $node->attr('content');
-                    });
-
-                    $title_twitter = $crawler->filter('meta[name="twitter:title"]')->each(function ($node) {
-                        return $node->attr('content');
-                    });
-
-                    $twitter_description = $crawler->filter('meta[name="twitter:description"]')->each(function ($node) {
-                        return $node->attr('content');
-                    });
-                    
-
-                    $image_twitter = $crawler->filter('meta[name="twitter:image"]')->each(function ($node) {
-                        return $node->attr('content');
-                    });
-
-                    $creator_twitter = $crawler->filter('meta[name="twitter:creator"]')->each(function ($node) {
-                        return $node->attr('content');
-                    });
-
-                    if(empty($card) || empty($site) || empty($title_twitter) || empty($twitter_description) || empty($image_twitter) || empty($creator_twitter)){
-                        $page_incomplete_card[] = $val;
+                    if ($val['metaInfo']["h1Count"] > 1) {
+                        $links_more_h1[] = $val['fullUrl'];
+                    }elseif ($val['metaInfo']["h1Count"] == 0) {
+                        $links_empty_h1[] = $val['fullUrl'];
                     }
 
-                    $a = array();
-                    $twitter[] = array_push($a, $card, $site, $title_twitter, $twitter_description, $image_twitter,$creator_twitter);
-
+                    if(count(array_unique($val['metaInfo']['h1Contents'])) < $val['metaInfo']["h1Count"]){
+                        $duplicate_h1[] = $val['fullUrl'];
+                    }
                     
                     $graph_type = $crawler->filter('meta[property="og:type"]')->each(function ($node) {
                         return $node->attr('content');
@@ -278,31 +177,28 @@ class analysisController extends Controller
                     });
 
                     if(empty($graph_type) || empty($graph_title) || empty($graph_description) || empty($graph_image) || empty($graph_url)){
-                        $page_incomplete_graph[]  = $val;
+                        $page_incomplete_graph[]  = $val['fullUrl'];
                     }
 
-                    $b = array();
-         
-                   // $graph_data[] = null;
 
-                    $title = $crawler->filter('title')->html();
+                    $title = $val['metaInfo']['title'];
                     if (!empty($title)) {
-                        $page_with_title[] = $val;
+                        $page_with_title[] = $val['fullUrl'];
                     } else {
-                        $page_miss_title[] = $val;
+                        $page_miss_title[] = $val['fullUrl'];
                     
                     }
                    
                     if (strlen($title) < 50) {
-                        $short_title[] = $val;
+                        $short_title[] = $val['fullUrl'];
                     } elseif (strlen($title) > 60) {
-                        $long_title[] = $val;
+                        $long_title[] = $val['fullUrl'];
                     }
                     
                     $total_title[] = $title;
 
-                    if(strlen($val)>115){
-                        $url_length[] = $val;
+                    if(strlen($val['fullUrl'])>115){
+                        $url_length[] = $val['fullUrl'];
                     }
                        // dd($val);
                     //page word count
@@ -312,7 +208,7 @@ class analysisController extends Controller
                 
                    
                     if ($page_words < 600) {
-                        $less_page_words[] = $val;
+                        $less_page_words[] = $val['fullUrl'];
                     }
 
                     //Text-HTML ratio
@@ -321,7 +217,7 @@ class analysisController extends Controller
                     $page_text_ratio = $page_words / $size * 100;
                     $page_words_size = round($page_words / 1024, 4);
                     if ($page_text_ratio < 10) {
-                        $less_code_ratio[] = $val;
+                        $less_code_ratio[] = $val['fullUrl'];
                     }
                     //$less_page[] = $page_words;
                     $page_html = preg_replace('#<[^>]+>#', ' ', $crawler->html());
@@ -332,69 +228,55 @@ class analysisController extends Controller
 
                     foreach (array_map('trim', $duplicates) as $value) {
                         if ($value === $title) {
-                            $duplicate_title[] = $val;
+                            $duplicate_title[] = $val['fullUrl'];
                         }
                     }
-                    $m_can = array();
-                    foreach ($crawler->filter('link[rel="canonical"]') as $can) {
-                        if (!empty($can->getAttribute('href'))) {
-                            $link_canonical[] = $val;
-                            $canonical[] = $can->getAttribute('href');
-                        }else{
-                            array_push($m_can,$val);
-                        }
-                        
+                    if($val['metaInfo']['canonicalLink']){
+                            $link_canonical[] = $val['fullUrl'];
+                            $canonical[] = $val['fullUrl'];
                     }
-                    
+
                     //meta description
-                    foreach ($crawler->filter('meta[name="description"]') as $desc) {
-                        $meta = $desc->getAttribute('content');
+
+                        $meta = $val['metaInfo']['metaDescription'];
                       
                         if (!empty($meta)) {
-                            $linkss[] = $val;
+                            $linkss[] = $val['fullUrl'];
                             if (strlen($meta) < 120) {
-                                $short_meta_description[] = $val;
+                                $short_meta_description[] = $val['fullUrl'];
                             } elseif (strlen($meta) > 160) {
-                                $long_meta_description[] = $val;
+                                $long_meta_description[] = $val['fullUrl'];
                             }
-                            $page_link_description[] = $val;
+                            $page_link_description[] = $val['fullUrl'];
                         }else{
-                            $page_null_description[] = $val;
-                        
+                            $page_null_description[] = $val['fullUrl'];
                         }
+
                         $total_meta[] = $meta;
-                    }
-
+              
+                    if($val['statusCode'] == '200'){
+                        $status_200[] = $val['fullUrl'];
+                        $link_200[] = $val['fullUrl'];
+                    }elseif($val['statusCode'] == '301') {
+                        $status_301[] = $val['fullUrl'];
+                        $link_301[] = $val['fullUrl'];
+                    } elseif ($val['statusCode'] == '302') {
+                        $status_302[] = $val['fullUrl'];
+                        $link_302[] = $val['fullUrl'];
+                    } elseif ($val['statusCode'] == '404') {
+                        $status_404[] = $val['fullUrl'];
+                        $link_404[] = $val['fullUrl'];
                     
-                    $redirect_links = get_headers($val);
-                    preg_match('/\s(\d+)\s/', $redirect_links[0], $matches);
-                    if($matches[0] == 200){
-                        $status_200[] = $matches[0];
-                        $link_200[] = $val;
-                    }elseif($matches[0] == 301) {
-                        $status_301[] = $matches[0];
-                        $link_301[] = $val;
-                    } elseif ($matches[0] == 302) {
-                        $status_302[] = $matches[0];
-                        $link_302[] = $val;
-                    } elseif ($matches[0] == 404) {
-                        $status_404[] = $matches[0];
-                        $link_404[] = $val;
-                    
-                    } elseif ($matches[0] == 500) {
-                        $status_500[] = $matches[0];
-                        $link_500[] = $val;
-                        
+                    } elseif ($val['statusCode'] == '500') {
+                        $status_500[] = $val['fullUrl'];
+                        $link_500[] = $val['fullUrl'];  
                     }
-                    $pages[] = $val;
-
 
                 }
-
+                    dd($pages);
             } catch (Exception $e) {
               Log::error($e);
             }
-        
             //meta duplicate
             try {
     
@@ -466,11 +348,7 @@ class analysisController extends Controller
                     $h1_count_more = 0;
                 }
                
-                if(empty($twitter)){
-                    $twitter_count = 1;
-                }else{
-                    $twitter_count = 0;
-                }
+
 
                 if(empty($graph_data)){
                     $graph_count = 1;
@@ -495,7 +373,7 @@ class analysisController extends Controller
                     $page_incomplete_graph_count = 0;
                 }
 
-            $notices = $h1_count_more+$twitter_count+$graph_count+$url_length_count+$robot_count+$page_incomplete_graph_count;
+            $notices = $h1_count_more+$graph_count+$url_length_count+$robot_count+$page_incomplete_graph_count;
 
             }catch(Exception $e){
                  Log::error($e);
@@ -632,6 +510,7 @@ class analysisController extends Controller
                 }
                  Log::error($e);
             }
+
             try{
                 $page_with_errors = []; 
                 foreach ($health as $childArray) 
@@ -796,11 +675,7 @@ class analysisController extends Controller
                 } else {
                     $duplicate_title = json_encode($duplicate_title);
                 }
-                   if(empty($twitter)){
-                    $twitter = null;
-                } else {
-                    $twitter = json_encode($twitter);
-                }
+                   
                    if(empty($page_without_canonical)){
                     $page_without_canonical = null;
                 } else {
@@ -815,11 +690,11 @@ class analysisController extends Controller
             //     'link_302','link_301','link_404','link_500','page_without_canonical','notices','warning','errors','passed_pages'
             //     ,'health_score','pages','audit_description'
             // ));
-$errors = $link_404_count+$link_500_count+$duplicate_title_count+
+                        $errors = $link_404_count+$link_500_count+$duplicate_title_count+
                 $duplicate_meta_description_count+$page_miss_meta_count+
                 $links_empty_h1_count+$short_title_count+$long_title_count+$short_meta_description_count+$long_meta_description_count;
 
-try {
+                        try {
                              $seo_audit_data = new Audit;
                                 $seo_audit_data->user_id = auth()->user()->id;
                                 $seo_audit_data->payment_id = $Payment->id ?? 0;
@@ -846,7 +721,6 @@ try {
                                 $seo_audit_data->status_500 = $status_500;
                                 $seo_audit_data->page_miss_title = $page_miss_title;
                                 $seo_audit_data->duplicate_title = $duplicate_title;
-                                $seo_audit_data->twitter = $twitter;
                                 $seo_audit_data->link_302 = $link_302;
                                 $seo_audit_data->link_301 = $link_301;
                                 $seo_audit_data->link_404 = $link_404;
@@ -913,10 +787,12 @@ try {
         
            }
 
- public function delete_audit_report($id){
+        public function delete_audit_report($id){
+
         Audit::where('id', $id)->delete();
         AuditResults::where('audit_id', $id)->delete();
         return $id;
+
            }
 
     public function download_audit_report($id){
@@ -1026,7 +902,7 @@ try {
     }
 
     public function get_seo($url,$Payment,$time){
-        $client = new Client();
+        $client = new Client(HttpClient::create(['verify_peer' => false, 'verify_host' => false]));
         $crawler = $client->request('GET', $url);
               
         //Mobile Friendly test
@@ -1059,11 +935,14 @@ try {
             curl_close($curl);
             $mobile = json_decode($resp, true);
             $mobile_friendly = $mobile['mobileFriendliness'];
-            if(empty($mobile_friendly))   {
-                $mobile_friendly = 'Error';
-            }     
-        }catch(Exception $e){}
+               
+        }catch(Exception $e){
+             Log::error($e);
+        }
 
+             if(empty($mobile_friendly))   {
+                $mobile_friendly = 'error';
+            } 
 
           //pagespeed test
         try{
@@ -1092,11 +971,11 @@ try {
                // $screenshot = $pagespeed['screenshot']['data'];
 
             $screenshot = str_replace('_','/',$pagespeed['lighthouseResult']['audits']['final-screenshot']['details']['data']);
-            $performance_score = $pagespeed['lighthouseResult']['categories']['performance']['score'];
-            $loadtime = $pagespeed['lighthouseResult']['audits']['speed-index']['displayValue'];
-            $fcp = $pagespeed['lighthouseResult']['audits']['first-contentful-paint']['displayValue'];
-            $lcp = $pagespeed['lighthouseResult']['audits']['largest-contentful-paint']['displayValue'];
-            $cls = $pagespeed['lighthouseResult']['audits']['cumulative-layout-shift']['displayValue'];
+            $performance_score = $pagespeed['lighthouseResult']['categories']['performance']['score'] ?? null;
+            $loadtime = $pagespeed['lighthouseResult']['audits']['speed-index']['displayValue'] ?? null;
+            $fcp = $pagespeed['lighthouseResult']['audits']['first-contentful-paint']['displayValue'] ?? null;
+            $lcp = $pagespeed['lighthouseResult']['audits']['largest-contentful-paint']['displayValue']  ?? null;
+            $cls = $pagespeed['lighthouseResult']['audits']['cumulative-layout-shift']['displayValue']  ?? null;
             $responsive_images = $pagespeed['lighthouseResult']['audits']['uses-responsive-images']['displayValue'] ?? null;
             $css_min = $pagespeed['lighthouseResult']['audits']['unminified-css']['displayValue'] ?? null;
             $css_min_score = $pagespeed['lighthouseResult']['audits']['unminified-css']['score'] ?? null; 
@@ -1440,6 +1319,8 @@ try {
             foreach ($headers as $header) {
                 if (strpos($header, "HTTP") !== false) {
                     $http[] = $header;
+                } else{
+                    $http[] = 0;
                 }
             }
         } catch (Exception $e) {
@@ -1485,7 +1366,11 @@ try {
         //Text-HTML ratio
         $size = strlen(implode(' ', array_unique(explode(' ', $contents))));
         $page_size = round(strlen($crawler->html()) / 1024, 4);
+        if($size != 0){
         $page_text_ratio = $page_words / $size * 100;
+        } else {
+            $page_text_ratio = 0;
+        }
         $page_words_size = round($page_words / 1024, 4);
         //URL Seo Result
         $url_len = strlen($url);
@@ -2056,7 +1941,7 @@ try {
                                 $seo_result_data->error_score = $error_score ?? 0;
                                 $seo_result_data->img_data = json_encode($img_data) ?? null;
                                 $seo_result_data->favicon = $favicon ?? '';
-                                $seo_result_data->mobile_friendly = $mobile_friendly;
+                                $seo_result_data->mobile_friendly = $mobile_friendly ?? null;
                                 $seo_result_data->ssl_certificate = $ssl_certificate;
                                 $seo_result_data->notice_score = $notice_score;
                                 $seo_result_data->image = $screenshot ?? '';
