@@ -524,8 +524,7 @@ use App\Http\Controllers\trafficController;
                   </div>
                   @else
       @php
-     
-   
+  
          $country_names = array();
               $country_traffic = array();
                   foreach(json_decode($traffic_details['countries']) as $key => $value) {
@@ -543,7 +542,11 @@ use App\Http\Controllers\trafficController;
   $sum = array_sum(array_map(function ($a) { return $a[1]; }, $country_array));
 
   foreach ($country_array as $info) {
+  if($sum > 0){
        $top_percent[] = round(($info[1]/$sum)*100);
+     } else{
+     $top_percent[] = 0;
+   }
   }      
 @endphp
 

@@ -204,7 +204,7 @@ if(!empty($seo_results)) {
                          //send analytics event
                              
                          gtag('event', 'click', {
-                                      'event_category': 'audit',
+                                      'event_category': 'analysis',
                                       'event_label': url
                                     });
 

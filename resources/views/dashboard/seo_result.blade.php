@@ -278,7 +278,7 @@
                           @elseif($seo_audit_details['urls_num'] == 'empty')
                           <label>Backlinks</label><span>0</span>
                           @else
-                          <label>Backlinks</label><span>{{$seo_audit_details['urls_num']}}</span>
+                          <label>Backlinks</label><span>{{number_format($seo_audit_details['urls_num'])}}</span>
                           @endif
                            
                         </div>
@@ -1174,9 +1174,7 @@ This is the only way to reduce high bounce rates, increasing your rankings in Go
                     @php
                         $http = json_decode($seo_audit_details['http']);
                     @endphp
-                    @foreach($http as $https)
-                        {{$https}} <br>
-                    @endforeach
+                     {{$http[0]}}
                 </div>
             </div>
             <hr>

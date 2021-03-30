@@ -939,7 +939,11 @@ class analysisController extends Controller
             $resp = curl_exec($curl);
             curl_close($curl);
             $mobile = json_decode($resp, true);
+            if($mobile) {
             $mobile_friendly = $mobile['mobileFriendliness'];
+            } else {
+                 $mobile_friendly = 'error';
+            }
                
         }catch(Exception $e){
              Log::error($e);
