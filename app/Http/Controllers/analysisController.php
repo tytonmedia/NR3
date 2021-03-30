@@ -236,7 +236,9 @@ class analysisController extends Controller
                             $duplicate_title[] = $val['fullUrl'];
                         }
                     }
-                    if($val['metaInfo']['canonicalLink']){
+                    $canon = $val['metaInfo']['canonicalLink'];
+
+                    if(!empty($canon)){
                             $link_canonical[] = $val['fullUrl'];
                             $canonical[] = $val['fullUrl'];
                     }
@@ -794,35 +796,13 @@ class analysisController extends Controller
 
         public function delete_audit_report($id){
 
-        Audit::where('id', $id)->delete();
-        AuditResults::where('audit_id', $id)->delete();
+        $auditid = AuditResults::where('id', $id)->pluck("audit_id");
+        AuditResults::where('id', $id)->delete();
+        Audit::where('id', $auditid)->delete();
         return $id;
 
-           }
-
-    public function download_audit_report($id){
-             
-                // replace default 'chrome' with 'chromium-browser'
-                   // $browserFactory = new BrowserFactory('C:\Programs\\Google\\Chrome\\Application\\chrome.exe');
-                 //   $browser = $browserFactory->createBrowser();
-
-        $audit_details = AuditResults::all()->where('id', $id)->toArray();
-        $audit_details = current($audit_details);
-         $white_label=WhiteLabel::where('user_id',auth()->user()->id)->first();
-        if(!empty($white_label)) {
-            $white_label = $white_label->image_path;
-        } else{
-            $white_label = 0;
         }
-       // $html = \View::make('dashboard/seo_result', compact('seo_audit_details'))->render();
-        $html = view('dashboard/audit_result', compact('audit_details', 'white_label'))->render();
-        
-       // Browsershot::html($html)->setNodeBinary('C:\wamp64\bin\nodejs\node.exe')->setNodeModulePath("C:\wamp64\bin\nodejs\node_modules")->setChromePath("C:\Programs\\Google\\Chrome\\Application\\chrome.exe")->setIncludePath('C:\wamp64\bin')->noSandbox()->pdf();
 
-         return 'done';
-
-
-           }
 
     public function email_audit_report(Request $request){
   

@@ -600,7 +600,7 @@ use App\Http\Controllers\trafficController;
                         responsive: true,
                         title: {
                           display: false,
-                          text: 'Traffic By Social'
+                          text: 'Traffic By Country'
                         }
                       }
                   });
