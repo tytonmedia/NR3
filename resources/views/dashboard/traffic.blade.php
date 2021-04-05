@@ -3,6 +3,42 @@
 @section('content')
 <div class="col-md-10 overview backlinks-container">
     <div class="inner">
+@if(empty($payment))
+      <div class="row">
+<div class="col-md-12">
+<div>
+<h2>Traffic Report Tool</h2>
+<p class="lead">See your competitors traffic from search engines, social media and referrals. With our traffic estimation tool, you can see how much traffic your competitors get and from where.</p>
+<div class="row">
+  <div class="col-md-6">
+<ul style="float:left;list-style-type: none;padding-left:5px;">
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> View Monthly Organic Visitors</li>
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> 6 Month History</li>
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> MoM Growth</li>
+</ul>
+<ul style="float:left;list-style-type: none; ">
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> Traffic from Social Media</li>
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> Traffic by Country</li>
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> Device Type</li>
+</ul>
+<div class="text-center" style="padding-top:25px;clear:both;">
+<h4>Sign Up to use the Traffic Report Tool:</h4>
+<br/>
+<a class="btn btn-success btn-lg" href="/subscription">SIGN UP</a>
+</div>
+</div>
+<div class="col-md-6">
+<iframe width="100%" height="300" src="https://www.youtube.com/embed/5XjAhewhjsE?modestbranding=0&showinfo=0&rel=0&fs=0&controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+</div>
+<div class="row" style="margin-top:25px;">
+<div class="col-md-12 text-center"><label style="color:#999;font-size:13px;">* Website must have over 5,000 monthly visitors to estimate traffic data.</label></div>
+
+</div>
+</div>
+</div>
+  </div>
+@else
        <div id="tool-desc" class="row">
 
         <div class="col-md-12">
@@ -11,6 +47,7 @@
     </div>
 
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <div class="row">
@@ -66,7 +103,7 @@
 
 </div>
 </div>
-
+@endif
      <!------------------------------------------Animation Script ProgressBarStart----------------------------------------------------->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
