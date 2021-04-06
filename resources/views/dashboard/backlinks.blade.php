@@ -221,6 +221,20 @@ if(!empty($backlink_results)) {
                                             $('#analyse').removeAttr('disabled');
                                              $('#analyse').text('CRAWL');
                                              $('.temp').hide();
+                                             }else if(data == 'empty'){
+                                                    Swal.fire({
+                              title: 'Sorry!',
+                              text: 'We could not find any backlinks pointing to your URL. Please try another URL.',
+                              icon: 'error',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            });
+                                                    
+   $('#analyse').removeAttr('disabled');
+                                             $('#analyse').text('CRAWL');
+                                             $("#backlink_audit").val('');
+                                              $('#loading').hide();
+                                                $('.table tr.temp').remove();
                                         }else if(data == 'duplicate'){
                                            // alert("That URL is already scanned. Check the table below.")
                                             Swal.fire({

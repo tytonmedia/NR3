@@ -101,16 +101,9 @@ class backlinkController extends Controller
             curl_close($curl);
 
             if (strpos($resp,'ERROR ')===0) {
-    				//error
-            	if (strpos($resp, 'NOTHING FOUND') === 0) {
-            		$response = 'There are no links pointing to this URL. Please try another URL.';
-                    return view("dashboard/no_results", compact('response'));
-            	} else{
-                    $response = $resp;
-                    return view("dashboard/no_results", compact('response'));
-                }
 
-            	
+            		return 'empty';
+
                 } else {
                 // no error
   				 $backlink_array = explode("\n", $resp);
@@ -243,7 +236,7 @@ class backlinkController extends Controller
 
             if (strpos($resp,'ERROR ')===0) {
     				//error
-            	dd($resp);
+                return 'empty';
             	
                 } else {
                 // no error

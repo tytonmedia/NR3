@@ -75,7 +75,7 @@ class rankingsController extends Controller
             }
 
              $competitor_array = array();
-            $semrush = "https://api.semrush.com/?type=domain_organic_organic&key=247c8d4143eff74adb96fb2f0b3f3d8a&display_limit=".$display_limit."&export_columns=Dn,Np,Or,Ot,Oc,Ad&domain=".$domain_name."&database=us";
+            $semrush = "https://api.semrush.com/?type=domain_organic_organic&key=e7eb30521b6724220a6ef7237fc70d08&display_limit=".$display_limit."&export_columns=Dn,Np,Or,Ot,Oc,Ad&domain=".$domain_name."&database=us";
 
             $curl = curl_init($semrush);
             curl_setopt($curl, CURLOPT_URL, $semrush);
@@ -91,7 +91,7 @@ class rankingsController extends Controller
 
             if (strpos($resp,'ERROR ')===0) {
 
-                return 'error';
+                return 'empty';
   
                 } else {
                 // no error
@@ -143,7 +143,7 @@ class rankingsController extends Controller
                 $display_limit=2;
             }
         try{
-            $semrush = "https://api.semrush.com/?type=url_organic&key=247c8d4143eff74adb96fb2f0b3f3d8a&display_limit=".$display_limit."&export_columns=Ph,Kd,Po,Nq,Cp,Co,Tr,Tc,Nr,Fk,Td&url=".$url."&database=us";
+            $semrush = "https://api.semrush.com/?type=url_organic&key=e7eb30521b6724220a6ef7237fc70d08&display_limit=".$display_limit."&export_columns=Ph,Kd,Po,Nq,Cp,Co,Tr,Tc,Nr,Fk,Td&url=".$url."&database=us";
 
             $curl = curl_init($semrush);
             curl_setopt($curl, CURLOPT_URL, $semrush);
@@ -157,9 +157,8 @@ class rankingsController extends Controller
             $resp = curl_exec($curl);
             curl_close($curl);
 
-
             if (strpos($resp,'ERROR ')===0) {
-               return 'error';
+               return 'empty';
                 } else {
                 // no error
                  $keyword_array = explode("\n", $resp);

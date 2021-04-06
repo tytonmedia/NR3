@@ -231,6 +231,19 @@ if(!empty($ranking_results)) {
                                               $('#loading').hide();
                                                 $('.table tr.temp').remove();
 
+                                        }else if(data == 'empty') {
+                                          $('#analyse').removeAttr('disabled');
+                                             $('#analyse').text('CRAWL');
+                                             $("#backlink_audit").val('');
+                                              $('#loading').hide();
+                                                $('.table tr.temp').remove();
+                                           Swal.fire({
+                              title: 'Sorry!',
+                              text: 'We could not find any organic rankings for that URL. Please try another URL.',
+                              icon: 'error',
+                              showConfirmButton: 'false',
+                              showCloseButton: 'true',
+                            });
                                         }else if(data == 'error') {
                                           $('#analyse').removeAttr('disabled');
                                              $('#analyse').text('CRAWL');
