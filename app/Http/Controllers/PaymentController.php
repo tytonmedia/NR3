@@ -18,7 +18,11 @@ class PaymentController extends Controller
         $id = $id;
         $date = strtotime("+7 day");
         $trial_end = date('M d, Y', $date);
-        return view('dashboard/payment',compact('id','trial_end'));
+        $next_billing = strtotime("+30 day");
+        $next_billing = date('M d', $next_billing);
+        $Payment=Payment::where('user_id',auth()->user()->id)->where('status',1)->first();
+     
+        return view('dashboard/payment',compact('id','status','next_billing'));
     }
   
     public function stripePost(Request $request,$id)
@@ -36,8 +40,11 @@ class PaymentController extends Controller
                     return redirect('/account')->with('message', 'You are already subscribed this plan.');
                 }else{
                     $plan_id = '1';
-                    $no_allowed_site = '300';
+                    $no_allowed_site = '100';
                     $no_allowed_audits = '25';
+                    $no_allowed_backlinks = '5';
+                    $no_allowed_rankings = '10';
+                    $no_allowed_traffic = '15';
                     $retrive= $stripe->subscriptions->retrieve(
                         $Payment->subscription_id,
                         []
@@ -60,12 +67,13 @@ class PaymentController extends Controller
                             'plan_id'           => $plan_id,
                             'no_allowed_analysis'   => $no_allowed_site,
                             'no_allowed_audits'   => $no_allowed_audits,
+                            'no_allowed_backlinks'   => $no_allowed_backlinks,
+                            'no_allowed_rankings'   => $no_allowed_rankings,
+                             'no_allowed_traffic'   => $no_allowed_traffic,
                             'currency'          => $charge->plan->currency,
                             'amount'            => $charge->plan->amount,
                             'interval'          => $charge->plan->interval,
                             'product_id'        => $charge->plan->product,
-                            'trial_start'       => $charge->trial_start,
-                            'trial_end'         => $charge->trial_end,
                             'current_period_start'  => $charge->current_period_start,
                             'current_period_end'    => $charge->current_period_end,
                             'status'  => 1
@@ -78,8 +86,11 @@ class PaymentController extends Controller
                     return redirect('/account')->with('message', 'You are already subscribed this plan.');
                 }else{
                     $plan_id = '2';
-                    $no_allowed_site = '500';
+                    $no_allowed_site = '999';
                     $no_allowed_audits = '100';
+                     $no_allowed_backlinks = '15';
+                    $no_allowed_rankings = '25';
+                    $no_allowed_traffic = '30';
                     $retrive= $stripe->subscriptions->retrieve(
                         $Payment->subscription_id,
                         []
@@ -101,12 +112,13 @@ class PaymentController extends Controller
                             'plan_id'           => $plan_id,
                             'no_allowed_analysis'   => $no_allowed_site,
                             'no_allowed_audits'   => $no_allowed_audits,
+                            'no_allowed_backlinks'   => $no_allowed_backlinks,
+                            'no_allowed_rankings'   => $no_allowed_rankings,
+                            'no_allowed_traffic'   => $no_allowed_traffic,
                             'currency'          => $charge->plan->currency,
                             'amount'            => $charge->plan->amount,
                             'interval'          => $charge->plan->interval,
                             'product_id'        => $charge->plan->product,
-                            'trial_start'       => $charge->trial_start,
-                            'trial_end'         => $charge->trial_end,
                             'current_period_start'  => $charge->current_period_start,
                             'current_period_end'    => $charge->current_period_end,
                             'status'  => 1
@@ -119,8 +131,11 @@ class PaymentController extends Controller
                     return redirect('/account')->with('message', 'You are already subscribed to this plan.');
                 }else{
                     $plan_id = '3';
-                    $no_allowed_site = '500';
+                    $no_allowed_site = '999';
                     $no_allowed_audits = '250';
+                    $no_allowed_backlinks = '25';
+                    $no_allowed_rankings = '25';
+                    $no_allowed_traffic = '50';
                     $retrive= $stripe->subscriptions->retrieve(
                         $Payment->subscription_id,
                         []
@@ -143,12 +158,13 @@ class PaymentController extends Controller
                             'plan_id'           => $plan_id,
                             'no_allowed_analysis'   => $no_allowed_site,
                             'no_allowed_audits'     => $no_allowed_audits,
+                            'no_allowed_backlinks'   => $no_allowed_backlinks,
+                            'no_allowed_rankings'   => $no_allowed_rankings,
+                            'no_allowed_traffic'   => $no_allowed_traffic,
                             'currency'          => $charge->plan->currency,
                             'amount'            => $charge->plan->amount,
                             'interval'          => $charge->plan->interval,
                             'product_id'        => $charge->plan->product,
-                            'trial_start'       => $charge->trial_start,
-                            'trial_end'         => $charge->trial_end,
                             'current_period_start'  => $charge->current_period_start,
                             'current_period_end'    => $charge->current_period_end,
                             'status'  => 1
@@ -169,15 +185,17 @@ class PaymentController extends Controller
 
                 $charge = $stripe->subscriptions->create([
                         "customer" => $customer->id,
-                        "trial_period_days" => 7,
                         'items' => [
                             ['price' => env('WEBMASTER_PRICE')],
                         ],
                     
                 ]);
                 $plan_id = '1';
-                $no_allowed_site = '300';
+                $no_allowed_site = '100';
                 $no_allowed_audits = '25';
+                $no_allowed_backlinks = '5';
+                $no_allowed_rankings = '10';
+                $no_allowed_traffic = '15';
             }else if($id == 2){
                 $customer = $stripe->customers->create([
                     "email"       => auth()->user()->email,
@@ -187,15 +205,17 @@ class PaymentController extends Controller
 
                 $charge = $stripe->subscriptions->create([
                         "customer" => $customer->id,
-                        "trial_period_days" => 7,
                         'items' => [
                             ['price' => env('BUSINESS_PRICE')],
                         ],
                     
                 ]);
                 $plan_id = '2';
-                $no_allowed_site = '500';
+                $no_allowed_site = '999';
                 $no_allowed_audits = '100';
+                $no_allowed_backlinks = '15';
+                $no_allowed_rankings = '25';
+                $no_allowed_traffic = '30';
             }else if($id == 3){
                 $customer = $stripe->customers->create([
                     "email"       => auth()->user()->email,
@@ -205,15 +225,17 @@ class PaymentController extends Controller
 
                 $charge = $stripe->subscriptions->create([
                         "customer" => $customer->id,
-                        "trial_period_days" => 7,
                         'items' => [
                             ['price' => env('AGENCY_PRICE')],
                         ],
                     
                 ]);
                 $plan_id = '3';
-                $no_allowed_site = '500';
+                $no_allowed_site = '999';
                 $no_allowed_audits = '250';
+                $no_allowed_backlinks = '100';
+                $no_allowed_rankings = '100';
+                $no_allowed_traffic = '50';
             }
             $create_user = new Payment;
             $create_user->user_id = auth()->user()->id;
@@ -221,12 +243,13 @@ class PaymentController extends Controller
             $create_user->plan_id = $plan_id;
             $create_user->no_allowed_analysis = $no_allowed_site;
             $create_user->no_allowed_audits = $no_allowed_audits;
+            $create_user->no_allowed_backlinks = $no_allowed_backlinks;
+            $create_user->no_allowed_rankings = $no_allowed_rankings;
+            $create_user->no_allowed_traffic = $no_allowed_traffic;
             $create_user->currency = $charge->plan->currency;
             $create_user->amount = $charge->plan->amount;
             $create_user->interval = $charge->plan->interval;
             $create_user->product_id = $charge->plan->product;
-            $create_user->trial_start = $charge->trial_start;
-            $create_user->trial_end = $charge->trial_end;
             $create_user->current_period_start = $charge->current_period_start;
             $create_user->current_period_end = $charge->current_period_end;
             $create_user->status = '1';

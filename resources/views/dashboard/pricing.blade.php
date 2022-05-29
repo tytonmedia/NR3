@@ -61,18 +61,18 @@
 <p>RWith the SEO Website Audit Tool, your website’s health will always be at 100%, allowing you to dominate the search engines.</p>
                 </div>
                 <div class="col-md-5">
-                    <img src="images/seo-analysis.png" style="width:100%">
+                    <img src="{{asset('images/seo-analysis.png)}}" style="width:100%">
                 </div>
             </div>
      <div class="row testimonials Audit-image-text" style="padding:25px;margin-top:50px;">
           <div class="col-md-6">
-            <img src="images/brandon.jpeg" style="float:left;margin-right:10px;" alt=""/>
+            <img src="{{asset('images/brandon.jpeg)}}" style="float:left;margin-right:10px;" alt=""/>
             <h4>Great SEO Tool</h4>
-            <p>I save a lot of time using this product. Weekly reports of my website audit in my inbox are a dream come true for any SEO agency or marketer!</p>
+            <p>I save a lot of time using this product. I can easily check the SEO health of my website and find all SEO issues to fix for maximum rankings.</p>
             <label>Brandon S.</label>
           </div>
            <div class="col-md-6">
-             <img src="images/megan.jpeg" style="float:left;margin-right:10px;" lt=""/>
+             <img src="{{asset('images/megan.jpeg)}}" style="float:left;margin-right:10px;" lt=""/>
             <h4>Great All Around Tool</h4>
             <p>Makes audit reporting much faster than it was before with other tools. I estimate I save 10-20 minutes per report with this tool.</p>
             <label>Megan R.</label>

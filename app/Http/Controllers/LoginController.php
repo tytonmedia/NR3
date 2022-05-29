@@ -7,6 +7,7 @@ use Auth;
 use Exception;
 use Illuminate\Http\Request;
 use Session;
+use Cookie;
 use Socialite;
 class LoginController extends Controller
 {
@@ -18,9 +19,12 @@ class LoginController extends Controller
     public function redirectToGoogle(Request $request)
     {
         
-        $intended = $request->request->get('page');
-        $url = $request->request->get('url');
+        $intended = $request->get('page');
+
+        $url = $request->get('url');    
+        
         $payment_page =  url()->previous();
+
         if ($payment_page) {
             Session::put('pay', $payment_page);
         }else{
@@ -29,20 +33,23 @@ class LoginController extends Controller
             }
             if($url){
                 Session::put('url', $url);
+                $request->session()->put('url', 'hello world');
+
             }
         } 
         return Socialite::driver('google')->redirect();
     }
 
-    public function handleGoogleCallback()
+    public function handleGoogleCallback(Request $request)
     {
         
         try {
             $redirect = Session::get('page_url');
-            $url = Session::get('url');
-           
+
+            $url = $request->get('url');
+
             $user = Socialite::driver('google')->user();
-           
+
             $finduser = User::where('google_id', $user->id)->first();
             
             if ($finduser){
@@ -54,12 +61,14 @@ class LoginController extends Controller
                 }else{
 
                     if($redirect != null && $url != null){
-                        return redirect($redirect.'?url='.$url);
+                        return redirect($redirect.'?url='.urlencode($url));
                     }
                     elseif ($redirect != null && $url == null) {
                         return redirect($redirect);
-                    }else{
-                        return redirect('/home');
+                    }elseif ($redirect == null && $url == null) {
+                        return redirect($redirect);
+                    } else {
+                        return redirect()->intended('/home');
                     }
                 }
             } else {
@@ -79,7 +88,7 @@ class LoginController extends Controller
                     } elseif ($redirect != null && $url == null) {
                         return redirect($redirect);
                     } else {
-                        return redirect('/home');
+                        return redirect()->intended('/home');
 
                     }
 

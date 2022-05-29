@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             $Payment = Payment::where('status',1)->get();
             $stripe = new \Stripe\StripeClient(
-                'sk_test_R5yp5YcSzHXQFP41vvKCSh9v'
+                env('STRIPE_SECRET_KEY')
             );
             $time = date('Y-m-d H:i:s');
             foreach($Payment as $val){

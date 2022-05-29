@@ -81,10 +81,12 @@
 
 <script src="https://js.stripe.com/v3/"></script>
 <div class="col-md-10 overview">
-	<div class="row" style="margin-top:50px;">
-	<div class="col-md-6">
+	<div class="row" style="margin-top:75px;">
+		<div class="col-md-1">
+		</div>
+	<div class="col-md-4">
 
-			<h1>Checkout <img src="../images/powered by stripe.png" alt="stripe" style="max-width:130px"/></h1>
+			<h1>Subscribe <img src="{{asset('images/powered by stripe.png')}}" alt="stripe" style="max-width:130px"/></h1>
 				<label for="card-element" class="label label-primary">
 					Credit or debit card
 				</label>
@@ -101,57 +103,85 @@
 					<div id="card-errors" role="alert"></div>
 				</div>
 				<div style="text-align:center;"><input type="checkbox" id="policy" name="policy" checked="checked"> <label for="policy" style="font-size:13px;padding-top:7px;color:#999">I have read and I agree to the <a target="_blank" href="https://www.ninjareports.com/terms-conditions/">Terms of Use</a>.</label></div>
-				<button class="btn btn-lg btn-warning" style="font-weight:bold;font-size:21px;">JOIN NOW &nbsp;<i class="fa fa-caret-right" aria-hidden="true"></i></button>
+				<button class="btn btn-lg btn-warning" style="font-weight:bold;font-size:21px;">GET ACCESS &nbsp;<i class="fa fa-caret-right" aria-hidden="true"></i></button>
 			</form>
 			
 	</div>
-	<div class="col-md-4" style="padding:50px 10px 10px 10px;">
+	<div class="col-md-4" style="padding:65px 15px 15px 15px;">
 		
 		<h3>Subscription Details</h3>
-		
-		<label>Free Trial Length</label>: <strong>7 Days</strong>
-	</br>
-		<label>After-Trial Price</label>:
-				@if($id == '1')
-					<strong>$29/month</strong>
+
+<label>Next Billing Date</label>: <strong>{{$next_billing}}</strong>
+</br>
+<label>Package</label>:
+		@if($id == '1')
+					<strong>Webmaster</strong>
 				@endif
 				@if($id == '2')
-					<strong>$49/month</strong>
+					<strong>Business</strong>
 				@endif
 				@if($id == '3')
-					<strong>$99/month</strong>
+					<strong>Agency</strong>
 				@endif
-		</strong>
-		</br>
-		<label>First Billing Date</label>: <strong>{{$trial_end}}</strong>
-		</br>
-		<div style="border-top:1px solid #ddd;padding:5px;background:#eee">
-		<label style="font-size:19px;margin:0">Today's Charge</label>: <strong style="font-size:19px;color:green">$0.00</strong>
+				<br/>
+<label>Savings</label>: <strong style="color:#ff0000">
+		@if($id == '1')
+					35%
+				@endif
+				@if($id == '2')
+					40%
+				@endif
+				@if($id == '3')
+					40%
+				@endif
+</strong>
+<br/>
+	<div style="border-top:1px solid #ddd;padding:5px;background:#f2f2f2">
+		<label style="margin:0">Price</label>:
+			@if($id == '1')
+					<strong style="font-size:18px;color:green"><strike style="color:#999">$29</strike> $19</strong>
+				@endif
+				@if($id == '2')
+					<strong style="font-size:18px;color:green"><strike style="color:#999">$49</strike> $29</strong>
+				@endif
+				@if($id == '3')
+					<strong style="font-size:18px;color:green"><strike style="color:#999">$99</strike> $59</strong>
+				@endif
 	</div>
-		<p style="font-size:13px;color:#666;padding:3px;margin-top:5px;"><i class="fa fa-info-circle" aria-hidden="true"></i> You can cancel anytime in the <a href="/account">My Account</a> area.</p>
+
+
+
 	</div>
 </div>
 
 <div class="row text-center" style="padding:30px 0">
-	<div class="col-md-12">
+	<div class="col-md-1">
+	</div>
+	<div class="col-md-8">
 		<strong style="display:block;text-align:center;font-size:12px;color:#ccc">FEATURED ON</strong>
-	<img src="https://www.ninjareports.com/wp-content/uploads/2020/07/as-seen-on.png" alt="seen on"/>
+	<img src="https://www.ninjareports.com/wp-content/uploads/2020/07/as-seen-on.png" alt="seen on" style="width:100%"/>
 	<hr/>
 </div>
+<div class="col-md-1">
+	</div>
 </div>
 
 	     <div class="row testimonials Audit-image-text" style="padding:25px;margin-top:50px;">
-          <div class="col-md-6">
-            <img src="../images/brandon.jpeg" style="float:left;margin-right:10px;" alt=""/>
+	     	<div class="col-md-1">
+	     	</div>
+          <div class="col-md-4">
+            <img src="{{asset('images/brandon.jpeg')}}" style="float:left;margin-right:10px;" alt=""/>
             <h4>Great SEO Tool</h4>
-            <p>I save a lot of time using this product. Weekly reports of my website audit in my inbox are a dream come true for any SEO agency or marketer!</p>
+            <p>I save a lot of time using this product. I can easily check the SEO health of my website and find all SEO issues to fix for maximum rankings.</p>
             <label style="font-weight:bold;text-align:right;display:block;">Brandon S.</label>
           </div>
-           <div class="col-md-6">
-             <img src="../images/megan.jpeg" style="float:left;margin-right:10px;" lt=""/>
+           <div class="col-md-4">
+             <img src="{{asset('images/megan.jpeg')}}" style="float:left;margin-right:10px;" lt=""/>
             <h4>Great All Around Tool</h4>
-            <p>Makes audit reporting much faster than it was before with other tools. I estimate I save 10-20 minutes per report with this tool.</p>
+            <p>Makes audit reporting much faster than it was before with other tools. Really love this software.</p>
             <label style="font-weight:bold;text-align:right;display:block;">Megan R.</label>
+          </div>
+          <div class="col-md-2">
           </div>
     </div>
 
