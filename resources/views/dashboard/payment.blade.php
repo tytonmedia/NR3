@@ -139,13 +139,13 @@
 	<div style="border-top:1px solid #ddd;padding:5px;background:#f2f2f2">
 		<label style="margin:0">Price</label>:
 			@if($id == '1')
-					<strong style="font-size:18px;color:green"><strike style="color:#999">$29</strike> $19</strong>
+					<strong style="font-size:18px;color:green"><strike style="color:#999">$29</strike> $10</strong>
 				@endif
 				@if($id == '2')
-					<strong style="font-size:18px;color:green"><strike style="color:#999">$49</strike> $29</strong>
+					<strong style="font-size:18px;color:green"><strike style="color:#999">$49</strike> $20</strong>
 				@endif
 				@if($id == '3')
-					<strong style="font-size:18px;color:green"><strike style="color:#999">$99</strike> $59</strong>
+					<strong style="font-size:18px;color:green"><strike style="color:#999">$99</strike> $30</strong>
 				@endif
 	</div>
 
