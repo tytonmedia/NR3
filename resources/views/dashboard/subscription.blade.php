@@ -15,7 +15,7 @@
                     <h3>Webmaster</h3>
                     <p>Affordable Package for webmasters or small businesses wanting to enhance their SEO.</p>
                     <strike style="color:#ff0000">$29</strike>               
-                    <h5><strong>$19</strong></h5>
+                    <h5><strong>$10</strong></h5>
                     <h6>per month</h6>
                          @if($status == 1 && $product->id == env('WEBMASTER_ID'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-lg" style="pointer-events: none;">CURRENT PLAN</a></h4>
@@ -32,7 +32,7 @@
                     <h3>Business</h3>
                     <p>Our most popular package, perfect for businesses with multiple sites or clients looking to grow their traffic.</p>
                     <strike style="color:#ff0000">$49</strike>
-                    <h5><strong>$29</strong></h5>
+                    <h5><strong>$20</strong></h5>
                     <h6>per month</h6>
                         @if($status == 1 && $product->id == env('BUSINESS_ID'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-lg" style="pointer-events: none;">CURRENT PLAN</a></h4>
@@ -50,7 +50,7 @@
                     <p>For agencies looking to grow their client’s traffic and keep on-page SEO health 100%.
 </p>
 <strike style="color:#ff0000">$99</strike>
-                    <h5><strong>$59</strong></h5>
+                    <h5><strong>$30</strong></h5>
                     <h6>per month</h6>
                     @if($status == 1 && $product->id == env('AGENCY_ID'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-lg" style="pointer-events: none;">CURRENT PLAN</a></h4>
@@ -128,9 +128,9 @@
     <tr style="color:green;font-weight:bold;">
 <td>Price</td>
 <td>Free</td>
-<td><strike style="color:#ff0000">$29</strike> $19/mo</td>
-<td><strike style="color:#ff0000">$49</strike> $29/mo</td>
-<td><strike style="color:#ff0000">$99</strike> $59/mo</td>
+<td><strike style="color:#ff0000">$29</strike> $10/mo</td>
+<td><strike style="color:#ff0000">$49</strike> $20/mo</td>
+<td><strike style="color:#ff0000">$99</strike> $30/mo</td>
 </tr>
 <tr>
 <td></td>
