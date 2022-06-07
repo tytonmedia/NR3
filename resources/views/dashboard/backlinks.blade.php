@@ -3,6 +3,37 @@
 @section('content')
 <div class="col-md-10 overview backlinks-container">
     <div class="inner">
+             @if(empty($payment))
+      <div class="row">
+<div class="col-md-12">
+<div>
+<h2>Backlink Analysis Tool</h2>
+<p class="lead">Backlinks are the foundation of SEO. This tool allows you to view all the backlinks pointing to a domain or URL and see detailed information about each backlink that is vital to your SEO.</p>
+<div class="row">
+  <div class="col-md-6">
+<ul style="float:left;list-style-type: none;padding-left:5px;">
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> List of backlinks</li>
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> See potential toxic backlinks</li>
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> View quality of each backlink</li>
+</ul>
+<ul style="float:left;list-style-type: none; ">
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> Overall toxicity score</li>
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> Domain Authority</li>
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> Vital backlink analysis</li>
+</ul>
+<div class="text-center" style="padding-top:25px;clear:both;">
+<h4>Sign up to use the Backlink Analysis Tool:</h4>
+<br/>
+<a class="btn btn-success btn-lg" href="/subscription">SIGN UP</a>
+</div>
+</div>
+<div class="col-md-6">
+
+</div>
+
+</div>
+  </div>
+@else
        <div id="tool-desc" class="row">
 
         <div class="col-md-12">
@@ -70,7 +101,7 @@
 
 </div>
 </div>
-
+@endif
      <!------------------------------------------Animation Script ProgressBarStart----------------------------------------------------->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>

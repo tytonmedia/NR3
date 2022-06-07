@@ -50,7 +50,7 @@ ul.serp-features-list li {padding:3px 0px;}
 user-select: none; /* Standard */
     left: 43%;
 }
-
+#protocol{    padding: 3px 6px 3px 5px;}
 li.competitor-info{padding:5px 0;cursor:pointer;}
 .competitor-info::marker {
 display:none;

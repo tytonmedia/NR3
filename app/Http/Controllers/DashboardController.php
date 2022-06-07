@@ -86,7 +86,10 @@ public function seo_backlinks(){
                     $payment = true;
                 }
             $backlink_results = BacklinkResults::select('id','backlinks_num','domains_num','site_url','updated_at')->where('user_id',auth()->user()->id)->get()->toArray();
-        }
+        } else {
+            $backlink_results = null;
+            $payment = false;
+          }
          
         return view('dashboard/backlinks',compact('backlink_results','payment'));
 
@@ -101,7 +104,10 @@ public function seo_backlinks(){
                     $payment = true;
                 }
             $ranking_results = KeywordResults::select('id','site_url','keywords','updated_at')->where('user_id',auth()->user()->id)->get()->toArray();
-        }
+        } else {
+            $ranking_results = null;
+            $payment = false;
+          }
         return view('dashboard/rankings',compact('ranking_results','payment'));
     }
     public function seo_analysis(){
@@ -188,6 +194,7 @@ public function seo_backlinks(){
         }
     } else {
         $status = 0;
+        $product = 'N/A';
     }
         return view('dashboard/subscription',compact('product','status'));
     }

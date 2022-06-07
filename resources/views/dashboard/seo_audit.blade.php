@@ -4,6 +4,42 @@
 
 <div class="col-md-10 overview audit-container">
      <div class="inner">
+       @if(empty($payment))
+      <div class="row">
+<div class="col-md-12">
+<div>
+<h2>Site Audit Tool</h2>
+<p class="lead">This tool uses the power of our 35+ point SEO report on your entire website. Scan your website to find SEO errors that may be causing bad rankings in search engines.</p>
+<div class="row">
+  <div class="col-md-6">
+<ul style="float:left;list-style-type: none;padding-left:35px;margin-top:15px;">
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> 35+ Point SEO Scan</li>
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> Scan Entire Website</li>
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> Find SEO Errors</li>
+</ul>
+<ul style="float:left;list-style-type: none; margin-top:15px;">
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> Web Core Vitals</li>
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> Performance Audit</li>
+<li><i class="fa fa-check" aria-hidden="true" style="color:green"></i> Deep SEO Scan</li>
+</ul>
+<div class="text-center" style="padding-top:25px;clear:both;">
+<h4>Sign up to use the Website SEO Audit Tool:</h4>
+<br/>
+<a class="btn btn-success btn-lg" href="/subscription">SIGN UP</a>
+</div>
+</div>
+<div class="col-md-6">
+<iframe width="560" height="300" src="https://www.youtube.com/embed/rxIzG_QzUiU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+<div class="row" style="margin-top:25px;">
+<div class="col-md-12 text-center"><label style="color:#999;font-size:13px;">* Website must have over 5,000 monthly visitors to estimate traffic data.</label></div>
+
+</div>
+</div>
+</div>
+  </div>
+@else
+
        <div id="tool-desc" class="row">
 
         <div class="col-md-12">
@@ -66,6 +102,7 @@
 
 </div>
 </div>
+@endif
      <!------------------------------------------Animation Script ProgressBarStart----------------------------------------------------->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>

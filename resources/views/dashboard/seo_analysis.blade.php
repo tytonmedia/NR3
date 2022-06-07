@@ -6,14 +6,14 @@
         <div id="tool-desc" class="row">
         <div class="col-md-12">
         <h3>Technical SEO Report</h3>
-        <p>Enter your domain or URL and Ninja Reports will scan the page for over 100+ SEO factors. Analyze your URL to see how you can get better rankings in search engines. The analysis can take a few minutes to scan your page for all of the SEO factors.</p>
+        <p>Enter your domain or URL and Ninja Reports will scan the page for over 35+ SEO factors. Analyze your URL to see how you can get better rankings in search engines. The analysis can take a few minutes to scan your page for all of the SEO factors.</p>
         @if( !auth()->check())
         <div class="try-it-free alert alert-success">
           <div class="row">
             <div class="col-md-12">
               <img src="{{asset('images/arrow down green.png')}}" alt="arrow"/>
       <h4>GET A FREE SEO ANALYSIS!</h4>
-         <p>Try this tool for <b>FREE</b> with your <a href="/login">Google account</a>! Check your website for the latest SEO errors and see how you can get more traffic from search engines. Enter your URL below to get started.
+         <p>Try this tool for <b>FREE</b> with your <a href="/login">Google account</a>! Check your website for the latest SEO errors and see how you can get more traffic from search engines. Sign in using your Google account and then enter a URL to run a free SEO analysis (limit 1 per day).
 </p>
 </div>
 
@@ -29,7 +29,7 @@
     <div class="col-md-12">
         <div class="row">
 
-        <div class="col-md-6" style="padding-left:0">
+        <div class="col-md-8" style="padding-left:0">
                 <form id='analyse_form'>
         <div class="row Analyze">
             <div class="col-md-8" style="padding-left:0">
@@ -37,7 +37,7 @@
                       <div class="col">
                <select class="form-control" id="protocol">
                 <option value="http">http</option>
-                <option value="https">https</option>
+                <option value="https" selected="selected">https</option>
                </select>
              </div>
                  <div class="col-9">
@@ -46,7 +46,7 @@
             </div>
           </div>
             <div class="col-md-4">
-                <button class="btn" id='analyse'>CRAWL</button><img src="{{asset('images/762.gif')}}" alt="loading" id="loading" style="display:none;"/>
+                <button class="btn" id='analyse'><i class="fa fa-search"></i> CRAWL</button><img src="{{asset('images/762.gif')}}" alt="loading" id="loading" style="display:none;"/>
             </div>
         </div>
     </form>
