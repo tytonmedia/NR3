@@ -6,7 +6,7 @@
         <div id="tool-desc" class="row">
         <div class="col-md-12">
         <h3>Technical SEO Report</h3>
-        <p>Enter your URL into the toolbar including https:// or http:// and Ninja Reports will scan the page for over 100+ SEO factors. Analyze your URL to see how you can get better rankings in search engines. The analysis can take a few minutes to scan your page for all of the SEO factors.</p>
+        <p>Enter your domain or URL and Ninja Reports will scan the page for over 100+ SEO factors. Analyze your URL to see how you can get better rankings in search engines. The analysis can take a few minutes to scan your page for all of the SEO factors.</p>
         @if( !auth()->check())
         <div class="try-it-free alert alert-success">
           <div class="row">
@@ -33,8 +33,18 @@
                 <form id='analyse_form'>
         <div class="row Analyze">
             <div class="col-md-8" style="padding-left:0">
-                <input type="text" id='analyze' class="form-control" value="{{$_GET['url'] ?? ''}}"  placeholder="Enter URL">
+                <div class="form-row">
+                      <div class="col">
+               <select class="form-control" id="protocol">
+                <option value="http">http</option>
+                <option value="https">https</option>
+               </select>
+             </div>
+                 <div class="col-9">
+                <input type="text" id='analyze' class="form-control" value="{{$_GET['url'] ?? ''}}"  placeholder="Enter Domain or URL">
+              </div>
             </div>
+          </div>
             <div class="col-md-4">
                 <button class="btn" id='analyse'>CRAWL</button><img src="{{asset('images/762.gif')}}" alt="loading" id="loading" style="display:none;"/>
             </div>
@@ -95,8 +105,16 @@
         <script>
             $(document).ready(function($) {
 
+// remove https:// or http:// from the url
+$( "#analyze" ).blur(function() {
+  $(this).val($(this).val().replace("https://",""));
+  $(this).val($(this).val().replace("http://",""));
+});
+
  $("#analyse_form").on("submit", function(e) {
     e.preventDefault();
+      $( "#analyze" ).val().replace("https://","");
+      $( "#analyze" ).val().replace("http://","");
       $('#analyse').trigger('click');
   });
                 
@@ -165,7 +183,11 @@ if(!empty($seo_results)) {
                 });
                 $("#analyse").click(function(e){
                     e . preventDefault();
-                    var url =  $("#analyze").val();
+                    var domain =  $("#analyze").val();
+                    var protocol = $("#protocol").val();
+
+                    var url = protocol + '://' + domain;
+                  
 
                      if(isUrl(url)) {
                     if(loggedIn){
@@ -282,8 +304,11 @@ if(!empty($seo_results)) {
                                         passed_score = data.passed_score;
                                         error_score = data.error_score;
                                         updated_at = data.updated_at;
+
+                                        //redirect after complete
+                                        window.location.href = "/analysis/" + id;
                                          
-                                        var rowCount = table.rows().count();
+                                       /* var rowCount = table.rows().count();
                                          $('.table').append("<tr><td>" + rowCount + 1 + "</td><td>" + url + "</td><td>Crawled</td><td>"+ passed_score +"%</td><td>"+ error_score + "</td><td>"+ updated_at +"</td><td><a class='btn btn-primary btn-sm' style='margin-right:5px;' href='analysis/"+id+"'>View</a><a class='btn btn-success btn-sm' target='_blank'  style='display:none' href=''>PDF</a><a class='btn btn-info btn-sm'  style='display:none' href=''><i class='fa fa-refresh' aria-hidden='true'></i></a><a class='btn btn-warning btn-sm delete-report' data-id='"+id+"' href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></td></tr>");
                                           
                                       //  $('.analysis_section').show();
@@ -291,6 +316,7 @@ if(!empty($seo_results)) {
                                         $('#analyse').removeAttr('disabled');
                                         $('#analyse').text('CRAWL');
                                         $('#analyze').val('');
+                                        */
 
                                         
                                     }
@@ -312,7 +338,7 @@ if(!empty($seo_results)) {
                 }
 
                 function isUrl(s) {
-                    var pattern = new RegExp('^https?:\\/\\/'+ // protocol
+                    var pattern = new RegExp(
                                             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
                                             '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
                                             '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path

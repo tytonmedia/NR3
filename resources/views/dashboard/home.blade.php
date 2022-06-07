@@ -10,37 +10,27 @@
         </div>
     </div>
     <div class="row Welcome-two-cols">
-        <div class="col-md-6 text-center Quick-col">
-            <h3>QUICK ANALYSIS</h3>
-            <p>Enter your URL to start a quick SEO analysis of your page. Ninja Reports scans your website for 100+ SEO factors and tells you how to fix them.</p>
-                <div class="row">
-                    <div class="col-md-9">
-                        <input type="text" class="form-control url" placeholder="Enter URL">
-                    </div>
-                    <div class="col-md-2">
-                        <button class="btn btn-primary" class="analyze" id='analsis'>ANALYZE</button>
-                    </div>
-                </div>
-        </div>
-        <div class="col-md-6 plan-col">
+         <div class="col-md-6 Quick-col">
             <h6><span>Plan: </span><span>{{ $productname ?? '' }}</span></h6>
             <h6><span>Created: </span><span>{{ $created ?? '' }}</span></h6>
             <a href="{{route('subscription')}}" class="btn btn-warning btn-sm">Upgrade</a>
             <a href="https://ninjareports.zendesk.com/hc/en-us/requests/new" target="_blank" class="btn btn-secondary btn-sm">Support</a>
         </div>
-    </div>
-
-        <div class="row Welcome-two-cols ">
-        <div class="col-md-6 guide-box">
-            <h5>How to Guides:</h5>
+        <div class="col-md-6 text-center guide-box">
+                <h5>How to Guides:</h5>
             <p></p>
-              <ul>
+              <ul style="list-style-type: none">
                 <li><a target="_blank" href="https://ninjareports.zendesk.com/hc/en-us/articles/360059931273">How to Run an Analysis </a></li>
                 <li><a target="_blank" href="https://ninjareports.zendesk.com/hc/en-us/articles/360058188953">How to Run an Audit</a></li>
                 <li><a target="_blank" href="https://www.ninjareports.com/on-page-seo-guide/">How to Fix SEO Issues</a></li>
               </ul>
+      
         </div>
-        <div class="col-md-6 guide-box">
+       
+    </div>
+
+        <div class="row">
+        <div class="col-md-12 ">
              <h5>New Features:</h5>
             <p></p>
               <ol>

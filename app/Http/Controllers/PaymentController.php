@@ -21,6 +21,7 @@ class PaymentController extends Controller
         $next_billing = strtotime("+30 day");
         $next_billing = date('M d', $next_billing);
         $Payment=Payment::where('user_id',auth()->user()->id)->where('status',1)->first();
+        $status = null;
      
         return view('dashboard/payment',compact('id','status','next_billing'));
     }

@@ -22,7 +22,7 @@ class DashboardController extends Controller
     public function home(){
         if(!empty(auth()->user()->id)) {
         $Payment=Payment::where('user_id',auth()->user()->id)->where('status',1)->first();
-        if($Payment['product_id']){
+        if(isset($Payment['product_id'])){
             $stripe = new \Stripe\StripeClient(
                 env('STRIPE_SECRET_KEY')
             );
@@ -37,7 +37,7 @@ class DashboardController extends Controller
             $created = 'N/A';
         }
 } else {
-     $productname = 'Guest';
+     $productname = 'Free';
          $created = 'N/A';
 }
          return view('dashboard/home',compact('productname','created'));
@@ -68,9 +68,13 @@ class DashboardController extends Controller
                     $payment = true;
                 }
             $audit_results = AuditResults::select('id','site_url','updated_at')->where('user_id',auth()->user()->id)->get()->toArray();
-        }
-         
+        } else {
+            $audit_results = null;
+             $payment = false;
+         }
+
         return view('dashboard/seo_audit',compact('audit_results','payment'));
+        
 
     }
 public function seo_backlinks(){
@@ -110,9 +114,12 @@ public function seo_backlinks(){
                     $payment = true;
                 }
             $seo_results = SeoResult::select('id','passed_score','error_score','url','updated_at')->where('user_id',auth()->user()->id)->get();
-        }
-         
+        } else {
+            $seo_results = null;
+            $payment = false;
+         }
         return view('dashboard/seo_analysis',compact('seo_results','payment'));
+        
     }
         public function seo_traffic(){
     
@@ -124,9 +131,12 @@ public function seo_backlinks(){
                     $payment = true;
                 }
             $traffic_results = TrafficResults::select('id','domain','traffic','updated_at')->where('user_id',auth()->user()->id)->get();
-        }
-         
+        } else {
+            $traffic_results = null;
+            $payment = false;
+          }
         return view('dashboard/traffic',compact('traffic_results','payment'));
+       
     }
     public function account(){
         $Payment=Payment::where('user_id',auth()->user()->id)->where('status',1)->first();
@@ -162,7 +172,7 @@ public function seo_backlinks(){
     public function subscription(){
         if(!empty(auth()->user()->id)) {
         $Payment=Payment::where('user_id',auth()->user()->id)->where('status',1)->first();
-        if($Payment['product_id']){
+        if(isset($Payment['product_id'])){
             $stripe = new \Stripe\StripeClient(
                 env('STRIPE_SECRET_KEY')
             );
