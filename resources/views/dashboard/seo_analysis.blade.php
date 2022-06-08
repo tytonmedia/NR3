@@ -21,7 +21,7 @@
       </div>
       @endif
         <div id="error-box" class="alert alert-error" style="display:none;">
-            Whoops, we could not run an analysis on that URL. Please try again.
+            Whoops, we could not run an analysis on that URL. There could be a redirection issue or malformed URL. Please try again.
         </div>
     </div>
 </div>
@@ -46,7 +46,7 @@
             </div>
           </div>
             <div class="col-md-4">
-                <button class="btn" id='analyse'><i class="fa fa-search"></i> CRAWL</button><img src="{{asset('images/762.gif')}}" alt="loading" id="loading" style="display:none;"/>
+                <button class="btn" id='analyse'><i class="fa fa-search"></i> CRAWL</button>
             </div>
         </div>
     </form>
@@ -212,7 +212,7 @@ if(!empty($seo_results)) {
                 } else {
                      Swal.fire({
                               title: 'Error!',
-                              text: 'The URL you entered is not valid. Make sure to add http:// or https:// and www or non-www in your URL. EX: https://www.ninjareports.com.',
+                              text: 'The URL you entered is not valid. Please enter a domain or URL and choose http or https.',
                               icon: 'error',
                               showConfirmButton: 'false',
                               showCloseButton: 'true',
@@ -244,15 +244,15 @@ if(!empty($seo_results)) {
                                             var percent = Math.round((e.loaded / e.total) * 100)-60;
                                             var datenow = new Date();
                                             //console.log(percent);
+                                            $('.ajax-loader').css("display", "block");
                                             $('#error-box').hide();
-                                            $('#loading').show();
-                                           $('#waiting').show();
+                                      
                                              $('#analyse').attr('disabled','disabled');
                                              $('#analyse').text('CRAWLING');
                                              if(rowcount == 0){
                                               $('#empty').fadeOut(1000);
                                              }
-                                             $('.table').append("<tr class='temp'><td colspan='7' class='text-center'><span class='loading-label'>Loading...</span></td></tr>");
+                                          //   $('.table').append("<tr class='temp'><td colspan='7' class='text-center'><span class='loading-label'>Loading...</span></td></tr>");
                                              count = 0;
                                              wordsArray = ["Finding Backlinks...", "Checking Technical SEO...", "Gathering Keywords...", "Checking Mobile Responsiveness","Scanning Core Web Vitals..."];
                                             setInterval(function () {
@@ -273,12 +273,13 @@ if(!empty($seo_results)) {
                                     
                                     //console.log(data);
                                     if(data == 'notsuccessful' || data == 'Expired' || data == 'exceeded' || data == 'upgrade' ){
-                                        $('#waiting').hide();
+                                     
                                         $('#upgradeModel').show();
-                                        $('.table tr.temp').remove();
+                                    
                                         $('#analyse').removeAttr('disabled');
                                         $('#analyse').text('CRAWL');
                                         $('#loading').hide();
+                                        $('.ajax-loader').css("display", "none");
                                     }else if(data == 'duplicate'){
                                            // alert("That URL is already scanned. Check the table below.")
                                             Swal.fire({
@@ -293,6 +294,7 @@ if(!empty($seo_results)) {
                                              $('#analyse').text('CRAWL');
                                              $("#backlink_audit").val('');
                                               $('#loading').hide();
+                                              $('.ajax-loader').css("display", "none");
                                                 $('.table tr.temp').remove();
                                         } else {
                                         $('#waiting').hide();
@@ -328,6 +330,7 @@ if(!empty($seo_results)) {
                                 },
                                 error: function (request, status, error) {
                                 $('#loading').hide();
+                                $('.ajax-loader').css("display", "none");
                                 $('#analyse').removeAttr('disabled');
                                 $('#error-box').show();
                                 alert(error);

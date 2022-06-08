@@ -46,4 +46,8 @@
 </script>
 </head>
 <body>
+	<div class="ajax-loader" style="display:none;">
+  <img src="{{asset('images/spinner.gif')}}" class="img-responsive" />
+  <label class="loading-label"></label>
+</div>
 	<section class="index-1">

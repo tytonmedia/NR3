@@ -50,6 +50,24 @@ ul.serp-features-list li {padding:3px 0px;}
 user-select: none; /* Standard */
     left: 43%;
 }
+.ajax-loader {
+  background-color: rgba(0,0,0,0.7);
+  position: absolute;
+  z-index: 9999999999999 !important;
+  width: 100%;
+  height:100%;
+}
+
+.ajax-loader img {
+  position: relative;
+  top:50%;
+  left:50%;
+}
+.loading-label {    position: relative;
+    top: 64%;
+    left: 39%;
+    color: #fff;
+    font-size: 24px;}
 #protocol{    padding: 3px 6px 3px 5px;}
 li.competitor-info{padding:5px 0;cursor:pointer;}
 .competitor-info::marker {
