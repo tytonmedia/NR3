@@ -140,8 +140,10 @@ if(!empty($seo_results)) {
 
                 var loggedIn = {{ auth()->check() ? 'true' : 'false' }};
                 var analyze_url =  $("#analyze").val();
+                var protocol = $("#protocol").val();
+                var fullurl = protocol + '://' + analyze_url;
                     if(analyze_url && loggedIn){
-                        if(isUrl(analyze_url) != false){
+                        if(isUrl(fullurl) != false){
                          //   $(".progress-bar1").css("animation-play-state", "running");
                             analyzeURL();
                         }else{
@@ -221,8 +223,10 @@ if(!empty($seo_results)) {
 
                 function analyzeURL(){
                     var url =  $("#analyze").val();
+                    var protocol = $("#protocol").val();
+                    var fullurl = protocol + '://' + url;
                     if(url.length != 0){
-                    if(isUrl(url) != false){
+                    if(isUrl(fullurl) != false){
                          //send analytics event
                              
                          gtag('event', 'click', {
@@ -264,7 +268,7 @@ if(!empty($seo_results)) {
                                 
                                 type:'POST',
                                 url:'/seo',
-                                data:{url:url},
+                                data:{url:fullurl},
                                 success:function(data){
                                     
                                     //console.log(data);
@@ -339,7 +343,7 @@ if(!empty($seo_results)) {
                 }
 
                 function isUrl(s) {
-                    var pattern = new RegExp(
+                    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
                                             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
                                             '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
                                             '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path

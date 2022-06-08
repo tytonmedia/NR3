@@ -27,7 +27,7 @@ class analysisController extends Controller
     {
         ini_set("allow_url_fopen", 1);
         $url = $request->input('url');
-         $ch = curl_init();
+        $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, TRUE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
@@ -1028,7 +1028,7 @@ class analysisController extends Controller
         if($Payment != NULL) {
             // if is a paid user, show the backlink data
         try{
-            $semrush_backlinks = "https://api.semrush.com/analytics/v1/?key=e7eb30521b6724220a6ef7237fc70d08&type=backlinks&target=".$url."&target_type=url&export_columns=source_url,anchor,external_num,internal_num&display_limit=3";
+            $semrush_backlinks = "https://api.semrush.com/analytics/v1/?key=17442c3998e3dbdf6a3a97e9fe7f9fdc&type=backlinks&target=".$url."&target_type=url&export_columns=source_url,anchor,external_num,internal_num&display_limit=3";
 
             $curl = curl_init($semrush_backlinks);
             curl_setopt($curl, CURLOPT_URL, $semrush_backlinks);
@@ -1065,7 +1065,7 @@ class analysisController extends Controller
         if($Payment != NULL) {
             // if is a paid user, show the organic keywords
         try{
-            $semrush_keywords = "https://api.semrush.com/?key=e7eb30521b6724220a6ef7237fc70d08&type=url_organic&database=us&url=".$url."&display_limit=5&export_columns=Ph,Po,Nq,Co,Kd,Tg";
+            $semrush_keywords = "https://api.semrush.com/?key=17442c3998e3dbdf6a3a97e9fe7f9fdc&type=url_organic&database=us&url=".$url."&display_limit=5&export_columns=Ph,Po,Nq,Co,Kd,Tg";
 
             $curl = curl_init($semrush_keywords);
             curl_setopt($curl, CURLOPT_URL, $semrush_keywords);
