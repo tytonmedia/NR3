@@ -17,7 +17,7 @@
                 <div class="col-md-4 text-center Webmaster-col">
                     <h6></h6>
                     <h3>Webmaster</h3>
-                    <p>Affordable Package for webmasters or small businesses wanting to enhance their SEO.
+                    <p>Affordable package for webmasters or small businesses wanting to enhance their SEO.
 </p>
                     <h5><strong>$29</strong></h5>
                     <h6>per month</h6>

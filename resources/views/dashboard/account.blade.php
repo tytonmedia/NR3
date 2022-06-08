@@ -72,7 +72,9 @@
               <ul class="change">
            
             <li><a class="btn btn-success upgrade" href="{{route('subscription')}}">Upgrade Plan</a></li>
+            @if($status == 1)
             <li><a class="btn btn-warning cancel" href="{{route('cancel')}}">Cancel Plan</a></li>
+            @endif 
             <li><a href="/destroy/{{ Auth::user()->id }}" class="btn btn-danger delete">Delete Account</a></li>
             <span style="font-size:13px;"><i class="fa fa-info-circle" aria-hidden="true"></i> Deleting your account will remove all data from our system.</span>
         </div>

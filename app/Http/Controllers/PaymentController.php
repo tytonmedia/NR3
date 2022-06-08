@@ -31,7 +31,7 @@ class PaymentController extends Controller
         $Payment=Payment::where('user_id',auth()->user()->id)->where('status',1)->first();
         
         $stripe = new \Stripe\StripeClient(
-         env('STRIPE_SECRET_KEY')
+        config('services.stripe.secret_key')
           );
 
         if(!empty($Payment->subscription_id) && $Payment->status == 1){
@@ -58,7 +58,7 @@ class PaymentController extends Controller
                             'items' => [
                                 [
                                 'id' => $retrive->items->data[0]->id,
-                                'price' => env('WEBMASTER_PRICE'),
+                                'price' => config('services.stripe.plan.webmaster_price'),
                                 ],
                             ],
                         ]);
@@ -103,7 +103,7 @@ class PaymentController extends Controller
                             'items' => [
                                 [
                                 'id' => $retrive->items->data[0]->id,
-                                'price' => env('BUSINESS_PRICE'),
+                                'price' => config('services.stripe.plan.business_price'),
                                 ],
                             ],
                         ]);
@@ -149,7 +149,7 @@ class PaymentController extends Controller
                             'items' => [
                                 [
                                 'id' => $retrive->items->data[0]->id,
-                                'price' => env('AGENCY_PRICE'),
+                                'price' => config('services.stripe.plan.agency_price'),
                                 ],
                             ],
                         ]);
@@ -187,7 +187,7 @@ class PaymentController extends Controller
                 $charge = $stripe->subscriptions->create([
                         "customer" => $customer->id,
                         'items' => [
-                            ['price' => env('WEBMASTER_PRICE')],
+                            ['price' => config('services.stripe.plan.webmaster_price')],
                         ],
                     
                 ]);
@@ -207,7 +207,7 @@ class PaymentController extends Controller
                 $charge = $stripe->subscriptions->create([
                         "customer" => $customer->id,
                         'items' => [
-                            ['price' => env('BUSINESS_PRICE')],
+                            ['price' => config('services.stripe.plan.business_price')],
                         ],
                     
                 ]);
@@ -227,7 +227,7 @@ class PaymentController extends Controller
                 $charge = $stripe->subscriptions->create([
                         "customer" => $customer->id,
                         'items' => [
-                            ['price' => env('AGENCY_PRICE')],
+                            ['price' => config('services.stripe.plan.agency_price')],
                         ],
                     
                 ]);

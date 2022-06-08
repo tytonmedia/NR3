@@ -13,11 +13,11 @@
             <div class="row three-cols pricing-boxes" style="margin-top:10%;">
                 <div class="col-md-4 text-center Webmaster-col">
                     <h3>Webmaster</h3>
-                    <p>Affordable Package for webmasters or small businesses wanting to enhance their SEO.</p>
+                    <p>Affordable package for webmasters or small businesses wanting to enhance their SEO.</p>
                     <strike style="color:#ff0000">$29</strike>               
                     <h5><strong>$10</strong></h5>
                     <h6>per month</h6>
-                         @if($status == 1 && $product->id == env('WEBMASTER_ID'))
+                         @if($status == 1 && $product->id == Config::get('services.stripe.plan.webmaster_id'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-lg" style="pointer-events: none;">CURRENT PLAN</a></h4>
                          @elseif($status == 1)
                         <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-lg">UPGRADE</a></h4>
@@ -34,7 +34,7 @@
                     <strike style="color:#ff0000">$49</strike>
                     <h5><strong>$20</strong></h5>
                     <h6>per month</h6>
-                        @if($status == 1 && $product->id == env('BUSINESS_ID'))
+                        @if($status == 1 && $product->id == Config::get('services.stripe.plan.business_id'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-lg" style="pointer-events: none;">CURRENT PLAN</a></h4>
                          @elseif($status == 1)
                         <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-lg">UPGRADE</a></h4>
@@ -52,7 +52,7 @@
 <strike style="color:#ff0000">$99</strike>
                     <h5><strong>$30</strong></h5>
                     <h6>per month</h6>
-                    @if($status == 1 && $product->id == env('AGENCY_ID'))
+                    @if($status == 1 && $product->id == Config::get('services.stripe.plan.agency_id'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-lg" style="pointer-events: none;">CURRENT PLAN</a></h4>
                          @elseif($status == 1)
                         <h4><a href="{{route('payment',['id' => 3])}}" class="btn btn-primary btn-lg">UPGRADE</a></h4>
@@ -65,9 +65,30 @@
             </div>
     </div>
     <div class="row">
-<div class="col-md-12 text-center" style="background:#f2f2f2;margin-top:25px;padding:15px 0">
+<div class="col-md-12 text-center" style="margin-top:25px;padding:15px 0">
 <img src="images/featured.png"/>
 </div>
+    <div class="container">
+          <div class="row Audit-image-text" style="width:100%;padding:25px;margin-top:0px;text-align:center">
+
+          </div>
+            <hr>
+     <div class="row testimonials Audit-image-text" style="padding:25px;margin-top:50px;">
+          <div class="col-md-6">
+            <img src="images/brandon.jpeg" style="float:left;margin-right:10px;" alt=""/>
+            <h4>Great SEO Tool</h4>
+            <p>I save a lot of time using this product. Weekly reports of my website audit in my inbox are a dream come true for any SEO agency or marketer!</p>
+            <label>Brandon S.</label>
+          </div>
+           <div class="col-md-6">
+             <img src="images/megan.jpeg" style="float:left;margin-right:10px;" lt=""/>
+            <h4>Great All Around Tool</h4>
+            <p>Makes audit reporting much faster than it was before with other tools. I estimate I save 10-20 minutes per report with this tool.</p>
+            <label>Megan R.</label>
+          </div>
+    </div>
+
+    </div>
     </div>
     <div class="container">
         <div class="row three-cols" style="margin-top:0">
@@ -136,7 +157,7 @@
 <td></td>
 <td></td>
 <td>
- @if($status == 1 && $product->id == env('WEBMASTER_ID'))
+ @if($status == 1 && $product->id == Config::get('stripe.plan.webmaster_id'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-sm" style="pointer-events: none;">CURRENT PLAN</a></h4>
                          @elseif($status == 1)
                         <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-sm">UPGRADE</a></h4>
@@ -145,7 +166,7 @@
                        <h4><a href="{{route('payment',['id' => 1])}}" class="btn btn-primary btn-sm">GET ACCESS</a></h4>
                          @endif
                          </td>
-<td>     @if($status == 1 && $product->id == env('BUSINESS_ID'))
+<td>     @if($status == 1 && $product->id == Config::get('stripe.plan.business_id'))
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-sm" style="pointer-events: none;">CURRENT PLAN</a></h4>
                          @elseif($status == 1)
                         <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-sm">UPGRADE</a></h4>
@@ -153,7 +174,7 @@
                         @if($status == 0)
                        <h4><a href="{{route('payment',['id' => 2])}}" class="btn btn-warning btn-sm">GET ACCESS</a></h4>
                          @endif</td>
-<td> @if($status == 1 && $product->id == env('AGENCY_ID'))
+<td> @if($status == 1 && $product->id == Config::get('stripe.plan.agency_id')) 
                        <h4><a href="javascript:void(0)" class="btn btn-secondary btn-sm" style="pointer-events: none;">CURRENT PLAN</a></h4>
                          @elseif($status == 1)
                         <h4><a href="{{route('payment',['id' => 3])}}" class="btn btn-primary btn-sm">UPGRADE</a></h4>
@@ -167,28 +188,5 @@
 </div>
 </div>
 </div>
-    <div class="container">
-          <div class="row Audit-image-text" style="width:100%;padding:25px;margin-top:0px;text-align:center">
-<div class="col-md-12"><h3>SEO software that helps grow your traffic, rankings, and sales online.</h3>
-    <p>Ninja Report’s revolutionary SEO tools will allow you to get more organic traffic online and grow your business. Check out our features below to see how we can help you grow.</p>
-</div>
-          </div>
-            <hr>
-     <div class="row testimonials Audit-image-text" style="padding:25px;margin-top:50px;">
-          <div class="col-md-6">
-            <img src="images/brandon.jpeg" style="float:left;margin-right:10px;" alt=""/>
-            <h4>Great SEO Tool</h4>
-            <p>I save a lot of time using this product. Weekly reports of my website audit in my inbox are a dream come true for any SEO agency or marketer!</p>
-            <label>Brandon S.</label>
-          </div>
-           <div class="col-md-6">
-             <img src="images/megan.jpeg" style="float:left;margin-right:10px;" lt=""/>
-            <h4>Great All Around Tool</h4>
-            <p>Makes audit reporting much faster than it was before with other tools. I estimate I save 10-20 minutes per report with this tool.</p>
-            <label>Megan R.</label>
-          </div>
-    </div>
-
-    </div>
 </div>
 @endsection

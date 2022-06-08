@@ -326,6 +326,7 @@ if(!empty($seo_results)) {
                                 $('#loading').hide();
                                 $('#analyse').removeAttr('disabled');
                                 $('#error-box').show();
+                                alert(error);
 
                                 }
                             });

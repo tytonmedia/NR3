@@ -37,6 +37,8 @@ class LoginController extends Controller
 
             }
         } 
+        Session::put('url.intended', $intended);
+        Session::put('url.crawl', $url);
         return Socialite::driver('google')->redirect();
     }
 
@@ -44,9 +46,9 @@ class LoginController extends Controller
     {
         
         try {
-            $redirect = Session::get('page_url');
 
-            $url = $request->get('url');
+             $redirect = Session::get('url.intended', url('/'));
+             $url = Session::get('url.crawl', url('/'));
 
             $user = Socialite::driver('google')->user();
 

@@ -24,7 +24,7 @@ class DashboardController extends Controller
         $Payment=Payment::where('user_id',auth()->user()->id)->where('status',1)->first();
         if(isset($Payment['product_id'])){
             $stripe = new \Stripe\StripeClient(
-                env('STRIPE_SECRET_KEY')
+                config('services.stripe.secret_key')
             );
             $product = $stripe->products->retrieve(
                 $Payment['product_id'],
@@ -147,14 +147,14 @@ public function seo_backlinks(){
     public function account(){
         $Payment=Payment::where('user_id',auth()->user()->id)->where('status',1)->first();
 
-        if($Payment['product_id'] == env('AGENCY_ID')){
+        if(isset($Payment) && $Payment['product_id'] == config('services.stripe.plan.agency_id')){
             $has_white_label = 1;
         }else{
             $has_white_label = 0;
         }
-        if($Payment['product_id']){
+        if(isset($Payment) && $Payment['product_id']){
             $stripe = new \Stripe\StripeClient(
-                env('STRIPE_SECRET_KEY')
+                config('services.stripe.secret_key')
             );
             $product = $stripe->products->retrieve(
                 $Payment['product_id'],
@@ -180,7 +180,7 @@ public function seo_backlinks(){
         $Payment=Payment::where('user_id',auth()->user()->id)->where('status',1)->first();
         if(isset($Payment['product_id'])){
             $stripe = new \Stripe\StripeClient(
-                env('STRIPE_SECRET_KEY')
+                config('services.stripe.secret_key')
             );
             $product = $stripe->products->retrieve(
                 $Payment['product_id'],
@@ -209,7 +209,7 @@ public function seo_backlinks(){
         //dd($Payment['subscription_id']);
         if($Payment){
             $stripe = new \Stripe\StripeClient(
-                env('STRIPE_SECRET_KEY')
+                config('services.stripe.secret_key')
             );
             $stripe->subscriptions->cancel(
                 $Payment['subscription_id'],

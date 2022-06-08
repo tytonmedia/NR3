@@ -79,7 +79,6 @@
 
 </style>
 
-<script src="https://js.stripe.com/v3/"></script>
 <div class="col-md-10 overview">
 	<div class="row" style="margin-top:75px;">
 		<div class="col-md-1">
@@ -190,7 +189,7 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script>
 	// Create a Stripe client.
-	var key = '{{ env('STRIPE_PUBLISHABLE_KEY') }}';
+	var key = '{{ Config::get('services.stripe.publishable_key') }}';
 	var stripe = Stripe(key);
 
 	// Create an instance of Elements.

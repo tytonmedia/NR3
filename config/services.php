@@ -35,5 +35,18 @@ return [
         'client_secret' => env('GOOGLE_APP_SECRET'),
         'redirect' => env('GOOGLE_APP_RETURN_URL'),
     ],
+     'stripe' => [
+        'publishable_key' => env('STRIPE_PUBLISHABLE_KEY'),
+        'secret_key' => env('STRIPE_SECRET_KEY'),
+        'plan' => [
+            'webmaster_id' => env('WEBMASTER_ID'),
+            'webmaster_price' => env('WEBMASTER_PRICE'),
+            'business_id' => env('BUSINESS_ID'),
+            'business_price' => env('BUSINESS_PRICE'),
+            'agency_id' => env('AGENCY_ID'),
+            'agency_price' => env('AGENCY_PRICE'),
+        ],
+    ],
 
 ];
+
