@@ -223,7 +223,7 @@ $nofollow_array = array();
 
         </div>
         <div class="col-md-4 text-right" style="padding:0">
-            <h5 class="updated_at">Last Updated: {{ date('F j, Y, g:i a', time($backlink_details['updated_at'])) }}</h5>
+            <h5 class="updated_at">Last Updated: {{ $backlink_details['updated_at'] }}</h5>
         </div>
     </div>
     

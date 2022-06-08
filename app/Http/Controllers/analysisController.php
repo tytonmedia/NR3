@@ -983,7 +983,7 @@ class analysisController extends Controller
             // if is a paid user, show the backlink counts
         try{
 
-            $semrush = "https://api.semrush.com/analytics/v1/?key=e7eb30521b6724220a6ef7237fc70d08&type=backlinks_overview&target=".$url."&target_type=url&export_columns=domains_num,urls_num";
+            $semrush = "https://api.semrush.com/analytics/v1/?key=17442c3998e3dbdf6a3a97e9fe7f9fdc&type=backlinks_overview&target=".$url."&target_type=url&export_columns=domains_num,urls_num";
 
             $curl = curl_init($semrush);
             curl_setopt($curl, CURLOPT_URL, $semrush);

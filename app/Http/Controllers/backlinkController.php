@@ -86,7 +86,7 @@ class backlinkController extends Controller
             }else {
                 $display_limit=3;
             }
-            $semrush = "https://api.semrush.com/analytics/v1/?key=e7eb30521b6724220a6ef7237fc70d08&type=backlinks&target=".$url."&target_type=url&display_limit=".$display_limit."&export_columns=source_url,target_url,anchor,page_ascore,external_num,internal_num,last_seen,first_seen,nofollow";
+            $semrush = "https://api.semrush.com/analytics/v1/?key=17442c3998e3dbdf6a3a97e9fe7f9fdc&type=backlinks&target=".$url."&target_type=url&display_limit=".$display_limit."&export_columns=source_url,target_url,anchor,page_ascore,external_num,internal_num,last_seen,first_seen,nofollow";
 
             $curl = curl_init($semrush);
             curl_setopt($curl, CURLOPT_URL, $semrush);
@@ -99,7 +99,7 @@ class backlinkController extends Controller
             
             $resp = curl_exec($curl);
             curl_close($curl);
-
+            dd($resp);
             if (strpos($resp,'ERROR ')===0) {
 
             		return 'empty';
@@ -170,7 +170,7 @@ class backlinkController extends Controller
         	// get backlink counts
          try{
 
-            $semrush = "https://api.semrush.com/analytics/v1/?key=e7eb30521b6724220a6ef7237fc70d08&type=backlinks_overview&target=".$url."&target_type=url&export_columns=domains_num,urls_num";
+            $semrush = "https://api.semrush.com/analytics/v1/?key=17442c3998e3dbdf6a3a97e9fe7f9fdc&type=backlinks_overview&target=".$url."&target_type=url&export_columns=domains_num,urls_num";
 
             $curl = curl_init($semrush);
             curl_setopt($curl, CURLOPT_URL, $semrush);
@@ -220,7 +220,7 @@ class backlinkController extends Controller
         			
                        try{
 
-            $semrush = "https://api.semrush.com/analytics/v1/?key=e7eb30521b6724220a6ef7237fc70d08&type=backlinks_historical&target=".$url."&target_type=url&export_columns=date,backlinks_num,backlinks_new_num,backlinks_lost_num,domains_num,domains_new_num,domains_lost_num&timespan=months&display_limit=".$display_limit;
+            $semrush = "https://api.semrush.com/analytics/v1/?key=17442c3998e3dbdf6a3a97e9fe7f9fdc&type=backlinks_historical&target=".$url."&target_type=url&export_columns=date,backlinks_num,backlinks_new_num,backlinks_lost_num,domains_num,domains_new_num,domains_lost_num&timespan=months&display_limit=".$display_limit;
 
             $curl = curl_init($semrush);
             curl_setopt($curl, CURLOPT_URL, $semrush);
